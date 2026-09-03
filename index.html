@@ -6,10 +6,11 @@
 <meta name="theme-color" content="#7c5cff">
 <title>HARMONY</title>
 
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop stop-color='%237c5cff'/%3E%3Cstop offset='1' stop-color='%23ff5ca8'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' rx='25' fill='url(%23g)'/%3E%3Cpath d='M35 28v42a15 15 0 1 0 8 13V48l27-8v22a15 15 0 1 0 8 13V20z' fill='white'/%3E%3C/svg%3E">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop stop-color='%237c5cff'/%3E%3Cstop offset='1' stop-color='%23ff5ca8'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' rx='25' fill='url(%23g)'/%3E%3Cpath d='M35 28v42a15 15 0 1 0 8 13V48l27-8v22a15 15 0 1 0 8 13V20z' fill='white'/%3E%3C/svg%3E">
 
 <style>
 *{box-sizing:border-box}
+
 :root{
  --purple:#7c5cff;
  --pink:#ff5ca8;
@@ -20,20 +21,23 @@
  --line:#e7e7ee;
  --shadow:0 10px 30px rgba(40,30,90,.09)
 }
+
 body{
  margin:0;
  background:var(--bg);
  color:var(--text);
  font-family:"Malgun Gothic","Noto Sans KR",Arial,sans-serif
 }
+
 button,input,textarea,select{font:inherit}
 button{cursor:pointer;border:0}
+
 .top{
  position:sticky;
  top:0;
  z-index:20;
  height:72px;
- background:rgba(255,255,255,.94);
+ background:rgba(255,255,255,.95);
  backdrop-filter:blur(14px);
  border-bottom:1px solid var(--line);
  display:flex;
@@ -41,6 +45,7 @@ button{cursor:pointer;border:0}
  gap:20px;
  padding:0 28px
 }
+
 .logo{
  display:flex;
  align-items:center;
@@ -49,13 +54,19 @@ button{cursor:pointer;border:0}
  font-size:23px;
  min-width:180px
 }
+
 .logoIcon{
- width:42px;height:42px;border-radius:13px;
+ width:42px;
+ height:42px;
+ border-radius:13px;
  background:linear-gradient(135deg,var(--purple),var(--pink));
- display:grid;place-items:center;
+ display:grid;
+ place-items:center;
  box-shadow:0 7px 18px rgba(124,92,255,.25)
 }
+
 .logoIcon svg{width:25px;height:25px}
+
 .search{
  flex:1;
  max-width:650px;
@@ -64,15 +75,20 @@ button{cursor:pointer;border:0}
  background:#f1f1f6;
  border:1px solid transparent;
  border-radius:18px;
- padding:0 15px;
- transition:.2s
+ padding:0 15px
 }
+
 .search:focus-within{
  background:#fff;
  border-color:#d8d2ff;
  box-shadow:0 0 0 4px rgba(124,92,255,.08)
 }
-.search span{font-size:20px;color:#777}
+
+.search span{
+ font-size:20px;
+ color:#777
+}
+
 .search input{
  width:100%;
  height:45px;
@@ -81,14 +97,32 @@ button{cursor:pointer;border:0}
  background:transparent;
  padding:0 10px
 }
-.topActions{display:flex;gap:8px;margin-left:auto}
+
+.topActions{
+ display:flex;
+ gap:8px;
+ margin-left:auto
+}
+
 .iconBtn,.profileBtn{
- width:42px;height:42px;border-radius:50%;
+ width:42px;
+ height:42px;
+ border-radius:50%;
  background:#f1f1f5;
  font-size:19px
 }
-.profileBtn{background:#eee7ff;color:var(--purple);font-weight:800}
-.layout{display:flex;min-height:calc(100vh - 72px)}
+
+.profileBtn{
+ background:#eee7ff;
+ color:var(--purple);
+ font-weight:800
+}
+
+.layout{
+ display:flex;
+ min-height:calc(100vh - 72px)
+}
+
 .side{
  width:230px;
  background:#fff;
@@ -98,6 +132,7 @@ button{cursor:pointer;border:0}
  top:72px;
  height:calc(100vh - 72px)
 }
+
 .navBtn{
  width:100%;
  padding:13px 15px;
@@ -108,8 +143,19 @@ button{cursor:pointer;border:0}
  color:#555;
  font-weight:700
 }
-.navBtn:hover,.navBtn.active{background:#eeeaff;color:var(--purple)}
-.main{flex:1;padding:28px;min-width:0}
+
+.navBtn:hover,
+.navBtn.active{
+ background:#eeeaff;
+ color:var(--purple)
+}
+
+.main{
+ flex:1;
+ padding:28px;
+ min-width:0
+}
+
 .hero{
  background:linear-gradient(135deg,#ece8ff,#fff1f7);
  border:1px solid #e5ddff;
@@ -122,37 +168,80 @@ button{cursor:pointer;border:0}
  overflow:hidden;
  margin-bottom:28px
 }
-.hero h1{font-size:38px;margin:0 0 12px}
-.hero p{color:#686974;line-height:1.7;margin:0 0 20px}
-.heroBtns{display:flex;gap:10px;flex-wrap:wrap}
-.primary,.secondary{
+
+.hero h1{
+ font-size:38px;
+ margin:0 0 12px
+}
+
+.hero p{
+ color:#686974;
+ line-height:1.7;
+ margin:0 0 20px
+}
+
+.heroBtns{
+ display:flex;
+ gap:10px;
+ flex-wrap:wrap
+}
+
+.primary,
+.secondary{
  padding:12px 17px;
  border-radius:13px;
  font-weight:800
 }
-.primary{background:var(--purple);color:white}
-.secondary{background:white;color:#555;border:1px solid var(--line)}
-.primary:hover{filter:brightness(.95)}
+
+.primary{
+ background:var(--purple);
+ color:white
+}
+
+.secondary{
+ background:white;
+ color:#555;
+ border:1px solid var(--line)
+}
+
+.primary:hover{
+ filter:brightness(.95)
+}
+
 .heroLogo{
- width:180px;height:180px;flex:none;
+ width:180px;
+ height:180px;
+ flex:none;
  border-radius:50%;
  background:linear-gradient(135deg,var(--purple),var(--pink));
- display:grid;place-items:center;
+ display:grid;
+ place-items:center;
  box-shadow:0 20px 45px rgba(124,92,255,.25)
 }
-.heroLogo svg{width:95px;height:95px}
+
+.heroLogo svg{
+ width:95px;
+ height:95px
+}
+
 .sectionHead{
  display:flex;
  justify-content:space-between;
  align-items:center;
  margin:26px 0 15px
 }
-.sectionHead h2{margin:0;font-size:21px}
+
+.sectionHead h2{
+ margin:0;
+ font-size:21px
+}
+
 .videoGrid{
  display:grid;
  grid-template-columns:repeat(auto-fill,minmax(235px,1fr));
  gap:20px
 }
+
 .videoCard{
  background:#fff;
  border:1px solid var(--line);
@@ -161,7 +250,11 @@ button{cursor:pointer;border:0}
  box-shadow:var(--shadow);
  transition:.2s
 }
-.videoCard:hover{transform:translateY(-3px)}
+
+.videoCard:hover{
+ transform:translateY(-3px)
+}
+
 .thumb{
  height:150px;
  background:linear-gradient(135deg,#ded7ff,#ffddec);
@@ -170,15 +263,28 @@ button{cursor:pointer;border:0}
  position:relative;
  overflow:hidden
 }
-.thumb video{width:100%;height:100%;object-fit:cover}
+
+.thumb video{
+ width:100%;
+ height:100%;
+ object-fit:cover
+}
+
 .play{
- width:52px;height:52px;border-radius:50%;
+ width:52px;
+ height:52px;
+ border-radius:50%;
  background:rgba(255,255,255,.9);
- display:grid;place-items:center;
+ display:grid;
+ place-items:center;
  position:absolute;
  box-shadow:0 5px 20px rgba(0,0,0,.12)
 }
-.cardBody{padding:14px}
+
+.cardBody{
+ padding:14px
+}
+
 .cardTitle{
  font-weight:800;
  white-space:nowrap;
@@ -186,20 +292,36 @@ button{cursor:pointer;border:0}
  text-overflow:ellipsis;
  margin-bottom:7px
 }
-.meta{color:var(--muted);font-size:13px}
-.cardBtns{display:flex;gap:7px;margin-top:12px}
+
+.meta{
+ color:var(--muted);
+ font-size:13px
+}
+
+.cardBtns{
+ display:flex;
+ gap:7px;
+ margin-top:12px
+}
+
 .smallBtn{
  background:#f3f3f7;
  border-radius:10px;
  padding:8px 10px;
  font-size:13px
 }
-.smallBtn.on{background:#eee8ff;color:var(--purple)}
+
+.smallBtn.on{
+ background:#eee8ff;
+ color:var(--purple)
+}
+
 .channelGrid{
  display:grid;
  grid-template-columns:repeat(auto-fill,minmax(210px,1fr));
  gap:18px
 }
+
 .channelCard{
  background:#fff;
  border:1px solid var(--line);
@@ -208,20 +330,30 @@ button{cursor:pointer;border:0}
  text-align:center;
  box-shadow:var(--shadow)
 }
+
 .avatar{
- width:70px;height:70px;border-radius:24px;
+ width:70px;
+ height:70px;
+ border-radius:24px;
  background:linear-gradient(135deg,#e7ddff,#ffdceb);
- display:grid;place-items:center;
+ display:grid;
+ place-items:center;
  font-size:33px;
  margin:0 auto 12px
 }
-.channelName{font-size:18px;font-weight:900}
+
+.channelName{
+ font-size:18px;
+ font-weight:900
+}
+
 .channelDesc{
  color:var(--muted);
  font-size:13px;
  margin:7px 0 15px;
  min-height:36px
 }
+
 .empty{
  text-align:center;
  background:white;
@@ -230,6 +362,7 @@ button{cursor:pointer;border:0}
  border-radius:20px;
  color:var(--muted)
 }
+
 .modal{
  display:none;
  position:fixed;
@@ -239,7 +372,13 @@ button{cursor:pointer;border:0}
  padding:20px;
  overflow:auto
 }
-.modal.show{display:flex;align-items:center;justify-content:center}
+
+.modal.show{
+ display:flex;
+ align-items:center;
+ justify-content:center
+}
+
 .modalBox{
  width:min(700px,100%);
  background:#fff;
@@ -248,23 +387,35 @@ button{cursor:pointer;border:0}
  box-shadow:0 30px 80px rgba(0,0,0,.25);
  position:relative
 }
+
 .close{
  position:absolute;
  right:18px;
  top:16px;
- width:36px;height:36px;
+ width:36px;
+ height:36px;
  border-radius:50%;
  background:#f2f2f5
 }
-.modal h2{margin:0 35px 20px 0}
-.field{margin-bottom:15px}
+
+.modal h2{
+ margin:0 35px 20px 0
+}
+
+.field{
+ margin-bottom:15px
+}
+
 .field label{
  display:block;
  font-weight:800;
  font-size:14px;
  margin-bottom:7px
 }
-.field input,.field textarea,.field select{
+
+.field input,
+.field textarea,
+.field select{
  width:100%;
  border:1px solid #dddde5;
  border-radius:12px;
@@ -272,13 +423,19 @@ button{cursor:pointer;border:0}
  outline:0;
  background:#fff
 }
-.field textarea{min-height:100px;resize:vertical}
+
+.field textarea{
+ min-height:100px;
+ resize:vertical
+}
+
 .modalActions{
  display:flex;
  justify-content:flex-end;
  gap:8px;
  margin-top:20px
 }
+
 .preview{
  width:100%;
  max-height:330px;
@@ -288,6 +445,25 @@ button{cursor:pointer;border:0}
  display:none;
  margin-bottom:15px
 }
+
+.videoInfo{
+ background:#f5f4fa;
+ border-radius:13px;
+ padding:12px;
+ margin-bottom:15px;
+ display:none
+}
+
+.videoInfo.ok{
+ display:block
+}
+
+.videoInfo.bad{
+ display:block;
+ background:#fff0f2;
+ color:#d92d4b
+}
+
 .camera{
  width:100%;
  max-height:430px;
@@ -295,13 +471,16 @@ button{cursor:pointer;border:0}
  border-radius:16px;
  display:block
 }
+
 .recordDot{
  display:inline-block;
- width:10px;height:10px;
+ width:10px;
+ height:10px;
  border-radius:50%;
  background:#ff4d67;
  margin-right:6px
 }
+
 .viewerVideo{
  width:100%;
  max-height:450px;
@@ -309,29 +488,69 @@ button{cursor:pointer;border:0}
  border-radius:16px;
  display:block
 }
-.viewerTitle{font-size:22px;font-weight:900;margin:17px 0 6px}
-.viewerMeta{color:var(--muted);font-size:14px}
-.viewerActions{display:flex;gap:8px;margin:15px 0}
+
+.viewerTitle{
+ font-size:22px;
+ font-weight:900;
+ margin:17px 0 6px
+}
+
+.viewerMeta{
+ color:var(--muted);
+ font-size:14px
+}
+
+.viewerActions{
+ display:flex;
+ gap:8px;
+ margin:15px 0
+}
+
 .comments{
  border-top:1px solid var(--line);
  margin-top:18px;
  padding-top:18px
 }
-.commentForm{display:flex;gap:8px}
-.commentForm input{flex:1}
-.commentList{margin-top:15px}
+
+.commentForm{
+ display:flex;
+ gap:8px
+}
+
+.commentForm input{
+ flex:1;
+ border:1px solid #dddde5;
+ border-radius:12px;
+ padding:11px;
+ outline:0
+}
+
+.commentList{
+ margin-top:15px
+}
+
 .comment{
  padding:11px 0;
  border-bottom:1px solid #f0f0f4
 }
-.comment strong{display:block;font-size:13px;margin-bottom:3px}
-.comment span{font-size:14px}
+
+.comment strong{
+ display:block;
+ font-size:13px;
+ margin-bottom:3px
+}
+
+.comment span{
+ font-size:14px
+}
+
 .toast{
  position:fixed;
  left:50%;
  bottom:25px;
  transform:translateX(-50%) translateY(20px);
- background:#222;color:#fff;
+ background:#222;
+ color:#fff;
  padding:12px 17px;
  border-radius:13px;
  opacity:0;
@@ -339,30 +558,94 @@ button{cursor:pointer;border:0}
  transition:.25s;
  z-index:300
 }
-.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-.hidden{display:none!important}
+
+.toast.show{
+ opacity:1;
+ transform:translateX(-50%) translateY(0)
+}
+
+.hidden{
+ display:none!important
+}
+
 @media(max-width:850px){
  .side{display:none}
+
  .main{padding:17px}
- .top{padding:0 13px;gap:9px}
- .logo{min-width:auto;font-size:19px}
- .logoIcon{width:38px;height:38px}
- .search{max-width:none}
- .topActions .iconBtn{display:none}
- .hero{padding:25px}
- .heroLogo{display:none}
- .hero h1{font-size:29px}
- .videoGrid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
- .thumb{height:120px}
+
+ .top{
+  padding:0 13px;
+  gap:9px
+ }
+
+ .logo{
+  min-width:auto;
+  font-size:19px
+ }
+
+ .logoIcon{
+  width:38px;
+  height:38px
+ }
+
+ .search{
+  max-width:none
+ }
+
+ .topActions .iconBtn{
+  display:none
+ }
+
+ .hero{
+  padding:25px
+ }
+
+ .heroLogo{
+  display:none
+ }
+
+ .hero h1{
+  font-size:29px
+ }
+
+ .videoGrid{
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:12px
+ }
+
+ .thumb{
+  height:120px
+ }
 }
+
 @media(max-width:520px){
- .videoGrid{grid-template-columns:1fr}
- .top{height:62px}
- .layout{min-height:calc(100vh - 62px)}
- .search input{height:40px}
- .logo span{display:none}
- .hero{border-radius:20px}
- .heroBtns button{width:100%}
+ .videoGrid{
+  grid-template-columns:1fr
+ }
+
+ .top{
+  height:62px
+ }
+
+ .layout{
+  min-height:calc(100vh - 62px)
+ }
+
+ .search input{
+  height:40px
+ }
+
+ .logo span{
+  display:none
+ }
+
+ .hero{
+  border-radius:20px
+ }
+
+ .heroBtns button{
+  width:100%
+ }
 }
 </style>
 </head>
@@ -370,93 +653,115 @@ button{cursor:pointer;border:0}
 <body>
 
 <header class="top">
-  <div class="logo">
-    <div class="logoIcon">
-      <svg viewBox="0 0 100 100" fill="none">
-        <path d="M35 28v42a15 15 0 1 0 8 13V48l27-8v22a15 15 0 1 0 8 13V20z" fill="white"/>
-      </svg>
-    </div>
-    <span>HARMONY</span>
+
+ <div class="logo">
+
+  <div class="logoIcon">
+   <svg viewBox="0 0 100 100" fill="none">
+    <path d="M35 28v42a15 15 0 1 0 8 13V48l27-8v22a15 15 0 1 0 8 13V20z" fill="white"/>
+   </svg>
   </div>
 
-  <div class="search">
-    <span>⌕</span>
-    <input id="searchInput" placeholder="동영상, 채널 검색">
-  </div>
+  <span>HARMONY</span>
 
-  <div class="topActions">
-    <button class="iconBtn" onclick="cameraOpen()" title="동영상 촬영">●</button>
-    <button class="iconBtn" onclick="uploadOpen()" title="동영상 업로드">＋</button>
-    <button class="profileBtn" onclick="createChannelOpen()">나</button>
-  </div>
+ </div>
+
+ <div class="search">
+  <span>⌕</span>
+  <input id="searchInput" placeholder="동영상, 채널 검색">
+ </div>
+
+ <div class="topActions">
+  <button class="iconBtn" onclick="cameraOpen()">●</button>
+  <button class="iconBtn" onclick="uploadOpen()">＋</button>
+  <button class="profileBtn" onclick="createChannelOpen()">나</button>
+ </div>
+
 </header>
 
 <div class="layout">
 
 <aside class="side">
-  <button class="navBtn active" onclick="showHome()">⌂　홈</button>
-  <button class="navBtn" onclick="showFavorites()">★　즐겨찾기</button>
-  <button class="navBtn" onclick="showAllChannels()">▣　모든 채널</button>
-  <button class="navBtn" onclick="createChannelOpen()">＋　채널 만들기</button>
-  <hr style="border:0;border-top:1px solid var(--line);margin:18px 5px">
-  <button class="navBtn" onclick="uploadOpen()">↑　동영상 업로드</button>
-  <button class="navBtn" onclick="cameraOpen()">●　동영상 촬영</button>
+
+ <button class="navBtn active" onclick="showHome()">⌂　홈</button>
+ <button class="navBtn" onclick="showFavorites()">★　즐겨찾기</button>
+ <button class="navBtn" onclick="showAllChannels()">▣　모든 채널</button>
+ <button class="navBtn" onclick="createChannelOpen()">＋　채널 만들기</button>
+
+ <hr style="border:0;border-top:1px solid var(--line);margin:18px 5px">
+
+ <button class="navBtn" onclick="uploadOpen()">↑　동영상 업로드</button>
+ <button class="navBtn" onclick="cameraOpen()">●　동영상 촬영</button>
+
 </aside>
 
 <main class="main">
 
 <section id="homePage">
 
-  <div class="hero">
-    <div>
-      <h1>우리 가족의 영상 공간<br>HARMONY</h1>
-      <p>
-        가족이 만든 영상을 모으고,<br>
-        채널을 만들고, 서로 댓글을 남겨보세요.
-      </p>
-      <div class="heroBtns">
-        <button class="primary" onclick="cameraOpen()">● 동영상 찍기</button>
-        <button class="secondary" onclick="uploadOpen()">↑ 업로드하기</button>
-        <button class="secondary" onclick="createChannelOpen()">＋ 채널 만들기</button>
-      </div>
-    </div>
+ <div class="hero">
 
-    <div class="heroLogo">
-      <svg viewBox="0 0 100 100" fill="none">
-        <path d="M35 28v42a15 15 0 1 0 8 13V48l27-8v22a15 15 0 1 0 8 13V20z" fill="white"/>
-      </svg>
-    </div>
+  <div>
+
+   <h1>우리 가족의 영상 공간<br>HARMONY</h1>
+
+   <p>
+    가족이 만든 영상을 모으고,<br>
+    채널을 만들고, 서로 댓글을 남겨보세요.
+   </p>
+
+   <div class="heroBtns">
+    <button class="primary" onclick="cameraOpen()">● 동영상 찍기</button>
+    <button class="secondary" onclick="uploadOpen()">↑ 업로드하기</button>
+    <button class="secondary" onclick="createChannelOpen()">＋ 채널 만들기</button>
+   </div>
+
   </div>
 
-  <div class="sectionHead">
-    <h2>최신 동영상</h2>
+  <div class="heroLogo">
+   <svg viewBox="0 0 100 100" fill="none">
+    <path d="M35 28v42a15 15 0 1 0 8 13V48l27-8v22a15 15 0 1 0 8 13V20z" fill="white"/>
+   </svg>
   </div>
 
-  <div id="homeVideos" class="videoGrid"></div>
+ </div>
 
-  <div class="sectionHead">
-    <h2>가족 채널</h2>
-  </div>
+ <div class="sectionHead">
+  <h2>최신 동영상</h2>
+ </div>
 
-  <div id="homeChannels" class="channelGrid"></div>
+ <div id="homeVideos" class="videoGrid"></div>
+
+ <div class="sectionHead">
+  <h2>가족 채널</h2>
+ </div>
+
+ <div id="homeChannels" class="channelGrid"></div>
 
 </section>
 
 <section id="listPage" class="hidden">
-  <div class="sectionHead">
-    <h2 id="listTitle">동영상</h2>
-    <button class="secondary" onclick="showHome()">홈으로</button>
-  </div>
-  <div id="listContent"></div>
+
+ <div class="sectionHead">
+  <h2 id="listTitle">동영상</h2>
+  <button class="secondary" onclick="showHome()">홈으로</button>
+ </div>
+
+ <div id="listContent"></div>
+
 </section>
 
 </main>
 </div>
 
 <!-- 채널 생성 -->
+
 <div class="modal" id="channelModal">
+
  <div class="modalBox">
+
   <button class="close" onclick="closeModal('channelModal')">×</button>
+
   <h2>새 채널 만들기</h2>
 
   <div class="field">
@@ -487,19 +792,33 @@ button{cursor:pointer;border:0}
    <button class="secondary" onclick="closeModal('channelModal')">취소</button>
    <button class="primary" onclick="createChannel()">채널 만들기</button>
   </div>
+
  </div>
 </div>
 
 <!-- 업로드 -->
+
 <div class="modal" id="uploadModal">
+
  <div class="modalBox">
+
   <button class="close" onclick="closeModal('uploadModal')">×</button>
+
   <h2>동영상 업로드</h2>
 
   <div class="field">
+
    <label>동영상 파일</label>
-   <input id="videoFile" type="file" accept="video/*" onchange="previewVideo()">
+
+   <input
+    id="videoFile"
+    type="file"
+    accept="video/*"
+    onchange="previewVideo()">
+
   </div>
+
+  <div id="videoInfo" class="videoInfo"></div>
 
   <video id="uploadPreview" class="preview" controls></video>
 
@@ -520,15 +839,20 @@ button{cursor:pointer;border:0}
 
   <div class="modalActions">
    <button class="secondary" onclick="closeModal('uploadModal')">취소</button>
-   <button class="primary" onclick="uploadVideo()">업로드</button>
+   <button id="uploadButton" class="primary" onclick="uploadVideo()">업로드</button>
   </div>
+
  </div>
 </div>
 
 <!-- 카메라 -->
+
 <div class="modal" id="cameraModal">
+
  <div class="modalBox">
+
   <button class="close" onclick="cameraClose()">×</button>
+
   <h2>동영상 촬영</h2>
 
   <video id="cameraVideo" class="camera" autoplay muted playsinline></video>
@@ -539,27 +863,40 @@ button{cursor:pointer;border:0}
 
   <div class="modalActions">
    <button class="secondary" onclick="cameraClose()">닫기</button>
-   <button class="primary" id="recordButton" onclick="toggleRecording()">● 촬영 시작</button>
+   <button id="recordButton" class="primary" onclick="toggleRecording()">● 촬영 시작</button>
   </div>
+
  </div>
 </div>
 
 <!-- 영상 보기 -->
+
 <div class="modal" id="viewerModal">
+
  <div class="modalBox">
+
   <button class="close" onclick="closeModal('viewerModal')">×</button>
 
   <video id="viewerVideo" class="viewerVideo" controls></video>
 
   <div id="viewerTitle" class="viewerTitle"></div>
+
   <div id="viewerMeta" class="viewerMeta"></div>
 
   <div class="viewerActions">
-   <button id="viewerLike" class="smallBtn" onclick="likeCurrent()">♡ 좋아요</button>
-   <button id="viewerFavorite" class="smallBtn" onclick="favoriteCurrent()">☆ 즐겨찾기</button>
+
+   <button id="viewerLike" class="smallBtn" onclick="likeCurrent()">
+    ♡ 좋아요
+   </button>
+
+   <button id="viewerFavorite" class="smallBtn" onclick="favoriteCurrent()">
+    ☆ 즐겨찾기
+   </button>
+
   </div>
 
   <div class="comments">
+
    <h3>댓글</h3>
 
    <div class="commentForm">
@@ -568,303 +905,664 @@ button{cursor:pointer;border:0}
    </div>
 
    <div id="commentList" class="commentList"></div>
+
   </div>
+
  </div>
 </div>
 
 <div id="toast" class="toast"></div>
 
 <script>
+
+const MAX_VIDEO_SIZE = 7 * 1024 * 1024;
+const MAX_VIDEO_DURATION = 30 * 60;
+
 const KEYS={
- channels:"harmony_channels_v2",
- videos:"harmony_videos_v2",
- favorites:"harmony_favorites_v2"
+ channels:"harmony_channels_v3",
+ videos:"harmony_videos_v3",
+ favorites:"harmony_favorites_v3"
 };
 
 let channels=load(KEYS.channels,[]);
 let videos=load(KEYS.videos,[]);
 let favorites=load(KEYS.favorites,[]);
+
 let currentVideo=null;
+let selectedVideoFile=null;
+let selectedVideoDuration=0;
+
 let mediaRecorder=null;
 let recordedChunks=[];
 let cameraStream=null;
 
 function load(key,fallback){
+
  try{
+
   const data=localStorage.getItem(key);
-  return data?JSON.parse(data):fallback;
- }catch(e){return fallback}
+
+  return data ? JSON.parse(data) : fallback;
+
+ }catch(e){
+
+  return fallback;
+
+ }
+
 }
 
 function save(){
+
  localStorage.setItem(KEYS.channels,JSON.stringify(channels));
  localStorage.setItem(KEYS.videos,JSON.stringify(videos));
  localStorage.setItem(KEYS.favorites,JSON.stringify(favorites));
+
 }
 
 function id(){
+
  return Date.now().toString(36)+Math.random().toString(36).slice(2,8);
+
 }
 
 function toast(message){
+
  const el=document.getElementById("toast");
+
  el.textContent=message;
+
  el.classList.add("show");
- setTimeout(()=>el.classList.remove("show"),1800);
+
+ setTimeout(()=>el.classList.remove("show"),2000);
+
 }
 
 function openModal(id){
+
  document.getElementById(id).classList.add("show");
+
 }
 
 function closeModal(id){
+
  document.getElementById(id).classList.remove("show");
+
 }
 
 function showHome(){
+
  document.getElementById("homePage").classList.remove("hidden");
+
  document.getElementById("listPage").classList.add("hidden");
+
  render();
+
 }
 
 function showList(title,items){
+
  document.getElementById("homePage").classList.add("hidden");
+
  document.getElementById("listPage").classList.remove("hidden");
+
  document.getElementById("listTitle").textContent=title;
 
  const box=document.getElementById("listContent");
 
  if(!items.length){
-  box.innerHTML='<div class="empty">아직 동영상이 없어요.</div>';
+
+  box.innerHTML=
+   '<div class="empty">아직 동영상이 없어요.</div>';
+
   return;
+
  }
 
- box.innerHTML='<div class="videoGrid">'+items.map(videoCard).join("")+'</div>';
+ box.innerHTML=
+  '<div class="videoGrid">'+
+  items.map(videoCard).join("")+
+  '</div>';
+
 }
 
 function createChannelOpen(){
+
  document.getElementById("channelName").value="";
  document.getElementById("channelDesc").value="";
+
  openModal("channelModal");
+
 }
 
 function createChannel(){
+
  const name=document.getElementById("channelName").value.trim();
  const desc=document.getElementById("channelDesc").value.trim();
  const emoji=document.getElementById("channelEmoji").value;
 
  if(!name){
+
   toast("채널 이름을 입력해 주세요.");
+
   return;
+
  }
 
  channels.push({
+
   id:id(),
-  name,
-  desc,
-  emoji,
+  name:name,
+  desc:desc,
+  emoji:emoji,
   createdAt:Date.now()
+
  });
 
  save();
+
  closeModal("channelModal");
+
  render();
+
  toast("채널을 만들었어요!");
+
 }
 
 function showAllChannels(){
+
  document.getElementById("homePage").classList.add("hidden");
+
  document.getElementById("listPage").classList.remove("hidden");
+
  document.getElementById("listTitle").textContent="모든 채널";
 
  const box=document.getElementById("listContent");
 
  if(!channels.length){
+
   box.innerHTML=
-   '<div class="empty">아직 채널이 없어요.<br><br><button class="primary" onclick="createChannelOpen()">＋ 첫 채널 만들기</button></div>';
+   '<div class="empty">'+
+   '아직 채널이 없어요.<br><br>'+
+   '<button class="primary" onclick="createChannelOpen()">＋ 첫 채널 만들기</button>'+
+   '</div>';
+
   return;
+
  }
 
- box.innerHTML='<div class="channelGrid">'+channels.map(channelCard).join("")+'</div>';
+ box.innerHTML=
+  '<div class="channelGrid">'+
+  channels.map(channelCard).join("")+
+  '</div>';
+
 }
 
 function showFavorites(){
+
  const items=videos.filter(v=>favorites.includes(v.id));
+
  showList("즐겨찾기",items);
+
 }
 
 function channelCard(ch){
+
  const count=videos.filter(v=>v.channelId===ch.id).length;
 
  return `
+
  <div class="channelCard">
-  <div class="avatar">${escapeHTML(ch.emoji)}</div>
-  <div class="channelName">${escapeHTML(ch.name)}</div>
-  <div class="channelDesc">${escapeHTML(ch.desc||"가족 채널입니다.")}</div>
-  <div class="meta">동영상 ${count}개</div>
+
+  <div class="avatar">
+   ${escapeHTML(ch.emoji)}
+  </div>
+
+  <div class="channelName">
+   ${escapeHTML(ch.name)}
+  </div>
+
+  <div class="channelDesc">
+   ${escapeHTML(ch.desc||"가족 채널입니다.")}
+  </div>
+
+  <div class="meta">
+   동영상 ${count}개
+  </div>
+
   <br>
-  <button class="primary" onclick="showChannel('${ch.id}')">채널 보기</button>
- </div>`;
+
+  <button class="primary"
+   onclick="showChannel('${ch.id}')">
+   채널 보기
+  </button>
+
+ </div>
+
+ `;
+
 }
 
 function showChannel(channelId){
+
  const ch=channels.find(c=>c.id===channelId);
+
  if(!ch)return;
 
  const items=videos.filter(v=>v.channelId===channelId);
 
  document.getElementById("homePage").classList.add("hidden");
+
  document.getElementById("listPage").classList.remove("hidden");
- document.getElementById("listTitle").textContent=ch.emoji+" "+ch.name;
+
+ document.getElementById("listTitle").textContent=
+  ch.emoji+" "+ch.name;
 
  const box=document.getElementById("listContent");
 
  let html=`
- <div class="channelCard" style="margin-bottom:20px;text-align:left">
-  <div style="display:flex;gap:15px;align-items:center">
-   <div class="avatar" style="margin:0">${escapeHTML(ch.emoji)}</div>
-   <div>
-    <div class="channelName">${escapeHTML(ch.name)}</div>
-    <div class="meta">${escapeHTML(ch.desc||"")}</div>
-   </div>
-  </div>
- </div>`;
 
- html+=items.length
- ? '<div class="videoGrid">'+items.map(videoCard).join("")+'</div>'
- : '<div class="empty">이 채널에는 아직 동영상이 없어요.</div>';
+ <div class="channelCard"
+  style="margin-bottom:20px;text-align:left">
+
+  <div style="display:flex;gap:15px;align-items:center">
+
+   <div class="avatar" style="margin:0">
+    ${escapeHTML(ch.emoji)}
+   </div>
+
+   <div>
+
+    <div class="channelName">
+     ${escapeHTML(ch.name)}
+    </div>
+
+    <div class="meta">
+     ${escapeHTML(ch.desc||"")}
+    </div>
+
+   </div>
+
+  </div>
+
+ </div>
+
+ `;
+
+ html += items.length
+
+  ? '<div class="videoGrid">'+items.map(videoCard).join("")+'</div>'
+
+  : '<div class="empty">이 채널에는 아직 동영상이 없어요.</div>';
 
  box.innerHTML=html;
+
 }
 
 function uploadOpen(){
+
  if(!channels.length){
+
   toast("먼저 채널을 만들어 주세요.");
+
   createChannelOpen();
+
   return;
+
  }
 
  fillChannelSelect();
+
  document.getElementById("videoFile").value="";
  document.getElementById("videoTitle").value="";
  document.getElementById("videoDesc").value="";
- document.getElementById("uploadPreview").style.display="none";
+
+ const preview=document.getElementById("uploadPreview");
+
+ preview.removeAttribute("src");
+ preview.style.display="none";
+
+ const info=document.getElementById("videoInfo");
+
+ info.style.display="none";
+ info.className="videoInfo";
+ info.innerHTML="";
+
+ selectedVideoFile=null;
+ selectedVideoDuration=0;
+
+ document.getElementById("uploadButton").disabled=false;
+
  openModal("uploadModal");
+
 }
 
 function fillChannelSelect(){
+
  const select=document.getElementById("videoChannel");
- select.innerHTML=channels.map(c=>
-  `<option value="${c.id}">${escapeHTML(c.emoji)} ${escapeHTML(c.name)}</option>`
- ).join("");
+
+ select.innerHTML=
+
+  channels.map(c=>
+   `<option value="${c.id}">
+    ${escapeHTML(c.emoji)} ${escapeHTML(c.name)}
+   </option>`
+  ).join("");
+
+}
+
+function formatDuration(seconds){
+
+ seconds=Math.floor(seconds);
+
+ const minutes=Math.floor(seconds/60);
+ const secs=seconds%60;
+
+ return minutes+"분 "+String(secs).padStart(2,"0")+"초";
+
+}
+
+function formatSize(bytes){
+
+ return (bytes/(1024*1024)).toFixed(2)+" MB";
+
 }
 
 function previewVideo(){
+
  const input=document.getElementById("videoFile");
  const file=input.files[0];
+
  const preview=document.getElementById("uploadPreview");
+ const info=document.getElementById("videoInfo");
+ const button=document.getElementById("uploadButton");
 
- if(!file)return;
+ selectedVideoFile=null;
+ selectedVideoDuration=0;
 
- if(file.size>5*1024*1024){
-  toast("5MB 이하의 영상을 권장해요.");
+ if(!file){
+
+  preview.style.display="none";
+  info.style.display="none";
+  button.disabled=false;
+
+  return;
+
  }
 
- preview.src=URL.createObjectURL(file);
+ if(file.size>MAX_VIDEO_SIZE){
+
+  info.className="videoInfo bad";
+  info.style.display="block";
+
+  info.innerHTML=
+   "❌ 파일 크기가 "+formatSize(file.size)+
+   "예요.<br><br>"+
+   "HARMONY에서는 <strong>7MB 이하</strong> 영상만 업로드할 수 있어요.";
+
+  button.disabled=true;
+
+ }else{
+
+  button.disabled=false;
+
+ }
+
+ const url=URL.createObjectURL(file);
+
+ preview.src=url;
  preview.style.display="block";
+
+ preview.onloadedmetadata=()=>{
+
+  const duration=preview.duration;
+
+  selectedVideoDuration=duration;
+
+  const durationOK=duration<=MAX_VIDEO_DURATION;
+  const sizeOK=file.size<=MAX_VIDEO_SIZE;
+
+  if(durationOK && sizeOK){
+
+   selectedVideoFile=file;
+
+   info.className="videoInfo ok";
+   info.style.display="block";
+
+   info.innerHTML=
+    "✅ 업로드 가능<br>"+
+    "영상 길이: <strong>"+formatDuration(duration)+"</strong><br>"+
+    "파일 크기: <strong>"+formatSize(file.size)+"</strong>";
+
+   button.disabled=false;
+
+  }else{
+
+   selectedVideoFile=null;
+
+   info.className="videoInfo bad";
+   info.style.display="block";
+
+   let messages=[];
+
+   if(!durationOK){
+
+    messages.push(
+     "영상 길이가 "+
+     formatDuration(duration)+
+     "로 30분을 초과했어요."
+    );
+
+   }
+
+   if(!sizeOK){
+
+    messages.push(
+     "파일 크기가 "+
+     formatSize(file.size)+
+     "로 7MB를 초과했어요."
+    );
+
+   }
+
+   info.innerHTML=
+    "❌ 업로드할 수 없어요.<br><br>"+
+    messages.join("<br>")+"<br><br>"+
+    "<strong>조건: 30분 이하 + 7MB 이하</strong>";
+
+   button.disabled=true;
+
+  }
+
+ };
+
+ preview.onerror=()=>{
+
+  selectedVideoFile=null;
+
+  info.className="videoInfo bad";
+  info.style.display="block";
+
+  info.textContent=
+   "❌ 이 동영상 파일을 확인할 수 없어요.";
+
+  button.disabled=true;
+
+ };
+
 }
 
 function uploadVideo(){
- const input=document.getElementById("videoFile");
- const file=input.files[0];
+
+ const file=selectedVideoFile;
+
  const title=document.getElementById("videoTitle").value.trim();
  const desc=document.getElementById("videoDesc").value.trim();
  const channelId=document.getElementById("videoChannel").value;
 
  if(!file){
-  toast("동영상 파일을 선택해 주세요.");
+
+  toast("30분 이하, 7MB 이하 영상을 선택해 주세요.");
+
   return;
+
+ }
+
+ if(file.size>MAX_VIDEO_SIZE){
+
+  toast("7MB를 초과해서 업로드할 수 없어요.");
+
+  return;
+
+ }
+
+ if(selectedVideoDuration>MAX_VIDEO_DURATION){
+
+  toast("30분을 초과해서 업로드할 수 없어요.");
+
+  return;
+
  }
 
  if(!title){
+
   toast("제목을 입력해 주세요.");
+
   return;
+
  }
 
- if(file.size>7*1024*1024){
-  toast("이 버전에서는 7MB 이하 영상을 사용해 주세요.");
-  return;
- }
+ const button=document.getElementById("uploadButton");
+
+ button.disabled=true;
+ button.textContent="업로드 중...";
 
  const reader=new FileReader();
 
  reader.onload=()=>{
+
   videos.unshift({
+
    id:id(),
-   title,
-   desc,
-   channelId,
+   title:title,
+   desc:desc,
+   channelId:channelId,
    src:reader.result,
+   duration:selectedVideoDuration,
+   size:file.size,
    likes:0,
    comments:[],
    createdAt:Date.now()
+
   });
 
   save();
+
   closeModal("uploadModal");
+
+  button.disabled=false;
+  button.textContent="업로드";
+
   render();
+
   toast("동영상을 올렸어요!");
+
+ };
+
+ reader.onerror=()=>{
+
+  button.disabled=false;
+  button.textContent="업로드";
+
+  toast("동영상 저장에 실패했어요.");
+
  };
 
  reader.readAsDataURL(file);
+
 }
 
 async function cameraOpen(){
+
  openModal("cameraModal");
 
  const video=document.getElementById("cameraVideo");
  const state=document.getElementById("recordState");
 
  try{
-  cameraStream=await navigator.mediaDevices.getUserMedia({
-   video:true,
-   audio:true
-  });
+
+  cameraStream=
+   await navigator.mediaDevices.getUserMedia({
+    video:true,
+    audio:true
+   });
 
   video.srcObject=cameraStream;
-  state.innerHTML='<span class="recordDot"></span>촬영할 준비가 됐어요.';
+
+  state.innerHTML=
+   '<span class="recordDot"></span>'+
+   '촬영할 준비가 됐어요.';
+
  }catch(e){
-  state.textContent="카메라를 사용할 수 없어요. 브라우저 권한을 확인해 주세요.";
+
+  state.textContent=
+   "카메라를 사용할 수 없어요. 브라우저 권한을 확인해 주세요.";
+
  }
+
 }
 
 function cameraClose(){
+
  stopCameraTracks();
+
  document.getElementById("cameraVideo").srcObject=null;
- document.getElementById("recordState").textContent="카메라를 준비하고 있어요.";
- document.getElementById("recordButton").textContent="● 촬영 시작";
+
+ document.getElementById("recordState").textContent=
+  "카메라를 준비하고 있어요.";
+
+ document.getElementById("recordButton").textContent=
+  "● 촬영 시작";
+
  closeModal("cameraModal");
+
 }
 
 function stopCameraTracks(){
+
  if(cameraStream){
+
   cameraStream.getTracks().forEach(track=>track.stop());
+
   cameraStream=null;
+
  }
+
 }
 
 function toggleRecording(){
- if(mediaRecorder && mediaRecorder.state==="recording"){
+
+ if(mediaRecorder &&
+    mediaRecorder.state==="recording"){
+
   stopRecording();
+
  }else{
+
   startRecording();
+
  }
+
 }
 
 function startRecording(){
+
  if(!cameraStream){
+
   toast("카메라가 준비되지 않았어요.");
+
   return;
+
  }
 
  recordedChunks=[];
@@ -872,280 +1570,563 @@ function startRecording(){
  let options={};
 
  if(MediaRecorder.isTypeSupported("video/webm;codecs=vp9")){
+
   options.mimeType="video/webm;codecs=vp9";
+
  }else if(MediaRecorder.isTypeSupported("video/webm")){
+
   options.mimeType="video/webm";
+
  }
 
  try{
-  mediaRecorder=new MediaRecorder(cameraStream,options);
+
+  mediaRecorder=
+   new MediaRecorder(cameraStream,options);
+
  }catch(e){
-  mediaRecorder=new MediaRecorder(cameraStream);
+
+  mediaRecorder=
+   new MediaRecorder(cameraStream);
+
  }
 
  mediaRecorder.ondataavailable=e=>{
-  if(e.data.size)recordedChunks.push(e.data);
+
+  if(e.data.size){
+
+   recordedChunks.push(e.data);
+
+  }
+
  };
 
  mediaRecorder.onstop=()=>{
-  const blob=new Blob(recordedChunks,{type:"video/webm"});
+
+  const blob=
+   new Blob(recordedChunks,{type:"video/webm"});
+
+  if(blob.size>MAX_VIDEO_SIZE){
+
+   toast(
+    "촬영 영상이 7MB를 넘었어요. 다시 짧게 촬영해 주세요."
+   );
+
+   return;
+
+  }
+
   const url=URL.createObjectURL(blob);
 
   const link=document.createElement("a");
+
   link.href=url;
   link.download="harmony-video.webm";
+
   link.click();
 
   URL.revokeObjectURL(url);
 
   toast("촬영한 영상을 저장했어요.");
+
  };
 
  mediaRecorder.start();
- document.getElementById("recordButton").textContent="■ 촬영 종료";
+
+ document.getElementById("recordButton").textContent=
+  "■ 촬영 종료";
+
  document.getElementById("recordState").innerHTML=
-  '<span class="recordDot"></span>촬영 중이에요!';
+  '<span class="recordDot"></span>'+
+  '촬영 중이에요!';
+
 }
 
 function stopRecording(){
- if(mediaRecorder && mediaRecorder.state==="recording"){
+
+ if(mediaRecorder &&
+    mediaRecorder.state==="recording"){
+
   mediaRecorder.stop();
+
  }
 
- document.getElementById("recordButton").textContent="● 촬영 시작";
- document.getElementById("recordState").textContent="촬영이 끝났어요.";
+ document.getElementById("recordButton").textContent=
+  "● 촬영 시작";
+
+ document.getElementById("recordState").textContent=
+  "촬영이 끝났어요.";
+
 }
 
 function videoCard(v){
+
  const ch=channels.find(c=>c.id===v.channelId);
- const channelName=ch?ch.name:"알 수 없는 채널";
+
+ const channelName=
+  ch?ch.name:"알 수 없는 채널";
+
  const isFav=favorites.includes(v.id);
 
  return `
+
  <article class="videoCard">
-  <div class="thumb" onclick="openVideo('${v.id}')">
-   <video src="${v.src}" preload="metadata" muted></video>
+
+  <div class="thumb"
+   onclick="openVideo('${v.id}')">
+
+   <video
+    src="${v.src}"
+    preload="metadata"
+    muted>
+   </video>
+
    <div class="play">▶</div>
+
   </div>
 
   <div class="cardBody">
-   <div class="cardTitle">${escapeHTML(v.title)}</div>
-   <div class="meta">${escapeHTML(channelName)} · 좋아요 ${v.likes||0}</div>
+
+   <div class="cardTitle">
+    ${escapeHTML(v.title)}
+   </div>
+
+   <div class="meta">
+    ${escapeHTML(channelName)}
+    · 좋아요 ${v.likes||0}
+   </div>
 
    <div class="cardBtns">
-    <button class="smallBtn" onclick="event.stopPropagation();likeVideo('${v.id}')">
+
+    <button
+     class="smallBtn"
+     onclick="event.stopPropagation();likeVideo('${v.id}')">
+
      ♡ ${v.likes||0}
+
     </button>
 
-    <button class="smallBtn ${isFav?"on":""}" onclick="event.stopPropagation();toggleFavorite('${v.id}')">
+    <button
+     class="smallBtn ${isFav?"on":""}"
+     onclick="event.stopPropagation();toggleFavorite('${v.id}')">
+
      ${isFav?"★":"☆"}
+
     </button>
 
-    <button class="smallBtn" onclick="openVideo('${v.id}')">
+    <button
+     class="smallBtn"
+     onclick="openVideo('${v.id}')">
+
      💬 ${v.comments?v.comments.length:0}
+
     </button>
+
    </div>
+
   </div>
- </article>`;
+
+ </article>
+
+ `;
+
 }
 
 function openVideo(videoId){
+
  const v=videos.find(x=>x.id===videoId);
+
  if(!v)return;
 
  currentVideo=v;
 
  document.getElementById("viewerVideo").src=v.src;
- document.getElementById("viewerTitle").textContent=v.title;
+
+ document.getElementById("viewerTitle").textContent=
+  v.title;
 
  const ch=channels.find(c=>c.id===v.channelId);
 
  document.getElementById("viewerMeta").textContent=
-  (ch?ch.emoji+" "+ch.name:"알 수 없는 채널")+
+
+  (ch
+   ? ch.emoji+" "+ch.name
+   : "알 수 없는 채널"
+  )+
+
   " · 좋아요 "+(v.likes||0);
 
  updateViewerButtons();
+
  renderComments();
 
  document.getElementById("commentInput").value="";
+
  openModal("viewerModal");
+
 }
 
 function updateViewerButtons(){
+
  if(!currentVideo)return;
 
- const like=document.getElementById("viewerLike");
- const fav=document.getElementById("viewerFavorite");
+ const like=
+  document.getElementById("viewerLike");
 
- like.textContent="♡ 좋아요 "+(currentVideo.likes||0);
+ const fav=
+  document.getElementById("viewerFavorite");
 
- const on=favorites.includes(currentVideo.id);
- fav.textContent=on?"★ 즐겨찾기":"☆ 즐겨찾기";
+ like.textContent=
+  "♡ 좋아요 "+(currentVideo.likes||0);
 
- like.classList.toggle("on",false);
+ const on=
+  favorites.includes(currentVideo.id);
+
+ fav.textContent=
+  on
+  ? "★ 즐겨찾기"
+  : "☆ 즐겨찾기";
+
  fav.classList.toggle("on",on);
+
 }
 
 function likeVideo(videoId){
+
  const v=videos.find(x=>x.id===videoId);
+
  if(!v)return;
 
  v.likes=(v.likes||0)+1;
+
  save();
+
  render();
 
- if(currentVideo && currentVideo.id===videoId){
+ if(currentVideo &&
+    currentVideo.id===videoId){
+
   currentVideo=v;
+
   updateViewerButtons();
+
+  const ch=
+   channels.find(c=>c.id===v.channelId);
+
   document.getElementById("viewerMeta").textContent=
-   document.getElementById("viewerMeta").textContent.replace(/좋아요 \d+/,"좋아요 "+v.likes);
+
+   (ch
+    ? ch.emoji+" "+ch.name
+    : "알 수 없는 채널"
+   )+
+   " · 좋아요 "+v.likes;
+
  }
 
  toast("좋아요!");
+
 }
 
 function likeCurrent(){
- if(currentVideo)likeVideo(currentVideo.id);
+
+ if(currentVideo){
+
+  likeVideo(currentVideo.id);
+
+ }
+
 }
 
 function toggleFavorite(videoId){
+
  if(favorites.includes(videoId)){
-  favorites=favorites.filter(id=>id!==videoId);
+
+  favorites=
+   favorites.filter(id=>id!==videoId);
+
   toast("즐겨찾기에서 뺐어요.");
+
  }else{
+
   favorites.push(videoId);
+
   toast("즐겨찾기에 저장했어요.");
+
  }
 
  save();
+
  render();
 
- if(currentVideo && currentVideo.id===videoId){
+ if(currentVideo &&
+    currentVideo.id===videoId){
+
   updateViewerButtons();
+
  }
+
 }
 
 function favoriteCurrent(){
- if(currentVideo)toggleFavorite(currentVideo.id);
+
+ if(currentVideo){
+
+  toggleFavorite(currentVideo.id);
+
+ }
+
 }
 
 function addComment(){
+
  if(!currentVideo)return;
 
- const input=document.getElementById("commentInput");
+ const input=
+  document.getElementById("commentInput");
+
  const text=input.value.trim();
 
  if(!text)return;
 
- if(!currentVideo.comments)currentVideo.comments=[];
+ if(!currentVideo.comments){
+
+  currentVideo.comments=[];
+
+ }
 
  currentVideo.comments.push({
+
   id:id(),
-  text,
+  text:text,
   createdAt:Date.now()
+
  });
 
  save();
+
  input.value="";
+
  renderComments();
+
  render();
+
  toast("댓글을 남겼어요!");
+
 }
 
 function renderComments(){
- const box=document.getElementById("commentList");
 
- if(!currentVideo || !currentVideo.comments || !currentVideo.comments.length){
-  box.innerHTML='<div class="meta">아직 댓글이 없어요. 첫 댓글을 남겨보세요!</div>';
+ const box=
+  document.getElementById("commentList");
+
+ if(!currentVideo ||
+    !currentVideo.comments ||
+    !currentVideo.comments.length){
+
+  box.innerHTML=
+   '<div class="meta">'+
+   '아직 댓글이 없어요. 첫 댓글을 남겨보세요!'+
+   '</div>';
+
   return;
+
  }
 
- box.innerHTML=currentVideo.comments.slice().reverse().map(c=>`
-  <div class="comment">
-   <strong>가족 사용자</strong>
-   <span>${escapeHTML(c.text)}</span>
-  </div>
- `).join("");
+ box.innerHTML=
+
+  currentVideo.comments
+   .slice()
+   .reverse()
+   .map(c=>`
+
+    <div class="comment">
+
+     <strong>가족 사용자</strong>
+
+     <span>
+      ${escapeHTML(c.text)}
+     </span>
+
+    </div>
+
+   `)
+   .join("");
+
 }
 
 function searchVideos(){
- const q=document.getElementById("searchInput").value.trim().toLowerCase();
+
+ const q=
+  document
+   .getElementById("searchInput")
+   .value
+   .trim()
+   .toLowerCase();
 
  if(!q){
+
   showHome();
+
   return;
+
  }
 
- const matchedVideos=videos.filter(v=>{
-  const ch=channels.find(c=>c.id===v.channelId);
-  return (
-   v.title.toLowerCase().includes(q) ||
-   (v.desc||"").toLowerCase().includes(q) ||
-   (ch && ch.name.toLowerCase().includes(q))
-  );
- });
+ const matchedVideos=
+  videos.filter(v=>{
 
- const matchedChannels=channels.filter(c=>
-  c.name.toLowerCase().includes(q) ||
-  (c.desc||"").toLowerCase().includes(q)
+   const ch=
+    channels.find(c=>c.id===v.channelId);
+
+   return(
+
+    v.title.toLowerCase().includes(q) ||
+
+    (v.desc||"").toLowerCase().includes(q) ||
+
+    (ch &&
+     ch.name.toLowerCase().includes(q))
+
+   );
+
+  });
+
+ const matchedChannels=
+  channels.filter(c=>
+
+   c.name.toLowerCase().includes(q) ||
+
+   (c.desc||"").toLowerCase().includes(q)
+
  );
 
- document.getElementById("homePage").classList.add("hidden");
- document.getElementById("listPage").classList.remove("hidden");
- document.getElementById("listTitle").textContent='"'+q+'" 검색 결과';
+ document.getElementById("homePage")
+  .classList.add("hidden");
+
+ document.getElementById("listPage")
+  .classList.remove("hidden");
+
+ document.getElementById("listTitle")
+  .textContent='"'+q+'" 검색 결과';
 
  let html="";
 
  if(matchedChannels.length){
+
   html+="<h3>채널</h3>";
-  html+='<div class="channelGrid">'+matchedChannels.map(channelCard).join("")+"</div>";
+
+  html+=
+   '<div class="channelGrid">'+
+   matchedChannels.map(channelCard).join("")+
+   '</div>';
+
  }
 
- html+="<h3 style='margin-top:25px'>동영상</h3>";
+ html+=
+  "<h3 style='margin-top:25px'>동영상</h3>";
 
  if(matchedVideos.length){
-  html+='<div class="videoGrid">'+matchedVideos.map(videoCard).join("")+"</div>";
+
+  html+=
+   '<div class="videoGrid">'+
+   matchedVideos.map(videoCard).join("")+
+   '</div>';
+
  }else{
-  html+='<div class="empty">검색된 동영상이 없어요.</div>';
+
+  html+=
+   '<div class="empty">검색된 동영상이 없어요.</div>';
+
  }
 
- document.getElementById("listContent").innerHTML=html;
+ document.getElementById("listContent")
+  .innerHTML=html;
+
 }
 
 function render(){
+
  document.getElementById("homeVideos").innerHTML=
+
   videos.length
-  ? videos.slice(0,12).map(videoCard).join("")
-  : '<div class="empty" style="grid-column:1/-1">아직 동영상이 없어요.<br><br><button class="primary" onclick="uploadOpen()">↑ 첫 동영상 올리기</button></div>';
+
+  ? videos
+    .slice(0,12)
+    .map(videoCard)
+    .join("")
+
+  :
+
+   '<div class="empty" style="grid-column:1/-1">'+
+   '아직 동영상이 없어요.<br><br>'+
+   '<button class="primary" onclick="uploadOpen()">'+
+   '↑ 첫 동영상 올리기'+
+   '</button>'+
+   '</div>';
 
  document.getElementById("homeChannels").innerHTML=
+
   channels.length
-  ? channels.slice(0,8).map(channelCard).join("")
-  : '<div class="empty" style="grid-column:1/-1">아직 채널이 없어요.<br><br><button class="primary" onclick="createChannelOpen()">＋ 첫 채널 만들기</button></div>';
+
+  ? channels
+    .slice(0,8)
+    .map(channelCard)
+    .join("")
+
+  :
+
+   '<div class="empty" style="grid-column:1/-1">'+
+   '아직 채널이 없어요.<br><br>'+
+   '<button class="primary" onclick="createChannelOpen()">'+
+   '＋ 첫 채널 만들기'+
+   '</button>'+
+   '</div>';
+
 }
 
 function escapeHTML(value){
+
  return String(value||"")
+
   .replace(/&/g,"&amp;")
   .replace(/</g,"&lt;")
   .replace(/>/g,"&gt;")
   .replace(/"/g,"&quot;")
   .replace(/'/g,"&#039;");
+
 }
 
-document.getElementById("searchInput").addEventListener("keydown",e=>{
- if(e.key==="Enter")searchVideos();
-});
+document
+ .getElementById("searchInput")
+ .addEventListener("keydown",e=>{
 
-document.getElementById("commentInput").addEventListener("keydown",e=>{
- if(e.key==="Enter")addComment();
-});
+  if(e.key==="Enter"){
+
+   searchVideos();
+
+  }
+
+ });
+
+document
+ .getElementById("commentInput")
+ .addEventListener("keydown",e=>{
+
+  if(e.key==="Enter"){
+
+   addComment();
+
+  }
+
+ });
 
 window.addEventListener("beforeunload",()=>{
+
  stopCameraTracks();
+
 });
 
 render();
+
 </script>
 
 </body>
