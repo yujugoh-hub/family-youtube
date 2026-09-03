@@ -2242,5 +2242,117 @@ init();
 
 </script>
 
+<!-- HARMONY FAMILY LOGIN -->
+<div id="familyLogin" style="
+position:fixed;inset:0;z-index:99999;
+background:linear-gradient(135deg,#fff7fb,#eef7ff);
+display:flex;align-items:center;justify-content:center;
+padding:20px;box-sizing:border-box;">
+  <div style="
+  width:min(420px,100%);
+  background:white;border-radius:28px;
+  padding:30px;box-shadow:0 15px 50px rgba(0,0,0,.12);
+  text-align:center;">
+    <div style="font-size:52px">🏠</div>
+    <h1 style="margin:8px 0">HARMONY</h1>
+    <p style="color:#777">우리 가족만 사용하는 공간 🔒</p>
+
+    <input id="familyEmail"
+      type="email"
+      placeholder="가족 계정 이메일"
+      style="width:100%;box-sizing:border-box;padding:14px;
+      border:1px solid #ddd;border-radius:14px;margin:8px 0">
+
+    <input id="familyPassword"
+      type="password"
+      placeholder="비밀번호"
+      style="width:100%;box-sizing:border-box;padding:14px;
+      border:1px solid #ddd;border-radius:14px;margin:8px 0">
+
+    <button type="button" id="familyLoginBtn"
+      style="width:100%;padding:15px;border:0;border-radius:14px;
+      background:#222;color:white;font-size:16px;margin-top:8px">
+      🔐 가족 로그인
+    </button>
+
+    <div id="familyLoginStatus"
+      style="margin-top:12px;color:#777;font-size:13px"></div>
+  </div>
+</div>
+<!-- /HARMONY FAMILY LOGIN -->
+
+<script>
+(function(){
+
+  const loginBox = document.getElementById("familyLogin");
+  const emailInput = document.getElementById("familyEmail");
+  const passwordInput = document.getElementById("familyPassword");
+  const loginBtn = document.getElementById("familyLoginBtn");
+  const status = document.getElementById("familyLoginStatus");
+
+  if(!loginBox || !loginBtn) return;
+
+  async function checkFamily(){
+
+    const result = await supabaseClient.auth.getSession();
+
+    if(result.data && result.data.session){
+      loginBox.style.display = "none";
+    }else{
+      loginBox.style.display = "flex";
+    }
+  }
+
+  loginBtn.addEventListener("click",async function(){
+
+    const email = emailInput.value.trim();
+    const password = passwordInput.value;
+
+    if(!email || !password){
+      status.textContent = "이메일과 비밀번호를 입력해주세요.";
+      return;
+    }
+
+    loginBtn.disabled = true;
+    status.textContent = "가족 계정을 확인하는 중...";
+
+    const result = await supabaseClient.auth.signInWithPassword({
+      email:email,
+      password:password
+    });
+
+    loginBtn.disabled = false;
+
+    if(result.error){
+      console.error(result.error);
+      status.textContent =
+        "로그인 실패: " + result.error.message;
+      return;
+    }
+
+    status.textContent = "가족 인증 완료! 🏠";
+    loginBox.style.display = "none";
+
+    if(typeof loadVideos === "function"){
+      loadVideos("homeVideos");
+      loadVideos("videoList");
+    }
+
+  });
+
+  supabaseClient.auth.onAuthStateChange(function(event,session){
+
+    if(session){
+      loginBox.style.display = "none";
+    }else{
+      loginBox.style.display = "flex";
+    }
+
+  });
+
+  checkFamily();
+
+})();
+</script>
 </body>
 </html>
