@@ -7,7 +7,87 @@
 
 <title>HARMONY</title>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">let subscriptions = JSON.parse(localStorage.getItem("harmonySubscriptions") || "[]");
+
+async function toggleSubscription(channelId, channelName){
+  const index = subscriptions.indexOf(String(channelId));
+
+  if(index >= 0){
+    subscriptions.splice(index,1);
+    alert("구독을 취소했어요.");
+  }else{
+    subscriptions.push(String(channelId));
+    alert("🔔 " + channelName + " 채널을 구독했어요!");
+  }
+
+  localStorage.setItem(
+    "harmonySubscriptions",
+    JSON.stringify(subscriptions)
+  );
+
+  if(typeof loadChannels === "function"){
+    loadChannels();
+  }
+
+  loadSubscriptions();
+}
+
+async function loadSubscriptions(){
+  const box = document.getElementById("subscriptionList");
+
+  if(!box) return;
+
+  if(subscriptions.length === 0){
+    box.innerHTML = `
+      <div class="empty">
+        아직 구독한 채널이 없어요.<br>
+        📺 채널에서 마음에 드는 채널을 구독해 보세요!
+      </div>
+    `;
+    return;
+  }
+
+  const {data,error} = await supabaseClient
+    .from("channels")
+    .select("*")
+    .order("created_at",{ascending:false});
+
+  if(error){
+    box.innerHTML = `<div class="empty">채널을 불러오지 못했어요.</div>`;
+    return;
+  }
+
+  const list = data.filter(function(channel){
+    return subscriptions.includes(String(channel.id));
+  });
+
+  if(list.length === 0){
+    box.innerHTML = `<div class="empty">구독한 채널이 없어요.</div>`;
+    return;
+  }
+
+  box.innerHTML = list.map(function(channel){
+    return `
+      <div class="card channelCard">
+        <div class="channelIcon">📺</div>
+        <div style="flex:1">
+          <div class="channelName">${escapeHtml(channel.name)}</div>
+          <div class="muted">${escapeHtml(channel.owner || "사용자")}</div>
+          <div class="muted">${escapeHtml(channel.description || "")}</div>
+        </div>
+
+        <button
+          class="secondaryBtn"
+          style="width:auto;padding:0 14px;margin:0"
+          type="button"
+          onclick="toggleSubscription('${channel.id}','${escapeHtml(channel.name)}')">
+          🔕 구독취소
+        </button>
+      </div>
+    `;
+  }).join("");
+}
+</script>
 
 <style>
 *{
@@ -535,7 +615,18 @@ button{
 </section>
 
 
-<!-- CREATE CHANNEL -->
+<section id="subscriptions" class="page">
+  <div class="sectionTitle">🔔 구독한 채널</div>
+
+  <div id="subscriptionList">
+    <div class="empty">
+      아직 구독한 채널이 없어요.<br>
+      📺 채널에서 마음에 드는 채널을 구독해 보세요!
+    </div>
+  </div>
+</section>
+
+
 <section id="createChannel" class="page">
 
   <div class="sectionTitle">📺 채널 만들기</div>
@@ -785,32 +876,31 @@ button{
 
 
 <!-- BOTTOM NAV -->
-<nav class="bottomNav"><button class="nav-btn" onclick="showPage('channels')">📺 채널</button>
-
-  <button class="navItem active"
-          onclick="showPage('home',this)">
+<nav class="bottomNav">
+  <button class="navItem" type="button" onclick="showPage('home')">
     <span>🏠</span>
-    홈
+    <span>홈</span>
   </button>
 
-  <button class="navItem"
-          onclick="showPage('videos',this)">
-    <span>📹</span>
-    동영상
+  <button class="navItem" type="button" onclick="showPage('videos')">
+    <span>🎬</span>
+    <span>동영상</span>
   </button>
 
-  <button class="navItem"
-          onclick="showPage('channels',this)">
+  <button class="navItem" type="button" onclick="showPage('channels')">
     <span>📺</span>
-    채널
+    <span>채널</span>
   </button>
 
-  <button class="navItem"
-          onclick="showPage('favorites',this)">
-    <span>⭐</span>
-    즐겨찾기
+  <button class="navItem" type="button" onclick="showPage('subscriptions')">
+    <span>🔔</span>
+    <span>구독</span>
   </button>
 
+  <button class="navItem" type="button" onclick="showPage('createChannel')">
+    <span>➕</span>
+    <span>채널 만들기</span>
+  </button>
 </nav>
 
 </div>
@@ -843,51 +933,46 @@ let recordedBlob = null;
 // 페이지 이동
 // ==========================
 
-function showPage(pageId, navButton){
+function showPage(pageId){
+  document.querySelectorAll(".page").forEach(function(page){
+    page.classList.remove("active");
+  });
 
-  document
-    .querySelectorAll(".page")
-    .forEach(p => p.classList.remove("active"));
+  const target = document.getElementById(pageId);
 
-  const page =
-    document.getElementById(pageId);
-
-  if(page){
-    page.classList.add("active");
+  if(target){
+    target.classList.add("active");
+    window.scrollTo({top:0, behavior:"instant"});
   }
 
-  document
-    .querySelectorAll(".navItem")
-    .forEach(n => n.classList.remove("active"));
+  document.querySelectorAll(".navItem").forEach(function(btn){
+    btn.classList.remove("active");
 
-  if(navButton){
-    navButton.classList.add("active");
+    const onclick = btn.getAttribute("onclick") || "";
+
+    if(onclick.includes("'" + pageId + "'")){
+      btn.classList.add("active");
+    }
+  });
+
+  if(pageId === "home" && typeof loadVideos === "function"){
+    loadVideos();
   }
 
-  window.scrollTo(0,0);
-
-  if(pageId === "home"){
-    loadVideos("homeVideos");
+  if(pageId === "videos" && typeof loadVideos === "function"){
+    loadVideos();
   }
 
-  if(pageId === "videos"){
-    loadVideos("videoList");
-  }
-
-  if(pageId === "channels"){
+  if(pageId === "channels" && typeof loadChannels === "function"){
     loadChannels();
   }
 
-  if(pageId === "favorites"){
-    loadFavorites();
+  if(pageId === "subscriptions" && typeof loadSubscriptions === "function"){
+    loadSubscriptions();
   }
 
-  if(pageId === "notifications"){
-    loadNotifications();
-  }
-
-  if(pageId === "upload"){
-    loadChannelSelect();
+  if(pageId === "upload" && typeof loadChannelsForUpload === "function"){
+    loadChannelsForUpload();
   }
 }
 
@@ -2411,6 +2496,86 @@ async function init(){
 
 init();
 
+let subscriptions = JSON.parse(localStorage.getItem("harmonySubscriptions") || "[]");
+
+async function toggleSubscription(channelId, channelName){
+  const index = subscriptions.indexOf(String(channelId));
+
+  if(index >= 0){
+    subscriptions.splice(index,1);
+    alert("구독을 취소했어요.");
+  }else{
+    subscriptions.push(String(channelId));
+    alert("🔔 " + channelName + " 채널을 구독했어요!");
+  }
+
+  localStorage.setItem(
+    "harmonySubscriptions",
+    JSON.stringify(subscriptions)
+  );
+
+  if(typeof loadChannels === "function"){
+    loadChannels();
+  }
+
+  loadSubscriptions();
+}
+
+async function loadSubscriptions(){
+  const box = document.getElementById("subscriptionList");
+
+  if(!box) return;
+
+  if(subscriptions.length === 0){
+    box.innerHTML = `
+      <div class="empty">
+        아직 구독한 채널이 없어요.<br>
+        📺 채널에서 마음에 드는 채널을 구독해 보세요!
+      </div>
+    `;
+    return;
+  }
+
+  const {data,error} = await supabaseClient
+    .from("channels")
+    .select("*")
+    .order("created_at",{ascending:false});
+
+  if(error){
+    box.innerHTML = `<div class="empty">채널을 불러오지 못했어요.</div>`;
+    return;
+  }
+
+  const list = data.filter(function(channel){
+    return subscriptions.includes(String(channel.id));
+  });
+
+  if(list.length === 0){
+    box.innerHTML = `<div class="empty">구독한 채널이 없어요.</div>`;
+    return;
+  }
+
+  box.innerHTML = list.map(function(channel){
+    return `
+      <div class="card channelCard">
+        <div class="channelIcon">📺</div>
+        <div style="flex:1">
+          <div class="channelName">${escapeHtml(channel.name)}</div>
+          <div class="muted">${escapeHtml(channel.owner || "사용자")}</div>
+          <div class="muted">${escapeHtml(channel.description || "")}</div>
+        </div>
+
+        <button
+          class="secondaryBtn"
+          style="width:auto;padding:0 14px;margin:0"
+          type="button"
+          onclick="toggleSubscription('${channel.id}','${escapeHtml(channel.name)}')">
+          🔕 구독취소
+        </button>
+      </div>
+    `;
+  }).join("");
+}
 </script>
 
 </body>
