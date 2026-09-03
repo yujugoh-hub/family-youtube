@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0">
-<title>우리 YouTube V3</title>
+<title>?곕━ YouTube V3</title>
 
 <style>
 *{box-sizing:border-box}
@@ -205,90 +205,90 @@ button:hover{opacity:.88}
   .search{order:3;width:100%;flex:none}
   .grid{grid-template-columns:1fr}
 }
-</style>
+.status{display:none!important;}</style>
 </head>
 
 <body>
 
 <header class="top">
 <div class="top-inner">
-  <div class="logo">▶ <span>우리</span> YouTube</div>
-  <input id="search" class="search" placeholder="동영상이나 채널 검색">
-  <button onclick="showPage('home')">홈</button>
+  <div class="logo">??<span>?곕━</span> YouTube</div>
+  <input id="search" class="search" placeholder="?숈쁺?곸씠??梨꾨꼸 寃??>
+  <button onclick="showPage('home')">??/button>
 </div>
 </header>
 
 <main class="container">
 
 <div id="status" class="status">
-  🔄 Firebase 연결을 확인하고 있어요...
+  ?봽 Firebase ?곌껐???뺤씤?섍퀬 ?덉뼱??..
 </div>
 
 <div class="hero">
-  <h1>📺 우리 YouTube</h1>
-  <p>우리 가족만의 동영상 세상</p>
+  <h1>?벟 ?곕━ YouTube</h1>
+  <p>?곕━ 媛議깅쭔???숈쁺???몄긽</p>
 
   <div class="tabs">
-    <button id="tabHome" class="active" onclick="showPage('home')">🏠 홈</button>
-    <button id="tabChannels" onclick="showPage('channels')">📺 채널</button>
-    <button id="tabUpload" onclick="showPage('upload')">⬆️ 영상 올리기</button>
-    <button id="tabCamera" onclick="showPage('camera')">🎥 동영상 찍기</button>
-    <button id="tabFavorites" onclick="showPage('favorites')">⭐ 즐겨찾기</button>
+    <button id="tabHome" class="active" onclick="showPage('home')">?룧 ??/button>
+    <button id="tabChannels" onclick="showPage('channels')">?벟 梨꾨꼸</button>
+    <button id="tabUpload" onclick="showPage('upload')">燧놅툘 ?곸긽 ?щ━湲?/button>
+    <button id="tabCamera" onclick="showPage('camera')">?렏 ?숈쁺??李띻린</button>
+    <button id="tabFavorites" onclick="showPage('favorites')">狩?利먭꺼李얘린</button>
   </div>
 </div>
 
 <section id="homePage">
   <div class="hero">
-    <h2>최근 동영상</h2>
+    <h2>理쒓렐 ?숈쁺??/h2>
     <div id="videoGrid" class="grid"></div>
   </div>
 </section>
 
 <section id="channelsPage" class="hidden">
   <div class="hero">
-    <h2>📺 채널</h2>
-    <button onclick="openChannelForm()">＋ 새 채널 만들기</button>
+    <h2>?벟 梨꾨꼸</h2>
+    <button onclick="openChannelForm()">竊???梨꾨꼸 留뚮뱾湲?/button>
   </div>
   <div id="channelGrid" class="grid"></div>
 </section>
 
 <section id="uploadPage" class="hidden">
   <div class="form">
-    <h2>⬆️ 동영상 올리기</h2>
+    <h2>燧놅툘 ?숈쁺???щ━湲?/h2>
 
-    <label>채널</label>
+    <label>梨꾨꼸</label>
     <select id="uploadChannel"></select>
 
-    <label>동영상</label>
+    <label>?숈쁺??/label>
     <input id="videoFile" type="file" accept="video/*">
 
-    <label>제목</label>
-    <input id="videoTitle" placeholder="동영상 제목">
+    <label>?쒕ぉ</label>
+    <input id="videoTitle" placeholder="?숈쁺???쒕ぉ">
 
-    <label>설명</label>
-    <textarea id="videoDescription" placeholder="동영상 설명"></textarea>
+    <label>?ㅻ챸</label>
+    <textarea id="videoDescription" placeholder="?숈쁺???ㅻ챸"></textarea>
 
-    <label>썸네일</label>
+    <label>?몃꽕??/label>
     <input id="thumbFile" type="file" accept="image/*">
 
-    <button onclick="uploadVideo()">동영상 올리기</button>
+    <button onclick="uploadVideo()">?숈쁺???щ━湲?/button>
   </div>
 </section>
 
 <section id="cameraPage" class="hidden">
   <div class="form">
-    <h2>🎥 동영상 찍기</h2>
+    <h2>?렏 ?숈쁺??李띻린</h2>
 
     <video id="cameraPreview" autoplay muted playsinline
       style="width:100%;max-height:55vh;background:#111;border-radius:18px"></video>
 
     <div class="actions">
-      <button onclick="startCamera()">📷 카메라 켜기</button>
-      <button onclick="startRecording()">🔴 촬영 시작</button>
-      <button onclick="stopRecording()">⏹️ 촬영 끝</button>
+      <button onclick="startCamera()">?벜 移대찓??耳쒓린</button>
+      <button onclick="startRecording()">?뵶 珥ъ쁺 ?쒖옉</button>
+      <button onclick="stopRecording()">?뱄툘 珥ъ쁺 ??/button>
     </div>
 
-    <p id="recordStatus" class="small">카메라를 켜주세요.</p>
+    <p id="recordStatus" class="small">移대찓?쇰? 耳쒖＜?몄슂.</p>
 
     <video id="recordedPreview" controls
       class="hidden"
@@ -296,20 +296,20 @@ button:hover{opacity:.88}
 
     <div id="recordUploadBox" class="hidden">
       <hr>
-      <label>채널</label>
+      <label>梨꾨꼸</label>
       <select id="recordChannel"></select>
 
-      <label>제목</label>
-      <input id="recordTitle" placeholder="촬영한 영상 제목">
+      <label>?쒕ぉ</label>
+      <input id="recordTitle" placeholder="珥ъ쁺???곸긽 ?쒕ぉ">
 
-      <button onclick="saveRecordedVideo()">촬영한 영상 올리기</button>
+      <button onclick="saveRecordedVideo()">珥ъ쁺???곸긽 ?щ━湲?/button>
     </div>
   </div>
 </section>
 
 <section id="favoritesPage" class="hidden">
   <div class="hero">
-    <h2>⭐ 즐겨찾기</h2>
+    <h2>狩?利먭꺼李얘린</h2>
     <div id="favoriteGrid" class="grid"></div>
   </div>
 </section>
@@ -318,7 +318,7 @@ button:hover{opacity:.88}
 
 <div id="modal" class="modal hidden">
   <div class="modal-box">
-    <button class="close" onclick="closeModal()">닫기</button>
+    <button class="close" onclick="closeModal()">?リ린</button>
     <div id="modalContent"></div>
   </div>
 </div>
@@ -403,7 +403,7 @@ async function loadData(){
     });
 
     firebaseOK = true;
-    setStatus("☁️ Firebase 연결 성공! 가족과 공유할 준비가 됐어요.",true);
+    setStatus("?곻툘 Firebase ?곌껐 ?깃났! 媛議깃낵 怨듭쑀??以鍮꾧? ?먯뼱??",true);
 
   }catch(e){
 
@@ -414,7 +414,7 @@ async function loadData(){
     channels = JSON.parse(localStorage.getItem("familyYT_channels") || "[]");
     videos = JSON.parse(localStorage.getItem("familyYT_videos") || "[]");
 
-    setStatus("⚠️ Firebase 데이터베이스 설정 전이에요. 현재 이 기기에서 먼저 사용할 수 있어요.");
+    setStatus("?좑툘 Firebase ?곗씠?곕쿋?댁뒪 ?ㅼ젙 ?꾩씠?먯슂. ?꾩옱 ??湲곌린?먯꽌 癒쇱? ?ъ슜?????덉뼱??");
   }
 
   renderAll();
@@ -447,9 +447,9 @@ function renderVideos(list=videos){
   if(!list.length){
     grid.innerHTML = `
       <div class="empty">
-        <div style="font-size:50px">🎬</div>
-        <h3>아직 동영상이 없어요.</h3>
-        <p>첫 번째 동영상을 올려보세요!</p>
+        <div style="font-size:50px">?렗</div>
+        <h3>?꾩쭅 ?숈쁺?곸씠 ?놁뼱??</h3>
+        <p>泥?踰덉㎏ ?숈쁺?곸쓣 ?щ젮蹂댁꽭??</p>
       </div>`;
     return;
   }
@@ -460,7 +460,7 @@ function renderVideos(list=videos){
 function videoCard(v){
 
   const channel = channels.find(c=>c.id===v.channelId);
-  const channelName = channel ? channel.name : "알 수 없는 채널";
+  const channelName = channel ? channel.name : "?????녿뒗 梨꾨꼸";
 
   return `
   <article class="card">
@@ -469,21 +469,21 @@ function videoCard(v){
       ${
         v.thumbnail
         ? `<img src="${v.thumbnail}">`
-        : `<span>🎬</span>`
+        : `<span>?렗</span>`
       }
     </div>
 
     <div class="card-body">
-      <h3>${escapeHTML(v.title || "제목 없음")}</h3>
+      <h3>${escapeHTML(v.title || "?쒕ぉ ?놁쓬")}</h3>
 
       <div class="small">
-        📺 ${escapeHTML(channelName)}
+        ?벟 ${escapeHTML(channelName)}
       </div>
 
       <div class="actions">
-        <button onclick="watchVideo('${v.id}')">▶ 보기</button>
-        <button onclick="likeVideo('${v.id}')">❤️ ${v.likes || 0}</button>
-        <button onclick="favoriteVideo('${v.id}')">⭐</button>
+        <button onclick="watchVideo('${v.id}')">??蹂닿린</button>
+        <button onclick="likeVideo('${v.id}')">?ㅿ툘 ${v.likes || 0}</button>
+        <button onclick="favoriteVideo('${v.id}')">狩?/button>
       </div>
     </div>
 
@@ -498,9 +498,9 @@ function renderChannels(){
 
     grid.innerHTML = `
       <div class="empty">
-        <div style="font-size:50px">📺</div>
-        <h3>아직 채널이 없어요.</h3>
-        <button onclick="openChannelForm()">＋ 첫 채널 만들기</button>
+        <div style="font-size:50px">?벟</div>
+        <h3>?꾩쭅 梨꾨꼸???놁뼱??</h3>
+        <button onclick="openChannelForm()">竊?泥?梨꾨꼸 留뚮뱾湲?/button>
       </div>`;
 
     return;
@@ -514,7 +514,7 @@ function renderChannels(){
         ${
           c.icon
           ? `<img src="${c.icon}">`
-          : `📺`
+          : `?벟`
         }
       </div>
 
@@ -522,10 +522,10 @@ function renderChannels(){
 
       <p>${escapeHTML(c.owner || "")}</p>
 
-      <p class="small">${escapeHTML(c.bio || "소개가 없습니다.")}</p>
+      <p class="small">${escapeHTML(c.bio || "?뚭컻媛 ?놁뒿?덈떎.")}</p>
 
       <button onclick="showChannel('${c.id}')">
-        채널 보기
+        梨꾨꼸 蹂닿린
       </button>
 
     </article>
@@ -539,7 +539,7 @@ function renderFavorites(){
 
   $("favoriteGrid").innerHTML = list.length
     ? list.map(videoCard).join("")
-    : `<div class="empty">⭐ 아직 즐겨찾기한 영상이 없어요.</div>`;
+    : `<div class="empty">狩??꾩쭅 利먭꺼李얘린???곸긽???놁뼱??</div>`;
 }
 
 function fillChannelSelects(){
@@ -559,7 +559,7 @@ function fillChannelSelects(){
             ${escapeHTML(c.name)}
           </option>`
         ).join("")
-      : `<option value="">채널을 먼저 만들어주세요</option>`;
+      : `<option value="">梨꾨꼸??癒쇱? 留뚮뱾?댁＜?몄슂</option>`;
   });
 }
 
@@ -567,23 +567,23 @@ window.openChannelForm = function(){
 
   $("modalContent").innerHTML = `
 
-    <h2>📺 새 채널 만들기</h2>
+    <h2>?벟 ??梨꾨꼸 留뚮뱾湲?/h2>
 
-    <label>채널 이름</label>
-    <input id="newChannelName" placeholder="예: 유주의 하루">
+    <label>梨꾨꼸 ?대쫫</label>
+    <input id="newChannelName" placeholder="?? ?좎＜???섎（">
 
-    <label>만든 사람</label>
-    <input id="newChannelOwner" placeholder="예: 유주">
+    <label>留뚮뱺 ?щ엺</label>
+    <input id="newChannelOwner" placeholder="?? ?좎＜">
 
-    <label>채널 소개</label>
+    <label>梨꾨꼸 ?뚭컻</label>
     <textarea id="newChannelBio"
-      placeholder="이 채널에서는 어떤 영상을 올릴까요?"></textarea>
+      placeholder="??梨꾨꼸?먯꽌???대뼡 ?곸긽???щ┫源뚯슂?"></textarea>
 
-    <label>채널 아이콘</label>
+    <label>梨꾨꼸 ?꾩씠肄?/label>
     <input id="newChannelIcon" type="file" accept="image/*">
 
     <button onclick="createChannel()">
-      채널 만들기
+      梨꾨꼸 留뚮뱾湲?
     </button>
   `;
 
@@ -598,7 +598,7 @@ window.createChannel = async function(){
   const iconFile = $("newChannelIcon").files[0];
 
   if(!name){
-    alert("채널 이름을 입력해주세요.");
+    alert("梨꾨꼸 ?대쫫???낅젰?댁＜?몄슂.");
     return;
   }
 
@@ -643,12 +643,12 @@ window.createChannel = async function(){
     closeModal();
     renderAll();
 
-    alert("채널이 만들어졌어요! 📺");
+    alert("梨꾨꼸??留뚮뱾?댁죱?댁슂! ?벟");
 
   }catch(e){
 
     console.error(e);
-    alert("채널 만들기에 실패했어요.");
+    alert("梨꾨꼸 留뚮뱾湲곗뿉 ?ㅽ뙣?덉뼱??");
   }
 };
 
@@ -661,17 +661,17 @@ window.uploadVideo = async function(){
   const thumbFile = $("thumbFile").files[0];
 
   if(!channelId){
-    alert("먼저 채널을 만들어주세요.");
+    alert("癒쇱? 梨꾨꼸??留뚮뱾?댁＜?몄슂.");
     return;
   }
 
   if(!file){
-    alert("동영상 파일을 선택해주세요.");
+    alert("?숈쁺???뚯씪???좏깮?댁＜?몄슂.");
     return;
   }
 
   if(!title){
-    alert("동영상 제목을 입력해주세요.");
+    alert("?숈쁺???쒕ぉ???낅젰?댁＜?몄슂.");
     return;
   }
 
@@ -680,8 +680,8 @@ window.uploadVideo = async function(){
     if(file.size > 8*1024*1024){
 
       alert(
-        "현재 Firebase 연결 전이라 큰 동영상은 저장할 수 없어요.\n" +
-        "8MB 이하의 영상을 사용해주세요."
+        "?꾩옱 Firebase ?곌껐 ?꾩씠?????숈쁺?곸? ??ν븷 ???놁뼱??\n" +
+        "8MB ?댄븯???곸긽???ъ슜?댁＜?몄슂."
       );
 
       return;
@@ -706,14 +706,14 @@ window.uploadVideo = async function(){
     saveLocal();
     renderAll();
 
-    alert("이 기기에 영상이 저장됐어요.\nFirebase를 연결하면 가족 공유가 가능해요.");
+    alert("??湲곌린???곸긽????λ릱?댁슂.\nFirebase瑜??곌껐?섎㈃ 媛議?怨듭쑀媛 媛?ν빐??");
 
     return;
   }
 
   try{
 
-    setStatus("⬆️ 동영상을 Firebase에 업로드하고 있어요...");
+    setStatus("燧놅툘 ?숈쁺?곸쓣 Firebase???낅줈?쒗븯怨??덉뼱??..");
 
     const fileRef = ref(
       storage,
@@ -758,9 +758,9 @@ window.uploadVideo = async function(){
       ...data
     });
 
-    setStatus("☁️ 동영상이 가족 YouTube에 올라갔어요!",true);
+    setStatus("?곻툘 ?숈쁺?곸씠 媛議?YouTube???щ씪媛붿뼱??",true);
 
-    alert("동영상 업로드 완료! 🎉");
+    alert("?숈쁺???낅줈???꾨즺! ?럦");
 
     $("videoFile").value="";
     $("thumbFile").value="";
@@ -773,11 +773,11 @@ window.uploadVideo = async function(){
 
     console.error(e);
 
-    setStatus("⚠️ Firebase 업로드 설정을 확인해야 해요.");
+    setStatus("?좑툘 Firebase ?낅줈???ㅼ젙???뺤씤?댁빞 ?댁슂.");
 
     alert(
-      "업로드에 실패했어요.\n\n" +
-      "Firebase Storage가 아직 설정되지 않았을 가능성이 있어요."
+      "?낅줈?쒖뿉 ?ㅽ뙣?덉뼱??\n\n" +
+      "Firebase Storage媛 ?꾩쭅 ?ㅼ젙?섏? ?딆븯??媛?μ꽦???덉뼱??"
     );
   }
 };
@@ -797,36 +797,36 @@ window.watchVideo = function(id){
     <video src="${v.videoURL}" controls playsinline></video>
 
     <p>
-      📺 ${escapeHTML(channel?.name || "채널 없음")}
+      ?벟 ${escapeHTML(channel?.name || "梨꾨꼸 ?놁쓬")}
     </p>
 
     <p>${escapeHTML(v.description || "")}</p>
 
     <div class="actions">
       <button onclick="likeVideo('${v.id}');watchVideo('${v.id}')">
-        ❤️ ${v.likes || 0}
+        ?ㅿ툘 ${v.likes || 0}
       </button>
 
       <button onclick="favoriteVideo('${v.id}');watchVideo('${v.id}')">
-        ⭐ 즐겨찾기
+        狩?利먭꺼李얘린
       </button>
     </div>
 
     <hr>
 
-    <h3>💬 댓글</h3>
+    <h3>?뮠 ?볤?</h3>
 
     <input id="commentInput"
-      placeholder="댓글을 입력하세요">
+      placeholder="?볤????낅젰?섏꽭??>
 
     <button onclick="addComment('${v.id}')">
-      댓글 쓰기
+      ?볤? ?곌린
     </button>
 
     <div id="commentList">
       ${(v.comments || []).map(c=>`
         <div class="comment">
-          <b>${escapeHTML(c.name || "가족")}</b>
+          <b>${escapeHTML(c.name || "媛議?)}</b>
           <div>${escapeHTML(c.text)}</div>
         </div>
       `).join("")}
@@ -889,7 +889,7 @@ window.addComment = async function(id){
   if(!input || !input.value.trim())return;
 
   const comment = {
-    name:"가족",
+    name:"媛議?,
     text:input.value.trim(),
     time:Date.now()
   };
@@ -932,7 +932,7 @@ window.showChannel = function(id){
     <div class="avatar">
       ${channel.icon
         ? `<img src="${channel.icon}">`
-        : `📺`
+        : `?벟`
       }
     </div>
 
@@ -940,13 +940,13 @@ window.showChannel = function(id){
 
     <p>${escapeHTML(channel.bio || "")}</p>
 
-    <h3>동영상</h3>
+    <h3>?숈쁺??/h3>
 
     <div class="grid">
       ${
         list.length
         ? list.map(videoCard).join("")
-        : `<div class="empty">아직 영상이 없어요.</div>`
+        : `<div class="empty">?꾩쭅 ?곸긽???놁뼱??</div>`
       }
     </div>
   `;
@@ -1031,15 +1031,15 @@ window.startCamera = async function(){
     $("cameraPreview").srcObject = cameraStream;
 
     $("recordStatus").textContent =
-      "📷 카메라가 켜졌어요. 촬영 시작을 눌러주세요.";
+      "?벜 移대찓?쇨? 耳쒖죱?댁슂. 珥ъ쁺 ?쒖옉???뚮윭二쇱꽭??";
 
   }catch(e){
 
     console.error(e);
 
     alert(
-      "카메라를 사용할 수 없어요.\n\n" +
-      "브라우저의 카메라 권한을 허용해주세요."
+      "移대찓?쇰? ?ъ슜?????놁뼱??\n\n" +
+      "釉뚮씪?곗???移대찓??沅뚰븳???덉슜?댁＜?몄슂."
     );
   }
 };
@@ -1048,7 +1048,7 @@ window.startRecording = function(){
 
   if(!cameraStream){
 
-    alert("먼저 카메라를 켜주세요.");
+    alert("癒쇱? 移대찓?쇰? 耳쒖＜?몄슂.");
     return;
   }
 
@@ -1095,13 +1095,13 @@ window.startRecording = function(){
     $("recordUploadBox").classList.remove("hidden");
 
     $("recordStatus").textContent =
-      "🎬 촬영 완료! 미리 보고 올릴 수 있어요.";
+      "?렗 珥ъ쁺 ?꾨즺! 誘몃━ 蹂닿퀬 ?щ┫ ???덉뼱??";
   };
 
   mediaRecorder.start();
 
   $("recordStatus").textContent =
-    "🔴 촬영 중...";
+    "?뵶 珥ъ쁺 以?..";
 
 };
 
@@ -1120,7 +1120,7 @@ window.stopRecording = function(){
 window.saveRecordedVideo = async function(){
 
   if(!recordedBlob){
-    alert("먼저 영상을 촬영해주세요.");
+    alert("癒쇱? ?곸긽??珥ъ쁺?댁＜?몄슂.");
     return;
   }
 
@@ -1128,12 +1128,12 @@ window.saveRecordedVideo = async function(){
   const title = $("recordTitle").value.trim();
 
   if(!channelId){
-    alert("채널을 선택해주세요.");
+    alert("梨꾨꼸???좏깮?댁＜?몄슂.");
     return;
   }
 
   if(!title){
-    alert("영상 제목을 입력해주세요.");
+    alert("?곸긽 ?쒕ぉ???낅젰?댁＜?몄슂.");
     return;
   }
 
@@ -1142,7 +1142,7 @@ window.saveRecordedVideo = async function(){
     if(recordedBlob.size > 8*1024*1024){
 
       alert(
-        "Firebase 연결 전에는 8MB 이하 영상만 저장할 수 있어요."
+        "Firebase ?곌껐 ?꾩뿉??8MB ?댄븯 ?곸긽留???ν븷 ???덉뼱??"
       );
 
       return;
@@ -1154,7 +1154,7 @@ window.saveRecordedVideo = async function(){
       id:"local_"+Date.now(),
       channelId,
       title,
-      description:"카메라로 촬영한 영상",
+      description:"移대찓?쇰줈 珥ъ쁺???곸긽",
       videoURL:url,
       thumbnail:"",
       likes:0,
@@ -1164,7 +1164,7 @@ window.saveRecordedVideo = async function(){
     saveLocal();
     renderAll();
 
-    alert("촬영한 영상이 이 기기에 저장됐어요.");
+    alert("珥ъ쁺???곸긽????湲곌린????λ릱?댁슂.");
 
     showPage("home");
     return;
@@ -1172,7 +1172,7 @@ window.saveRecordedVideo = async function(){
 
   try{
 
-    setStatus("⬆️ 촬영 영상을 Firebase에 올리는 중...");
+    setStatus("燧놅툘 珥ъ쁺 ?곸긽??Firebase???щ━??以?..");
 
     const fileRef = ref(
       storage,
@@ -1186,7 +1186,7 @@ window.saveRecordedVideo = async function(){
     const data={
       channelId,
       title,
-      description:"카메라로 촬영한 영상",
+      description:"移대찓?쇰줈 珥ъ쁺???곸긽",
       videoURL,
       thumbnail:"",
       likes:0,
@@ -1205,7 +1205,7 @@ window.saveRecordedVideo = async function(){
 
     renderAll();
 
-    alert("촬영 영상이 가족 YouTube에 올라갔어요! 🎉");
+    alert("珥ъ쁺 ?곸긽??媛議?YouTube???щ씪媛붿뼱?? ?럦");
 
     showPage("home");
 
@@ -1214,7 +1214,7 @@ window.saveRecordedVideo = async function(){
     console.error(e);
 
     alert(
-      "Firebase Storage 설정이 아직 준비되지 않았어요."
+      "Firebase Storage ?ㅼ젙???꾩쭅 以鍮꾨릺吏 ?딆븯?댁슂."
     );
   }
 };
