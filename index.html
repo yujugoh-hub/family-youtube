@@ -7,87 +7,7 @@
 
 <title>HARMONY</title>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">let subscriptions = JSON.parse(localStorage.getItem("harmonySubscriptions") || "[]");
-
-async function toggleSubscription(channelId, channelName){
-  const index = subscriptions.indexOf(String(channelId));
-
-  if(index >= 0){
-    subscriptions.splice(index,1);
-    alert("구독을 취소했어요.");
-  }else{
-    subscriptions.push(String(channelId));
-    alert("🔔 " + channelName + " 채널을 구독했어요!");
-  }
-
-  localStorage.setItem(
-    "harmonySubscriptions",
-    JSON.stringify(subscriptions)
-  );
-
-  if(typeof loadChannels === "function"){
-    loadChannels();
-  }
-
-  loadSubscriptions();
-}
-
-async function loadSubscriptions(){
-  const box = document.getElementById("subscriptionList");
-
-  if(!box) return;
-
-  if(subscriptions.length === 0){
-    box.innerHTML = `
-      <div class="empty">
-        아직 구독한 채널이 없어요.<br>
-        📺 채널에서 마음에 드는 채널을 구독해 보세요!
-      </div>
-    `;
-    return;
-  }
-
-  const {data,error} = await supabaseClient
-    .from("channels")
-    .select("*")
-    .order("created_at",{ascending:false});
-
-  if(error){
-    box.innerHTML = `<div class="empty">채널을 불러오지 못했어요.</div>`;
-    return;
-  }
-
-  const list = data.filter(function(channel){
-    return subscriptions.includes(String(channel.id));
-  });
-
-  if(list.length === 0){
-    box.innerHTML = `<div class="empty">구독한 채널이 없어요.</div>`;
-    return;
-  }
-
-  box.innerHTML = list.map(function(channel){
-    return `
-      <div class="card channelCard">
-        <div class="channelIcon">📺</div>
-        <div style="flex:1">
-          <div class="channelName">${escapeHtml(channel.name)}</div>
-          <div class="muted">${escapeHtml(channel.owner || "사용자")}</div>
-          <div class="muted">${escapeHtml(channel.description || "")}</div>
-        </div>
-
-        <button
-          class="secondaryBtn"
-          style="width:auto;padding:0 14px;margin:0"
-          type="button"
-          onclick="toggleSubscription('${channel.id}','${escapeHtml(channel.name)}')">
-          🔕 구독취소
-        </button>
-      </div>
-    `;
-  }).join("");
-}
-</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
 *{
@@ -627,6 +547,27 @@ button{
 </section>
 
 
+
+<!-- CHANNEL VIEW -->
+<section id="channelView" class="page">
+
+  <div class="sectionTitle">📺 채널 보기</div>
+
+  <button
+    class="secondaryBtn"
+    type="button"
+    onclick="showPage('channels')">
+    ← 채널 목록으로
+  </button>
+
+  <div id="channelViewInfo" class="card"></div>
+
+  <div class="sectionTitle">🎬 이 채널의 동영상</div>
+
+  <div id="channelVideoList"></div>
+
+</section>
+
 <section id="createChannel" class="page">
 
   <div class="sectionTitle">📺 채널 만들기</div>
@@ -956,15 +897,19 @@ function showPage(pageId){
   });
 
   if(pageId === "home" && typeof loadVideos === "function"){
-    loadVideos();
+    loadVideos("homeVideos");
   }
 
   if(pageId === "videos" && typeof loadVideos === "function"){
-    loadVideos();
+    loadVideos("videoList");
   }
 
   if(pageId === "channels" && typeof loadChannels === "function"){
     loadChannels();
+  }
+
+  if(pageId === "channelView"){
+    window.scrollTo({top:0, behavior:"instant"});
   }
 
   if(pageId === "subscriptions" && typeof loadSubscriptions === "function"){
@@ -1632,6 +1577,14 @@ async function loadVideos(containerId){
           ❤️ ${video.likes || 0}
         </div>
 
+        <button
+          class="primaryBtn"
+          type="button"
+          style="min-height:45px;margin-top:10px"
+          onclick="event.stopPropagation(); openVideo(video)">
+          ▶️ 동영상 보기
+        </button>
+
       </div>
     `;
 
@@ -1691,11 +1644,14 @@ async function loadChannels(){
     card.className =
       "card channelCard";
 
+    const subscribed =
+      subscriptions.includes(String(channel.id));
+
     card.innerHTML = `
 
       <div class="channelIcon">📺</div>
 
-      <div>
+      <div style="flex:1">
 
         <div class="channelName">
           ${escapeHtml(channel.name)}
@@ -1709,6 +1665,26 @@ async function loadChannels(){
           만든 사람: ${escapeHtml(channel.owner || "사용자")}
         </div>
 
+        <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
+
+          <button
+            class="primaryBtn"
+            type="button"
+            style="width:auto;min-height:44px;margin:0;padding:0 14px"
+            onclick="event.stopPropagation(); viewChannel(${Number(channel.id)})">
+            📺 채널 보기
+          </button>
+
+          <button
+            class="secondaryBtn"
+            type="button"
+            style="width:auto;min-height:44px;margin:0;padding:0 14px"
+            onclick="event.stopPropagation(); toggleSubscription(${Number(channel.id)}, ${JSON.stringify(channel.name)})">
+            ${subscribed ? "🔕 구독취소" : "🔔 구독"}
+          </button>
+
+        </div>
+
       </div>
     `;
 
@@ -1719,6 +1695,165 @@ async function loadChannels(){
 }
 
 
+
+// ==========================
+// 채널 보기
+// ==========================
+
+async function viewChannel(channelId){
+
+  showPage("channelView");
+
+  const info =
+    document.getElementById("channelViewInfo");
+
+  const list =
+    document.getElementById("channelVideoList");
+
+  info.innerHTML =
+    '<div class="empty">채널을 불러오는 중...</div>';
+
+  list.innerHTML =
+    '<div class="empty">동영상을 불러오는 중...</div>';
+
+  const {data:channel,error:channelError} =
+    await supabaseClient
+      .from("channels")
+      .select("*")
+      .eq("id",channelId)
+      .single();
+
+  if(channelError || !channel){
+
+    info.innerHTML =
+      '<div class="empty">채널을 찾을 수 없어요.</div>';
+
+    list.innerHTML = "";
+
+    return;
+  }
+
+  const subscribed =
+    subscriptions.includes(String(channelId));
+
+  info.innerHTML = `
+
+    <div style="display:flex;gap:14px;align-items:center">
+
+      <div class="channelIcon">📺</div>
+
+      <div style="flex:1">
+
+        <div class="channelName">
+          ${escapeHtml(channel.name)}
+        </div>
+
+        <div class="muted">
+          만든 사람: ${escapeHtml(channel.owner || "사용자")}
+        </div>
+
+        <div class="muted" style="margin-top:5px">
+          ${escapeHtml(channel.description || "채널 설명이 없어요.")}
+        </div>
+
+      </div>
+
+    </div>
+
+    <button
+      class="secondaryBtn"
+      type="button"
+      style="margin-top:14px"
+      onclick="toggleSubscription(${Number(channel.id)}, ${JSON.stringify(channel.name)}); viewChannel(${Number(channel.id)})">
+      ${subscribed ? "🔕 구독취소" : "🔔 이 채널 구독하기"}
+    </button>
+  `;
+
+  const {data:videos,error:videoError} =
+    await supabaseClient
+      .from("videos")
+      .select(`
+        *,
+        channels (
+          name,
+          owner
+        )
+      `)
+      .eq("channel_id",channelId)
+      .order("created_at",{ascending:false});
+
+  if(videoError){
+
+    console.error(videoError);
+
+    list.innerHTML =
+      '<div class="empty">동영상을 불러오지 못했어요.</div>';
+
+    return;
+  }
+
+  if(!videos || videos.length === 0){
+
+    list.innerHTML =
+      '<div class="empty">이 채널에는 아직 동영상이 없어요. 🎬</div>';
+
+    return;
+  }
+
+  list.innerHTML = "";
+
+  videos.forEach(video => {
+
+    const card =
+      document.createElement("div");
+
+    card.className =
+      "card videoCard";
+
+    card.innerHTML = `
+
+      <video
+        class="videoThumb"
+        src="${escapeHtml(video.video_url)}"
+        muted
+        playsinline
+        preload="metadata">
+      </video>
+
+      <div class="videoInfo">
+
+        <div class="videoTitle">
+          ${escapeHtml(video.title)}
+        </div>
+
+        <div class="muted">
+          ❤️ ${video.likes || 0}
+        </div>
+
+        <button
+          class="primaryBtn"
+          type="button"
+          style="min-height:45px;margin-top:10px"
+          onclick="event.stopPropagation(); openVideo(window.harmonyVideos[${Number(video.id)}])">
+          ▶️ 동영상 보기
+        </button>
+
+      </div>
+    `;
+
+    card.onclick = () => openVideo(video);
+
+    if(!window.harmonyVideos){
+      window.harmonyVideos = {};
+    }
+
+    window.harmonyVideos[video.id] = video;
+
+    list.appendChild(card);
+
+  });
+
+}
 // ==========================
 // 영상 열기
 // ==========================
