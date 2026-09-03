@@ -2,1495 +2,2397 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
 <title>HARMONY</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
-*{box-sizing:border-box}
+*{
+  box-sizing:border-box;
+  -webkit-tap-highlight-color:transparent;
+}
+
+html,body{
+  margin:0;
+  padding:0;
+  width:100%;
+  min-height:100%;
+  font-family:Arial,"Noto Sans KR",sans-serif;
+  background:#f5f7fb;
+  color:#202124;
+}
 
 body{
-    margin:0;
-    font-family:Arial,"Noto Sans KR",sans-serif;
-    background:#f6f7fb;
-    color:#202124;
+  overflow-x:hidden;
 }
 
-header{
-    height:70px;
-    background:white;
-    border-bottom:1px solid #e5e7eb;
-    display:flex;
-    align-items:center;
-    padding:0 18px;
-    gap:15px;
-    position:sticky;
-    top:0;
-    z-index:20;
-}
-
-.logo{
-    font-size:25px;
-    font-weight:900;
-    letter-spacing:1px;
-    cursor:pointer;
-}
-
-.search{
-    flex:1;
-    max-width:600px;
-    margin:auto;
-    display:flex;
-}
-
-.search input{
-    width:100%;
-    padding:13px 17px;
-    border:1px solid #ddd;
-    border-radius:25px 0 0 25px;
-    font-size:15px;
-    outline:none;
-}
-
-.search button{
-    border:0;
-    padding:0 20px;
-    border-radius:0 25px 25px 0;
-    background:#222;
-    color:white;
-    cursor:pointer;
-}
-
-.header-btn{
-    border:0;
-    background:#f1f3f5;
-    padding:10px 14px;
-    border-radius:20px;
-    cursor:pointer;
-    font-weight:bold;
-}
-
-.notification{
-    position:relative;
-}
-
-.badge{
-    position:absolute;
-    top:-5px;
-    right:-5px;
-    min-width:19px;
-    height:19px;
-    background:#ff3b30;
-    color:white;
-    border-radius:50%;
-    font-size:11px;
-    display:none;
-    align-items:center;
-    justify-content:center;
-}
-
-.container{
-    max-width:1200px;
-    margin:auto;
-    padding:22px;
-}
-
-.nav{
-    display:flex;
-    gap:10px;
-    flex-wrap:wrap;
-    margin-bottom:22px;
-}
-
-.nav button{
-    border:0;
-    background:white;
-    padding:12px 17px;
-    border-radius:20px;
-    cursor:pointer;
-    box-shadow:0 2px 8px rgba(0,0,0,.05);
-}
-
-.nav button.active{
-    background:#222;
-    color:white;
-}
-
-.page{display:none}
-.page.active{display:block}
-
-.hero{
-    background:white;
-    border-radius:22px;
-    padding:30px;
-    margin-bottom:22px;
-    box-shadow:0 4px 18px rgba(0,0,0,.06);
-}
-
-.hero h1{
-    margin-top:0;
-}
-
-.grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fill,minmax(250px,1fr));
-    gap:18px;
-}
-
-.card{
-    background:white;
-    border-radius:18px;
-    overflow:hidden;
-    box-shadow:0 3px 15px rgba(0,0,0,.06);
-}
-
-.thumb{
-    width:100%;
-    aspect-ratio:16/9;
-    background:#e9ecf2;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    overflow:hidden;
-}
-
-.thumb video{
-    width:100%;
-    height:100%;
-    object-fit:cover;
-}
-
-.card-body{
-    padding:15px;
-}
-
-.card-title{
-    font-size:17px;
-    font-weight:bold;
-    margin-bottom:7px;
-}
-
-.muted{
-    color:#777;
-    font-size:13px;
-}
-
-.actions{
-    display:flex;
-    gap:8px;
-    flex-wrap:wrap;
-    margin-top:12px;
+button,
+input,
+textarea,
+select{
+  font:inherit;
 }
 
 button{
-    font-family:inherit;
+  border:0;
+  cursor:pointer;
 }
 
-.primary{
-    border:0;
-    background:#222;
-    color:white;
-    padding:12px 18px;
-    border-radius:12px;
-    cursor:pointer;
-    font-weight:bold;
+.app{
+  width:100%;
+  max-width:760px;
+  margin:auto;
+  min-height:100vh;
+  background:#fff;
 }
 
-.secondary{
-    border:1px solid #ddd;
-    background:white;
-    padding:11px 16px;
-    border-radius:12px;
-    cursor:pointer;
+.header{
+  position:sticky;
+  top:0;
+  z-index:50;
+  height:64px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:8px 12px;
+  background:#fff;
+  border-bottom:1px solid #eee;
 }
 
-.danger{
-    background:#ff3b30;
-    color:white;
-    border:0;
+.logo{
+  font-size:22px;
+  font-weight:900;
+  letter-spacing:-1px;
+  white-space:nowrap;
 }
 
-.form{
-    background:white;
-    padding:22px;
-    border-radius:20px;
-    max-width:650px;
-    margin:auto;
-    box-shadow:0 3px 15px rgba(0,0,0,.06);
+.search{
+  flex:1;
+  min-width:0;
+  height:44px;
+  border:1px solid #ddd;
+  border-radius:22px;
+  padding:0 16px;
+  outline:none;
+  background:#f7f7f7;
 }
 
-.form h2{
-    margin-top:0;
+.iconBtn{
+  width:44px;
+  height:44px;
+  border-radius:50%;
+  background:#f1f3f5;
+  font-size:21px;
+  flex:none;
 }
 
-.form input,
-.form textarea,
-.form select{
-    width:100%;
-    padding:13px;
-    border:1px solid #ddd;
-    border-radius:12px;
-    margin:7px 0 14px;
-    font-size:15px;
-    outline:none;
+.badge{
+  position:absolute;
+  top:2px;
+  right:0;
+  min-width:17px;
+  height:17px;
+  border-radius:10px;
+  background:#ff3b30;
+  color:white;
+  font-size:10px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:0 4px;
 }
 
-.form textarea{
-    min-height:110px;
-    resize:vertical;
+.notificationBtn{
+  position:relative;
 }
 
-.channel-card{
-    background:white;
-    padding:20px;
-    border-radius:18px;
-    box-shadow:0 3px 15px rgba(0,0,0,.06);
+.page{
+  display:none;
+  padding:16px;
+  padding-bottom:100px;
 }
 
-.channel-avatar{
-    width:65px;
-    height:65px;
-    border-radius:50%;
-    background:#222;
-    color:white;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:28px;
-    font-weight:bold;
-    margin-bottom:12px;
+.page.active{
+  display:block;
+}
+
+.hero{
+  padding:22px 18px;
+  border-radius:24px;
+  background:linear-gradient(135deg,#eef5ff,#f8efff);
+  margin-bottom:16px;
+}
+
+.hero h1{
+  margin:0 0 8px;
+  font-size:30px;
+}
+
+.hero p{
+  margin:0;
+  color:#666;
+  line-height:1.5;
+}
+
+.sectionTitle{
+  font-size:20px;
+  font-weight:800;
+  margin:22px 0 12px;
+}
+
+.bigCamera{
+  width:100%;
+  min-height:110px;
+  border-radius:26px;
+  background:#111;
+  color:#fff;
+  font-size:27px;
+  font-weight:900;
+  box-shadow:0 8px 24px rgba(0,0,0,.18);
+  margin-bottom:12px;
+}
+
+.bigCamera:active{
+  transform:scale(.98);
+}
+
+.secondaryBtn{
+  width:100%;
+  min-height:58px;
+  border-radius:18px;
+  background:#eef1f5;
+  font-size:18px;
+  font-weight:700;
+  margin-bottom:10px;
+}
+
+.primaryBtn{
+  width:100%;
+  min-height:58px;
+  border-radius:18px;
+  background:#111;
+  color:#fff;
+  font-size:18px;
+  font-weight:800;
+  margin-top:10px;
+}
+
+.card{
+  background:#fff;
+  border:1px solid #eee;
+  border-radius:20px;
+  padding:16px;
+  margin-bottom:12px;
+  box-shadow:0 4px 15px rgba(0,0,0,.04);
+}
+
+.videoCard{
+  overflow:hidden;
+  padding:0;
+}
+
+.videoThumb{
+  width:100%;
+  aspect-ratio:16/9;
+  background:#111;
+  display:block;
+  object-fit:cover;
+}
+
+.videoInfo{
+  padding:14px;
+}
+
+.videoTitle{
+  font-size:18px;
+  font-weight:800;
+  margin-bottom:7px;
+}
+
+.muted{
+  color:#777;
+  font-size:14px;
+}
+
+.channelCard{
+  display:flex;
+  align-items:center;
+  gap:14px;
+}
+
+.channelIcon{
+  width:58px;
+  height:58px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#eef1ff;
+  font-size:28px;
+  flex:none;
+}
+
+.channelName{
+  font-size:18px;
+  font-weight:800;
+}
+
+.formGroup{
+  margin-bottom:14px;
+}
+
+.formGroup label{
+  display:block;
+  margin-bottom:7px;
+  font-weight:700;
+}
+
+.formGroup input,
+.formGroup textarea,
+.formGroup select{
+  width:100%;
+  border:1px solid #ddd;
+  border-radius:15px;
+  padding:14px;
+  outline:none;
+  background:#fafafa;
+}
+
+.formGroup textarea{
+  min-height:110px;
+  resize:vertical;
+}
+
+.fileBox{
+  padding:20px;
+  border:2px dashed #ddd;
+  border-radius:20px;
+  text-align:center;
+  margin-bottom:14px;
+}
+
+.fileBox input{
+  width:100%;
+}
+
+.preview{
+  width:100%;
+  border-radius:18px;
+  background:#111;
+  max-height:400px;
+  object-fit:contain;
+  margin-top:12px;
+}
+
+.cameraWrap{
+  background:#111;
+  border-radius:22px;
+  overflow:hidden;
+}
+
+#cameraPreview{
+  width:100%;
+  display:block;
+  background:#111;
+}
+
+.cameraControls{
+  display:flex;
+  gap:10px;
+  padding:12px;
+  background:#181818;
+}
+
+.cameraControls button{
+  flex:1;
+  min-height:55px;
+  border-radius:15px;
+  font-weight:800;
+}
+
+.record{
+  background:#ff3b30;
+  color:#fff;
+}
+
+.stop{
+  background:#fff;
+  color:#111;
+}
+
+.bottomNav{
+  position:fixed;
+  left:50%;
+  bottom:0;
+  transform:translateX(-50%);
+  width:min(760px,100%);
+  height:74px;
+  display:flex;
+  background:rgba(255,255,255,.96);
+  backdrop-filter:blur(12px);
+  border-top:1px solid #eee;
+  z-index:60;
+}
+
+.navItem{
+  flex:1;
+  background:none;
+  font-size:12px;
+  color:#666;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:4px;
+}
+
+.navItem span:first-child{
+  font-size:22px;
+}
+
+.navItem.active{
+  color:#111;
+  font-weight:900;
 }
 
 .modal{
-    display:none;
-    position:fixed;
-    inset:0;
-    background:rgba(0,0,0,.55);
-    z-index:50;
-    align-items:center;
-    justify-content:center;
-    padding:18px;
+  display:none;
+  position:fixed;
+  inset:0;
+  z-index:100;
+  background:rgba(0,0,0,.65);
+  align-items:flex-end;
+  justify-content:center;
 }
 
 .modal.show{
-    display:flex;
+  display:flex;
 }
 
-.modal-box{
-    background:white;
-    width:min(700px,100%);
-    max-height:90vh;
-    overflow:auto;
-    border-radius:22px;
-    padding:22px;
+.modalBox{
+  width:min(760px,100%);
+  max-height:92vh;
+  overflow:auto;
+  background:#fff;
+  border-radius:25px 25px 0 0;
+  padding:18px;
+}
+
+.modalTop{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:12px;
 }
 
 .close{
-    float:right;
-    border:0;
-    background:#eee;
-    border-radius:50%;
-    width:35px;
-    height:35px;
-    cursor:pointer;
+  width:42px;
+  height:42px;
+  border-radius:50%;
+  background:#eee;
 }
 
-.video-player video{
-    width:100%;
-    max-height:500px;
-    background:#000;
-    border-radius:15px;
+#modalVideo{
+  width:100%;
+  max-height:50vh;
+  background:#000;
+  border-radius:15px;
 }
 
 .comment{
-    border-top:1px solid #eee;
-    padding:12px 0;
-}
-
-.notification-list{
-    display:flex;
-    flex-direction:column;
-    gap:10px;
-}
-
-.notice{
-    background:white;
-    padding:16px;
-    border-radius:15px;
-    box-shadow:0 2px 10px rgba(0,0,0,.05);
-}
-
-.notice.unread{
-    border-left:5px solid #222;
+  padding:12px 0;
+  border-bottom:1px solid #eee;
 }
 
 .empty{
-    text-align:center;
-    padding:50px 20px;
-    color:#777;
+  text-align:center;
+  padding:40px 10px;
+  color:#888;
 }
 
-.progress{
-    height:8px;
-    background:#eee;
-    border-radius:10px;
-    overflow:hidden;
-    margin:10px 0;
+.notice{
+  padding:14px;
+  border-radius:15px;
+  background:#f3f6ff;
+  margin-bottom:10px;
 }
 
-.progress-bar{
-    height:100%;
-    width:0;
-    background:#222;
-    transition:.2s;
+.uploadStatus{
+  margin-top:12px;
+  padding:12px;
+  border-radius:14px;
+  display:none;
 }
 
-@media(max-width:700px){
-    header{
-        flex-wrap:wrap;
-        height:auto;
-        padding:12px;
-    }
+@media(max-width:430px){
+  .header{
+    height:58px;
+  }
 
-    .search{
-        order:3;
-        width:100%;
-        max-width:none;
-    }
+  .logo{
+    font-size:19px;
+  }
 
-    .container{
-        padding:13px;
-    }
+  .search{
+    height:40px;
+    padding:0 12px;
+  }
 
-    .hero{
-        padding:22px;
-    }
+  .iconBtn{
+    width:40px;
+    height:40px;
+  }
+
+  .page{
+    padding:12px;
+    padding-bottom:95px;
+  }
+
+  .hero h1{
+    font-size:26px;
+  }
+
+  .bigCamera{
+    min-height:100px;
+    font-size:24px;
+  }
 }
 </style>
 </head>
 
 <body>
 
-<header>
-    <div class="logo" onclick="showPage('home')">🎬 HARMONY</div>
+<div class="app">
 
-    <div class="search">
-        <input id="searchInput" placeholder="동영상이나 채널 검색">
-        <button onclick="searchAll()">검색</button>
-    </div>
+<header class="header">
+  <div class="logo">HARMONY</div>
 
-    <button class="header-btn notification" onclick="showPage('notifications')">
-        🔔
-        <span id="notificationBadge" class="badge">0</span>
-    </button>
+  <input
+    id="searchInput"
+    class="search"
+    placeholder="동영상 검색"
+    oninput="searchVideos()"
+  >
 
-    <button class="header-btn" onclick="showPage('createChannel')">➕ 채널</button>
+  <button class="iconBtn notificationBtn" onclick="showPage('notifications')">
+    🔔
+    <span id="notificationBadge" class="badge" style="display:none">0</span>
+  </button>
 </header>
 
-<div class="container">
+<main>
 
-    <div class="nav">
-        <button id="navHome" class="active" onclick="showPage('home')">🏠 홈</button>
-        <button id="navVideos" onclick="showPage('videos')">🎬 동영상</button>
-        <button id="navChannels" onclick="showPage('channels')">📺 채널</button>
-        <button id="navFavorites" onclick="showPage('favorites')">⭐ 즐겨찾기</button>
-        <button id="navCreate" onclick="showPage('createChannel')">➕ 채널 만들기</button>
-        <button id="navUpload" onclick="showPage('upload')">⬆️ 동영상 올리기</button>
-        <button id="navCamera" onclick="showPage('camera')">📹 동영상 찍기</button>
-        <button id="navNotifications" onclick="showPage('notifications')">🔔 알림</button>
+<!-- HOME -->
+<section id="home" class="page active">
+
+  <div class="hero">
+    <h1>우리 가족 HARMONY 💛</h1>
+    <p>
+      가족이 각자의 채널을 만들고<br>
+      핸드폰으로 동영상을 바로 올려보세요.
+    </p>
+  </div>
+
+  <button class="bigCamera" onclick="startCamera()">
+    🎥 촬영하기
+  </button>
+
+  <button class="secondaryBtn" onclick="showPage('upload')">
+    📱 앨범에서 동영상 선택
+  </button>
+
+  <button class="secondaryBtn" onclick="showPage('createChannel')">
+    📺 내 채널 만들기
+  </button>
+
+  <div class="sectionTitle">✨ 최신 동영상</div>
+  <div id="homeVideos"></div>
+
+</section>
+
+
+<!-- VIDEOS -->
+<section id="videos" class="page">
+  <div class="sectionTitle">📹 동영상</div>
+  <div id="videoList"></div>
+</section>
+
+
+<!-- CHANNELS -->
+<section id="channels" class="page">
+
+  <div class="sectionTitle">📺 가족 채널</div>
+
+  <button class="secondaryBtn" onclick="showPage('createChannel')">
+    ➕ 새 채널 만들기
+  </button>
+
+  <div id="channelList"></div>
+
+</section>
+
+
+<!-- CREATE CHANNEL -->
+<section id="createChannel" class="page">
+
+  <div class="sectionTitle">📺 채널 만들기</div>
+
+  <div class="card">
+
+    <div class="formGroup">
+      <label>채널 이름</label>
+      <input id="channelName" placeholder="예: 유주의 만들기 채널">
     </div>
 
-    <!-- HOME -->
-    <section id="home" class="page active">
-        <div class="hero">
-            <h1>🎬 HARMONY</h1>
-            <p>가족끼리 자유롭게 채널을 만들고 동영상을 공유해요.</p>
+    <div class="formGroup">
+      <label>채널 설명</label>
+      <textarea id="channelDescription"
+        placeholder="내 채널을 소개해 주세요"></textarea>
+    </div>
 
-            <div class="actions">
-                <button class="primary" onclick="showPage('createChannel')">
-                    ➕ 내 채널 만들기
-                </button>
+    <div class="formGroup">
+      <label>만든 사람</label>
+      <input id="channelOwner" placeholder="예: 유주">
+    </div>
 
-                <button class="secondary" onclick="showPage('upload')">
-                    ⬆️ 동영상 올리기
-                </button>
+    <button class="primaryBtn" onclick="createChannel()">
+      📺 채널 만들기
+    </button>
 
-                <button class="secondary" onclick="showPage('camera')">
-                    📹 동영상 찍기
-                </button>
-            </div>
-        </div>
+  </div>
 
-        <h2>🔥 최신 동영상</h2>
-        <div id="homeVideos" class="grid"></div>
-    </section>
+</section>
 
-    <!-- VIDEOS -->
-    <section id="videos" class="page">
-        <h2>🎬 모든 동영상</h2>
-        <div id="videoGrid" class="grid"></div>
-    </section>
 
-    <!-- CHANNELS -->
-    <section id="channels" class="page">
-        <h2>📺 채널</h2>
+<!-- UPLOAD -->
+<section id="upload" class="page">
 
-        <div class="actions">
-            <button class="primary" onclick="showPage('createChannel')">
-                ➕ 채널 만들기
-            </button>
-        </div>
+  <div class="sectionTitle">⬆️ 동영상 올리기</div>
 
-        <br>
+  <div class="card">
 
-        <div id="channelGrid" class="grid"></div>
-    </section>
+    <div class="fileBox">
+      <div style="font-size:45px">🎬</div>
+      <div style="font-weight:800;margin:8px">
+        핸드폰에서 동영상 선택
+      </div>
 
-    <!-- CREATE CHANNEL -->
-    <section id="createChannel" class="page">
-        <div class="form">
-            <h2>➕ 채널 만들기</h2>
+      <input
+        id="videoFile"
+        type="file"
+        accept="video/*"
+        onchange="previewVideo(event)"
+      >
 
-            <label>채널 이름</label>
-            <input id="channelName" placeholder="예: 유주의 만들기 채널">
+      <video id="preview" class="preview" controls style="display:none"></video>
+    </div>
 
-            <label>채널 소개</label>
-            <textarea id="channelDescription" placeholder="내 채널을 소개해 주세요."></textarea>
+    <div class="formGroup">
+      <label>동영상 제목</label>
+      <input id="videoTitle" placeholder="동영상 제목">
+    </div>
 
-            <label>만든 사람</label>
-            <input id="channelOwner" placeholder="이름을 입력하세요">
+    <div class="formGroup">
+      <label>설명</label>
+      <textarea id="videoDescription"
+        placeholder="동영상 설명"></textarea>
+    </div>
 
-            <button class="primary" onclick="createChannel()">
-                🎉 채널 만들기
-            </button>
-        </div>
-    </section>
+    <div class="formGroup">
+      <label>채널</label>
+      <select id="videoChannel">
+        <option value="">채널을 선택하세요</option>
+      </select>
+    </div>
 
-    <!-- UPLOAD -->
-    <section id="upload" class="page">
-        <div class="form">
-            <h2>⬆️ 동영상 올리기</h2>
+    <button class="primaryBtn" onclick="uploadVideo()">
+      ⬆️ 동영상 올리기
+    </button>
 
-            <label>채널</label>
-            <select id="uploadChannel"></select>
+    <div id="uploadStatus" class="uploadStatus"></div>
 
-            <label>동영상 제목</label>
-            <input id="videoTitle" placeholder="동영상 제목">
+  </div>
 
-            <label>설명</label>
-            <textarea id="videoDescription" placeholder="동영상 설명"></textarea>
+  <div class="muted">
+    ⏱️ 동영상은 최대 30분까지 올릴 수 있어요.
+  </div>
 
-            <label>올리는 사람</label>
-            <input id="videoOwner" placeholder="이름">
+</section>
 
-            <label>동영상 파일</label>
-            <input id="videoFile" type="file" accept="video/*">
 
-            <p class="muted">
-                ⏱️ 최대 30분까지 업로드할 수 있어요.
-            </p>
+<!-- CAMERA -->
+<section id="camera" class="page">
 
-            <div class="progress">
-                <div id="uploadProgress" class="progress-bar"></div>
-            </div>
+  <div class="sectionTitle">🎥 동영상 촬영</div>
 
-            <button class="primary" onclick="uploadVideo()">
-                🚀 동영상 업로드
-            </button>
+  <div class="cameraWrap">
 
-            <p id="uploadStatus" class="muted"></p>
-        </div>
-    </section>
+    <video
+      id="cameraPreview"
+      autoplay
+      playsinline
+      muted
+    ></video>
 
-    <!-- CAMERA -->
-    <section id="camera" class="page">
-        <div class="form">
-            <h2>📹 동영상 찍기</h2>
+    <div class="cameraControls">
 
-            <video id="cameraPreview" autoplay muted playsinline
-                   style="width:100%;border-radius:15px;background:#111;"></video>
+      <button
+        class="record"
+        id="recordBtn"
+        onclick="startRecording()">
+        🔴 촬영 시작
+      </button>
 
-            <div class="actions">
-                <button class="primary" onclick="startCamera()">카메라 시작</button>
-                <button class="primary" onclick="startRecording()">🔴 촬영 시작</button>
-                <button class="secondary" onclick="stopRecording()">⏹ 촬영 종료</button>
-            </div>
+      <button
+        class="stop"
+        id="stopBtn"
+        onclick="stopRecording()"
+        disabled>
+        ⏹️ 촬영 끝
+      </button>
 
-            <p id="cameraStatus" class="muted"></p>
+    </div>
 
-            <div id="recordedArea"></div>
-        </div>
-    </section>
+  </div>
 
-    <!-- FAVORITES -->
-    <section id="favorites" class="page">
-        <h2>⭐ 즐겨찾기</h2>
-        <div id="favoriteGrid" class="grid"></div>
-    </section>
+  <div id="recordStatus"
+       class="notice"
+       style="margin-top:12px">
+    카메라를 준비하고 있어요.
+  </div>
 
-    <!-- NOTIFICATIONS -->
-    <section id="notifications" class="page">
-        <div style="display:flex;justify-content:space-between;align-items:center;">
-            <h2>🔔 새로운 소식</h2>
-            <button class="secondary" onclick="markNotificationsRead()">
-                모두 읽음
-            </button>
-        </div>
+  <video
+    id="recordedPreview"
+    class="preview"
+    controls
+    style="display:none">
+  </video>
 
-        <div id="notificationList" class="notification-list"></div>
-    </section>
+  <button
+    id="useRecordedBtn"
+    class="primaryBtn"
+    onclick="useRecordedVideo()"
+    style="display:none">
+    ⬆️ 이 영상 올리기
+  </button>
 
-</div>
+</section>
+
+
+<!-- FAVORITES -->
+<section id="favorites" class="page">
+
+  <div class="sectionTitle">⭐ 즐겨찾기</div>
+
+  <div id="favoriteList"></div>
+
+</section>
+
+
+<!-- NOTIFICATIONS -->
+<section id="notifications" class="page">
+
+  <div class="sectionTitle">🔔 새로운 소식</div>
+
+  <button
+    class="secondaryBtn"
+    onclick="requestNotifications()">
+    🔔 알림 허용하기
+  </button>
+
+  <div id="notificationList"></div>
+
+</section>
+
+</main>
+
 
 <!-- VIDEO MODAL -->
 <div id="videoModal" class="modal">
-    <div class="modal-box">
-        <button class="close" onclick="closeVideo()">×</button>
 
-        <div id="videoDetail"></div>
+  <div class="modalBox">
 
-        <h3>💬 댓글</h3>
+    <div class="modalTop">
+      <strong id="modalTitle">동영상</strong>
 
-        <input id="commentAuthor"
-               placeholder="이름"
-               style="width:100%;padding:12px;border:1px solid #ddd;border-radius:10px;">
-
-        <textarea id="commentText"
-                  placeholder="댓글을 입력하세요"
-                  style="width:100%;padding:12px;border:1px solid #ddd;border-radius:10px;margin-top:8px;min-height:80px;"></textarea>
-
-        <button class="primary" onclick="addComment()">
-            댓글 남기기
-        </button>
-
-        <div id="comments"></div>
+      <button
+        class="close"
+        onclick="closeVideo()">
+        ✕
+      </button>
     </div>
+
+    <video
+      id="modalVideo"
+      controls
+      playsinline>
+    </video>
+
+    <div
+      id="modalDescription"
+      class="muted"
+      style="margin-top:10px">
+    </div>
+
+    <div style="display:flex;gap:8px;margin-top:12px">
+
+      <button
+        class="secondaryBtn"
+        style="margin:0"
+        onclick="likeCurrentVideo()">
+        ❤️ 좋아요
+      </button>
+
+      <button
+        class="secondaryBtn"
+        style="margin:0"
+        onclick="favoriteCurrentVideo()">
+        ⭐ 즐겨찾기
+      </button>
+
+    </div>
+
+    <div class="sectionTitle">
+      💬 댓글
+    </div>
+
+    <div class="formGroup">
+      <input
+        id="commentAuthor"
+        placeholder="이름">
+    </div>
+
+    <div class="formGroup">
+      <input
+        id="commentText"
+        placeholder="댓글을 입력하세요">
+    </div>
+
+    <button
+      class="primaryBtn"
+      onclick="addComment()">
+      💬 댓글 남기기
+    </button>
+
+    <div id="commentList"></div>
+
+  </div>
+
 </div>
 
-<script>
-const SUPABASE_URL = "https://iunngbsdbvwpcgayluns.supabase.co";
-const SUPABASE_KEY = "sb_publishable_Ry5rF5t2eTVxLiBdJQmAKA_y1T2lzrT";
 
-const supabaseClient = window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_KEY
+<!-- BOTTOM NAV -->
+<nav class="bottomNav">
+
+  <button class="navItem active"
+          onclick="showPage('home',this)">
+    <span>🏠</span>
+    홈
+  </button>
+
+  <button class="navItem"
+          onclick="showPage('videos',this)">
+    <span>📹</span>
+    동영상
+  </button>
+
+  <button class="navItem"
+          onclick="showPage('channels',this)">
+    <span>📺</span>
+    채널
+  </button>
+
+  <button class="navItem"
+          onclick="showPage('favorites',this)">
+    <span>⭐</span>
+    즐겨찾기
+  </button>
+
+</nav>
+
+</div>
+
+
+<script>
+
+const SUPABASE_URL =
+"https://iunngbsdbvwpcgayluns.supabase.co";
+
+const SUPABASE_KEY =
+"sb_publishable_Ry5rF5t2eTVxLiBdJQmAKA_y1T2lzrT";
+
+const supabaseClient =
+window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
 );
 
-let channels = [];
-let videos = [];
-let favorites = [];
-let notifications = [];
+let currentVideoId = null;
 let currentVideo = null;
 
 let cameraStream = null;
 let mediaRecorder = null;
 let recordedChunks = [];
+let recordedBlob = null;
 
-function escapeHTML(value){
-    return String(value ?? "")
-        .replaceAll("&","&amp;")
-        .replaceAll("<","&lt;")
-        .replaceAll(">","&gt;")
-        .replaceAll('"',"&quot;")
-        .replaceAll("'","&#039;");
+
+// ==========================
+// 페이지 이동
+// ==========================
+
+function showPage(pageId, navButton){
+
+  document
+    .querySelectorAll(".page")
+    .forEach(p => p.classList.remove("active"));
+
+  const page =
+    document.getElementById(pageId);
+
+  if(page){
+    page.classList.add("active");
+  }
+
+  document
+    .querySelectorAll(".navItem")
+    .forEach(n => n.classList.remove("active"));
+
+  if(navButton){
+    navButton.classList.add("active");
+  }
+
+  window.scrollTo(0,0);
+
+  if(pageId === "home"){
+    loadVideos("homeVideos");
+  }
+
+  if(pageId === "videos"){
+    loadVideos("videoList");
+  }
+
+  if(pageId === "channels"){
+    loadChannels();
+  }
+
+  if(pageId === "favorites"){
+    loadFavorites();
+  }
+
+  if(pageId === "notifications"){
+    loadNotifications();
+  }
+
+  if(pageId === "upload"){
+    loadChannelSelect();
+  }
 }
 
-function showPage(page){
-    document.querySelectorAll(".page").forEach(p=>{
-        p.classList.remove("active");
-    });
 
-    const target = document.getElementById(page);
+// ==========================
+// 촬영 페이지
+// ==========================
 
-    if(target){
-        target.classList.add("active");
-    }
+async function startCamera(){
 
-    document.querySelectorAll(".nav button").forEach(b=>{
-        b.classList.remove("active");
-    });
+  showPage("camera");
 
-    if(page==="home") document.getElementById("navHome").classList.add("active");
-    if(page==="videos") document.getElementById("navVideos").classList.add("active");
-    if(page==="channels") document.getElementById("navChannels").classList.add("active");
-    if(page==="favorites") document.getElementById("navFavorites").classList.add("active");
-    if(page==="createChannel") document.getElementById("navCreate").classList.add("active");
-    if(page==="upload") document.getElementById("navUpload").classList.add("active");
-    if(page==="camera") document.getElementById("navCamera").classList.add("active");
-    if(page==="notifications") document.getElementById("navNotifications").classList.add("active");
+  const video =
+    document.getElementById("cameraPreview");
 
-    if(page==="upload"){
-        loadUploadChannels();
-    }
+  try{
 
-    if(page==="notifications"){
-        loadNotifications();
-    }
+    cameraStream =
+      await navigator.mediaDevices.getUserMedia({
+        video:{
+          facingMode:{
+            ideal:"environment"
+          }
+        },
+        audio:true
+      });
+
+    video.srcObject = cameraStream;
+
+    document.getElementById("recordStatus").textContent =
+      "카메라 준비 완료! 🔴 촬영 시작을 눌러주세요.";
+
+  }catch(error){
+
+    console.error(error);
+
+    document.getElementById("recordStatus").textContent =
+      "카메라를 사용할 수 없어요. 브라우저의 카메라 권한을 확인해주세요.";
+
+  }
 }
 
-async function loadAll(){
-    try{
-        const channelResult = await supabaseClient
-            .from("channels")
-            .select("*")
-            .order("created_at",{ascending:false});
 
-        if(channelResult.error) throw channelResult.error;
+// ==========================
+// 녹화 시작
+// ==========================
 
-        channels = channelResult.data || [];
+function startRecording(){
 
-        const videoResult = await supabaseClient
-            .from("videos")
-            .select("*")
-            .order("created_at",{ascending:false});
+  if(!cameraStream){
+    alert("먼저 카메라를 준비해주세요.");
+    return;
+  }
 
-        if(videoResult.error) throw videoResult.error;
+  recordedChunks = [];
 
-        videos = videoResult.data || [];
+  let options = {};
 
-        const favoriteResult = await supabaseClient
-            .from("favorites")
-            .select("*")
-            .order("created_at",{ascending:false});
+  if(MediaRecorder.isTypeSupported("video/webm;codecs=vp9,opus")){
+    options.mimeType =
+      "video/webm;codecs=vp9,opus";
+  }
 
-        if(!favoriteResult.error){
-            favorites = favoriteResult.data || [];
+  try{
+
+    mediaRecorder =
+      new MediaRecorder(
+        cameraStream,
+        options
+      );
+
+  }catch(e){
+
+    mediaRecorder =
+      new MediaRecorder(cameraStream);
+
+  }
+
+  mediaRecorder.ondataavailable = event => {
+
+    if(event.data && event.data.size > 0){
+      recordedChunks.push(event.data);
+    }
+
+  };
+
+  mediaRecorder.onstop = () => {
+
+    recordedBlob =
+      new Blob(
+        recordedChunks,
+        {
+          type:
+            mediaRecorder.mimeType ||
+            "video/webm"
         }
+      );
 
-        renderAll();
-        loadNotifications();
+    const preview =
+      document.getElementById("recordedPreview");
 
-    }catch(error){
-        console.error(error);
+    preview.src =
+      URL.createObjectURL(recordedBlob);
 
-        document.getElementById("homeVideos").innerHTML =
-            '<div class="empty">Supabase 연결을 확인해주세요.</div>';
-    }
+    preview.style.display = "block";
+
+    document.getElementById("useRecordedBtn")
+      .style.display = "block";
+
+    document.getElementById("recordStatus").textContent =
+      "촬영 완료! 영상을 올릴 수 있어요. 🎉";
+
+  };
+
+  mediaRecorder.start();
+
+  document.getElementById("recordBtn").disabled = true;
+  document.getElementById("stopBtn").disabled = false;
+
+  document.getElementById("recordStatus").textContent =
+    "🔴 촬영 중...";
+
 }
 
-function renderAll(){
-    renderVideos(videos,"homeVideos");
-    renderVideos(videos,"videoGrid");
-    renderChannels();
-    renderFavorites();
-    loadUploadChannels();
+
+// ==========================
+// 녹화 종료
+// ==========================
+
+function stopRecording(){
+
+  if(
+    mediaRecorder &&
+    mediaRecorder.state !== "inactive"
+  ){
+    mediaRecorder.stop();
+  }
+
+  document.getElementById("recordBtn").disabled = false;
+  document.getElementById("stopBtn").disabled = true;
+
 }
 
-function channelName(channelId){
-    const channel = channels.find(c=>String(c.id)===String(channelId));
-    return channel ? channel.name : "알 수 없는 채널";
-}
 
-function renderVideos(list,targetId){
-    const target = document.getElementById(targetId);
+// ==========================
+// 촬영한 영상 사용
+// ==========================
 
-    if(!target) return;
+function useRecordedVideo(){
 
-    if(!list.length){
-        target.innerHTML = '<div class="empty">아직 동영상이 없어요 🎬</div>';
-        return;
-    }
+  if(!recordedBlob){
+    alert("먼저 영상을 촬영해주세요.");
+    return;
+  }
 
-    target.innerHTML = list.map(video=>{
-        return `
-        <div class="card">
-            <div class="thumb">
-                <video src="${escapeHTML(video.video_url)}" muted preload="metadata"></video>
-            </div>
-
-            <div class="card-body">
-                <div class="card-title">${escapeHTML(video.title)}</div>
-
-                <div class="muted">
-                    📺 ${escapeHTML(channelName(video.channel_id))}
-                </div>
-
-                <div class="muted">
-                    👤 ${escapeHTML(video.owner || "사용자")}
-                </div>
-
-                <div class="actions">
-                    <button class="primary"
-                            onclick="openVideo(${video.id})">
-                        ▶️ 보기
-                    </button>
-
-                    <button class="secondary"
-                            onclick="toggleFavorite(${video.id})">
-                        ⭐
-                    </button>
-                </div>
-            </div>
-        </div>
-        `;
-    }).join("");
-}
-
-function renderChannels(){
-    const target = document.getElementById("channelGrid");
-
-    if(!channels.length){
-        target.innerHTML = `
-        <div class="empty">
-            아직 채널이 없어요.<br><br>
-            <button class="primary" onclick="showPage('createChannel')">
-                ➕ 첫 번째 채널 만들기
-            </button>
-        </div>`;
-        return;
-    }
-
-    target.innerHTML = channels.map(channel=>{
-        const count = videos.filter(v=>
-            String(v.channel_id)===String(channel.id)
-        ).length;
-
-        const first = (channel.name || "?").charAt(0);
-
-        return `
-        <div class="channel-card">
-            <div class="channel-avatar">${escapeHTML(first)}</div>
-
-            <h3>${escapeHTML(channel.name)}</h3>
-
-            <p>${escapeHTML(channel.description || "채널 소개가 없습니다.")}</p>
-
-            <div class="muted">
-                👤 ${escapeHTML(channel.owner || "사용자")}
-            </div>
-
-            <div class="muted">
-                🎬 동영상 ${count}개
-            </div>
-
-            <div class="actions">
-                <button class="primary"
-                        onclick="openChannel(${channel.id})">
-                    채널 보기
-                </button>
-            </div>
-        </div>
-        `;
-    }).join("");
-}
-
-function renderFavorites(){
-    const target = document.getElementById("favoriteGrid");
-
-    const list = videos.filter(v=>
-        favorites.some(f=>String(f.video_id)===String(v.id))
+  const file =
+    new File(
+      [recordedBlob],
+      "harmony-recording.webm",
+      {
+        type:
+          recordedBlob.type ||
+          "video/webm"
+      }
     );
 
-    renderVideos(list,"favoriteGrid");
+  const input =
+    document.getElementById("videoFile");
+
+  const dt =
+    new DataTransfer();
+
+  dt.items.add(file);
+
+  input.files = dt.files;
+
+  showPage("upload");
+
 }
 
-async function createChannel(){
-    const name = document.getElementById("channelName").value.trim();
-    const description = document.getElementById("channelDescription").value.trim();
-    const owner = document.getElementById("channelOwner").value.trim();
 
-    if(!name){
-        alert("채널 이름을 입력해주세요.");
-        return;
+// ==========================
+// 영상 미리보기
+// ==========================
+
+function previewVideo(event){
+
+  const file =
+    event.target.files[0];
+
+  if(!file){
+    return;
+  }
+
+  const preview =
+    document.getElementById("preview");
+
+  preview.src =
+    URL.createObjectURL(file);
+
+  preview.style.display =
+    "block";
+
+  preview.onloadedmetadata = () => {
+
+    const duration =
+      preview.duration;
+
+    if(duration > 1800){
+
+      alert(
+        "30분을 넘는 영상은 올릴 수 없어요."
+      );
+
+      event.target.value = "";
+      preview.style.display = "none";
+
     }
 
-    try{
-        const {data,error} = await supabaseClient
-            .from("channels")
-            .insert({
-                name,
-                description,
-                owner: owner || "사용자"
-            })
-            .select()
-            .single();
+  };
 
-        if(error) throw error;
-
-        await createNotification(
-            "channel",
-            "새 채널이 만들어졌어요 📺",
-            `${name} 채널이 HARMONY에 만들어졌어요.`,
-            data.id
-        );
-
-        alert("🎉 채널이 만들어졌어요!");
-
-        document.getElementById("channelName").value="";
-        document.getElementById("channelDescription").value="";
-        document.getElementById("channelOwner").value="";
-
-        await loadAll();
-        showPage("channels");
-
-    }catch(error){
-        console.error(error);
-        alert("채널 만들기에 실패했어요.\n\n"+error.message);
-    }
 }
 
-function loadUploadChannels(){
-    const select = document.getElementById("uploadChannel");
 
-    if(!select) return;
+// ==========================
+// 채널 선택 목록
+// ==========================
 
-    if(!channels.length){
-        select.innerHTML = '<option value="">먼저 채널을 만들어 주세요</option>';
-        return;
-    }
+async function loadChannelSelect(){
 
-    select.innerHTML = channels.map(c=>
-        `<option value="${c.id}">${escapeHTML(c.name)}</option>`
-    ).join("");
+  const select =
+    document.getElementById("videoChannel");
+
+  select.innerHTML =
+    '<option value="">채널을 선택하세요</option>';
+
+  const {data,error} =
+    await supabaseClient
+      .from("channels")
+      .select("*")
+      .order("created_at",{ascending:false});
+
+  if(error){
+
+    console.error(error);
+
+    return;
+  }
+
+  (data || []).forEach(channel => {
+
+    const option =
+      document.createElement("option");
+
+    option.value =
+      channel.id;
+
+    option.textContent =
+      channel.name;
+
+    select.appendChild(option);
+
+  });
+
 }
+
+
+// ==========================
+// 동영상 업로드
+// ==========================
 
 async function uploadVideo(){
-    const channelId = document.getElementById("uploadChannel").value;
-    const title = document.getElementById("videoTitle").value.trim();
-    const description = document.getElementById("videoDescription").value.trim();
-    const owner = document.getElementById("videoOwner").value.trim();
-    const file = document.getElementById("videoFile").files[0];
 
-    const status = document.getElementById("uploadStatus");
-    const progress = document.getElementById("uploadProgress");
+  const file =
+    document.getElementById("videoFile")
+      .files[0];
 
-    if(!channelId){
-        alert("채널을 먼저 만들어 주세요.");
-        return;
+  const title =
+    document.getElementById("videoTitle")
+      .value.trim();
+
+  const description =
+    document.getElementById("videoDescription")
+      .value.trim();
+
+  const channelId =
+    document.getElementById("videoChannel")
+      .value;
+
+  const status =
+    document.getElementById("uploadStatus");
+
+  if(!file){
+    alert("동영상을 선택해주세요.");
+    return;
+  }
+
+  if(!title){
+    alert("동영상 제목을 입력해주세요.");
+    return;
+  }
+
+  if(!channelId){
+    alert("채널을 선택해주세요.");
+    return;
+  }
+
+  status.style.display = "block";
+  status.textContent =
+    "⏳ 동영상을 업로드하고 있어요...";
+
+  try{
+
+    const duration =
+      await getVideoDuration(file);
+
+    if(duration > 1800){
+
+      throw new Error(
+        "30분을 넘는 동영상은 올릴 수 없습니다."
+      );
+
     }
 
-    if(!title){
-        alert("동영상 제목을 입력해주세요.");
-        return;
-    }
+    const safeName =
+      file.name
+        .replace(/[^a-zA-Z0-9가-힣._-]/g,"_");
 
-    if(!file){
-        alert("동영상 파일을 선택해주세요.");
-        return;
-    }
+    const path =
+      Date.now() +
+      "_" +
+      Math.random()
+        .toString(36)
+        .slice(2) +
+      "_" +
+      safeName;
 
-    status.textContent="동영상 길이를 확인하는 중...";
-    progress.style.width="5%";
-
-    try{
-        const duration = await getVideoDuration(file);
-
-        if(duration > 1800){
-            status.textContent="";
-            progress.style.width="0%";
-            alert("동영상은 최대 30분까지 올릴 수 있어요.");
-            return;
-        }
-
-        progress.style.width="15%";
-        status.textContent="Storage에 업로드하는 중...";
-
-        const safeName = file.name
-            .replace(/[^\w.\-가-힣]/g,"_");
-
-        const filePath =
-            Date.now()+"_"+Math.random().toString(36).slice(2)+"_"+safeName;
-
-        const {error:uploadError} = await supabaseClient
-            .storage
-            .from("videos")
-            .upload(filePath,file,{
-                cacheControl:"3600",
-                upsert:false,
-                contentType:file.type
-            });
-
-        if(uploadError) throw uploadError;
-
-        progress.style.width="80%";
-
-        const {data:urlData} =
-            supabaseClient
-            .storage
-            .from("videos")
-            .getPublicUrl(filePath);
-
-        const videoUrl = urlData.publicUrl;
-
-        status.textContent="동영상 정보를 저장하는 중...";
-
-        const {data,error} = await supabaseClient
-            .from("videos")
-            .insert({
-                channel_id:Number(channelId),
-                title,
-                description,
-                video_url:videoUrl,
-                duration:Math.round(duration),
-                owner:owner || "사용자",
-                likes:0
-            })
-            .select()
-            .single();
-
-        if(error) throw error;
-
-        await createNotification(
-            "video",
-            "새 동영상이 올라왔어요 🎬",
-            `${title} 동영상이 HARMONY에 올라왔어요.`,
-            data.id
+    const {error:storageError} =
+      await supabaseClient
+        .storage
+        .from("videos")
+        .upload(
+          path,
+          file,
+          {
+            cacheControl:"3600",
+            upsert:false,
+            contentType:
+              file.type || "video/mp4"
+          }
         );
 
-        progress.style.width="100%";
-        status.textContent="🎉 업로드 완료!";
-
-        document.getElementById("videoTitle").value="";
-        document.getElementById("videoDescription").value="";
-        document.getElementById("videoOwner").value="";
-        document.getElementById("videoFile").value="";
-
-        await loadAll();
-
-        setTimeout(()=>{
-            progress.style.width="0%";
-            status.textContent="";
-            showPage("videos");
-        },800);
-
-    }catch(error){
-        console.error(error);
-        status.textContent="업로드 실패";
-        progress.style.width="0%";
-
-        alert(
-            "동영상 업로드에 실패했어요.\n\n"+
-            error.message+
-            "\n\nSupabase Storage에 videos 버킷이 있는지 확인해주세요."
-        );
-    }
-}
-
-function getVideoDuration(file){
-    return new Promise((resolve,reject)=>{
-        const video=document.createElement("video");
-        const url=URL.createObjectURL(file);
-
-        video.preload="metadata";
-
-        video.onloadedmetadata=()=>{
-            URL.revokeObjectURL(url);
-            resolve(video.duration);
-        };
-
-        video.onerror=()=>{
-            URL.revokeObjectURL(url);
-            reject(new Error("동영상 정보를 읽을 수 없습니다."));
-        };
-
-        video.src=url;
-    });
-}
-
-async function openVideo(id){
-    currentVideo = videos.find(v=>String(v.id)===String(id));
-
-    if(!currentVideo) return;
-
-    const modal=document.getElementById("videoModal");
-
-    document.getElementById("videoDetail").innerHTML=`
-        <h2>${escapeHTML(currentVideo.title)}</h2>
-
-        <div class="video-player">
-            <video controls autoplay src="${escapeHTML(currentVideo.video_url)}"></video>
-        </div>
-
-        <p>${escapeHTML(currentVideo.description || "")}</p>
-
-        <p class="muted">
-            📺 ${escapeHTML(channelName(currentVideo.channel_id))}
-            · 👤 ${escapeHTML(currentVideo.owner || "사용자")}
-        </p>
-
-        <div class="actions">
-            <button class="primary"
-                    onclick="likeVideo(${currentVideo.id})">
-                ❤️ 좋아요
-            </button>
-
-            <button class="secondary"
-                    onclick="toggleFavorite(${currentVideo.id})">
-                ⭐ 즐겨찾기
-            </button>
-        </div>
-    `;
-
-    modal.classList.add("show");
-
-    await loadComments();
-}
-
-function closeVideo(){
-    document.getElementById("videoModal").classList.remove("show");
-    document.getElementById("videoDetail").innerHTML="";
-    document.getElementById("comments").innerHTML="";
-    currentVideo=null;
-}
-
-async function likeVideo(id){
-    try{
-        const video=videos.find(v=>String(v.id)===String(id));
-
-        if(!video) return;
-
-        const {error}=await supabaseClient
-            .from("videos")
-            .update({
-                likes:(video.likes || 0)+1
-            })
-            .eq("id",id);
-
-        if(error) throw error;
-
-        await createNotification(
-            "like",
-            "좋아요 ❤️",
-            `${video.title}에 좋아요가 추가됐어요.`,
-            id
-        );
-
-        await loadAll();
-
-        if(currentVideo){
-            currentVideo.likes=(currentVideo.likes || 0)+1;
-        }
-
-        alert("❤️ 좋아요!");
-    }catch(error){
-        alert("좋아요에 실패했어요.\n"+error.message);
-    }
-}
-
-async function toggleFavorite(id){
-    const existing=favorites.find(f=>
-        String(f.video_id)===String(id)
-    );
-
-    try{
-        if(existing){
-            const {error}=await supabaseClient
-                .from("favorites")
-                .delete()
-                .eq("id",existing.id);
-
-            if(error) throw error;
-        }else{
-            const {error}=await supabaseClient
-                .from("favorites")
-                .insert({
-                    video_id:Number(id),
-                    user_name:"사용자"
-                });
-
-            if(error) throw error;
-        }
-
-        await loadAll();
-
-    }catch(error){
-        alert("즐겨찾기 처리에 실패했어요.\n"+error.message);
-    }
-}
-
-async function loadComments(){
-    if(!currentVideo) return;
-
-    const target=document.getElementById("comments");
-
-    const {data,error}=await supabaseClient
-        .from("comments")
-        .select("*")
-        .eq("video_id",currentVideo.id)
-        .order("created_at",{ascending:false});
-
-    if(error){
-        target.innerHTML="<p>댓글을 불러오지 못했어요.</p>";
-        return;
+    if(storageError){
+      throw storageError;
     }
 
-    if(!data.length){
-        target.innerHTML='<div class="empty">첫 댓글을 남겨보세요 💬</div>';
-        return;
+    const {data:urlData} =
+      supabaseClient
+        .storage
+        .from("videos")
+        .getPublicUrl(path);
+
+    const videoUrl =
+      urlData.publicUrl;
+
+    const {data:channelData} =
+      await supabaseClient
+        .from("channels")
+        .select("name,owner")
+        .eq("id",channelId)
+        .single();
+
+    const owner =
+      channelData?.owner ||
+      "사용자";
+
+    const {data:videoData,error:videoError} =
+      await supabaseClient
+        .from("videos")
+        .insert({
+          channel_id:Number(channelId),
+          title:title,
+          description:description,
+          video_url:videoUrl,
+          duration:Math.round(duration),
+          likes:0,
+          owner:owner
+        })
+        .select()
+        .single();
+
+    if(videoError){
+      throw videoError;
     }
 
-    target.innerHTML=data.map(c=>`
-        <div class="comment">
-            <b>${escapeHTML(c.author)}</b>
-            <p>${escapeHTML(c.text)}</p>
-            <span class="muted">
-                ${new Date(c.created_at).toLocaleString("ko-KR")}
-            </span>
-        </div>
-    `).join("");
-}
+    await supabaseClient
+      .from("notifications")
+      .insert({
+        type:"video",
+        title:"새 동영상 🎬",
+        message:
+          `"${title}" 동영상이 올라왔어요.`,
+        related_id:
+          videoData?.id || null
+      });
 
-async function addComment(){
-    if(!currentVideo) return;
+    status.textContent =
+      "✅ 동영상 업로드 완료!";
 
-    const author=document.getElementById("commentAuthor").value.trim();
-    const text=document.getElementById("commentText").value.trim();
+    alert("동영상이 올라갔어요! 🎉");
 
-    if(!author || !text){
-        alert("이름과 댓글을 입력해주세요.");
-        return;
-    }
+    document.getElementById("videoFile").value = "";
+    document.getElementById("videoTitle").value = "";
+    document.getElementById("videoDescription").value = "";
 
-    try{
-        const {error}=await supabaseClient
-            .from("comments")
-            .insert({
-                video_id:currentVideo.id,
-                author,
-                text
-            });
-
-        if(error) throw error;
-
-        await createNotification(
-            "comment",
-            "새 댓글이 달렸어요 💬",
-            `${currentVideo.title}에 새 댓글이 달렸어요.`,
-            currentVideo.id
-        );
-
-        document.getElementById("commentText").value="";
-
-        await loadComments();
-
-    }catch(error){
-        alert("댓글 등록에 실패했어요.\n"+error.message);
-    }
-}
-
-function openChannel(id){
-    const channel=channels.find(c=>String(c.id)===String(id));
-
-    if(!channel) return;
-
-    const list=videos.filter(v=>
-        String(v.channel_id)===String(id)
-    );
-
-    const target=document.getElementById("homeVideos");
+    document.getElementById("preview").style.display =
+      "none";
 
     showPage("home");
 
-    target.innerHTML=`
-        <div style="grid-column:1/-1">
-            <div class="hero">
-                <h2>📺 ${escapeHTML(channel.name)}</h2>
-                <p>${escapeHTML(channel.description || "")}</p>
-                <p class="muted">
-                    👤 ${escapeHTML(channel.owner || "사용자")}
-                    · 🎬 ${list.length}개
-                </p>
-            </div>
-        </div>
-    `;
+  }catch(error){
 
-    if(list.length){
-        const wrapper=document.createElement("div");
-        wrapper.className="grid";
-        wrapper.style.gridColumn="1/-1";
-        target.appendChild(wrapper);
+    console.error(error);
 
-        wrapper.innerHTML=list.map(video=>`
-            <div class="card">
-                <div class="thumb">
-                    <video src="${escapeHTML(video.video_url)}"
-                           muted
-                           preload="metadata"></video>
-                </div>
-                <div class="card-body">
-                    <div class="card-title">${escapeHTML(video.title)}</div>
-                    <div class="actions">
-                        <button class="primary"
-                                onclick="openVideo(${video.id})">
-                            ▶️ 보기
-                        </button>
-                    </div>
-                </div>
-            </div>
-        `).join("");
-    }
-}
-
-async function createNotification(type,title,message,relatedId){
-    try{
-        await supabaseClient
-            .from("notifications")
-            .insert({
-                type,
-                title,
-                message,
-                related_id:relatedId || null
-            });
-    }catch(error){
-        console.warn("알림 저장 실패:",error);
-    }
-}
-
-async function loadNotifications(){
-    try{
-        const {data,error}=await supabaseClient
-            .from("notifications")
-            .select("*")
-            .order("created_at",{ascending:false})
-            .limit(100);
-
-        if(error) throw error;
-
-        notifications=data || [];
-
-        renderNotifications();
-
-    }catch(error){
-        console.warn("알림을 불러오지 못했습니다.",error);
-
-        document.getElementById("notificationList").innerHTML=
-            '<div class="empty">알림을 불러오지 못했어요.</div>';
-    }
-}
-
-function renderNotifications(){
-    const target=document.getElementById("notificationList");
-
-    if(!notifications.length){
-        target.innerHTML=
-            '<div class="empty">새로운 소식이 없어요 🔔</div>';
-
-        updateBadge(0);
-        return;
-    }
-
-    target.innerHTML=notifications.map(n=>`
-        <div class="notice unread">
-            <b>${escapeHTML(n.title)}</b>
-            <p>${escapeHTML(n.message)}</p>
-            <span class="muted">
-                ${new Date(n.created_at).toLocaleString("ko-KR")}
-            </span>
-        </div>
-    `).join("");
-
-    updateBadge(notifications.length);
-
-    if("Notification" in window &&
-       Notification.permission==="default"){
-        Notification.requestPermission().catch(()=>{});
-    }
-}
-
-function updateBadge(count){
-    const badge=document.getElementById("notificationBadge");
-
-    if(count>0){
-        badge.style.display="flex";
-        badge.textContent=count>99 ? "99+" : count;
-    }else{
-        badge.style.display="none";
-    }
-}
-
-async function markNotificationsRead(){
-    notifications=[];
-    renderNotifications();
-}
-
-async function searchAll(){
-    const q=document.getElementById("searchInput").value.trim().toLowerCase();
-
-    if(!q){
-        await loadAll();
-        showPage("videos");
-        return;
-    }
-
-    const videoResults=videos.filter(v=>
-        String(v.title || "").toLowerCase().includes(q) ||
-        String(v.description || "").toLowerCase().includes(q) ||
-        String(v.owner || "").toLowerCase().includes(q)
-    );
-
-    const channelResults=channels.filter(c=>
-        String(c.name || "").toLowerCase().includes(q) ||
-        String(c.description || "").toLowerCase().includes(q) ||
-        String(c.owner || "").toLowerCase().includes(q)
-    );
-
-    showPage("videos");
-
-    const target=document.getElementById("videoGrid");
-
-    let html="";
-
-    if(channelResults.length){
-        html+=`
-        <div style="grid-column:1/-1">
-            <h2>📺 채널 검색 결과</h2>
-        </div>
-        `;
-
-        html+=channelResults.map(c=>`
-            <div class="channel-card">
-                <div class="channel-avatar">
-                    ${escapeHTML((c.name || "?").charAt(0))}
-                </div>
-                <h3>${escapeHTML(c.name)}</h3>
-                <p>${escapeHTML(c.description || "")}</p>
-                <button class="primary"
-                        onclick="openChannel(${c.id})">
-                    채널 보기
-                </button>
-            </div>
-        `).join("");
-    }
-
-    if(videoResults.length){
-        html+=`
-        <div style="grid-column:1/-1">
-            <h2>🎬 동영상 검색 결과</h2>
-        </div>
-        `;
-
-        html+=videoResults.map(v=>`
-            <div class="card">
-                <div class="thumb">
-                    <video src="${escapeHTML(v.video_url)}"
-                           muted
-                           preload="metadata"></video>
-                </div>
-
-                <div class="card-body">
-                    <div class="card-title">
-                        ${escapeHTML(v.title)}
-                    </div>
-
-                    <div class="muted">
-                        📺 ${escapeHTML(channelName(v.channel_id))}
-                    </div>
-
-                    <button class="primary"
-                            onclick="openVideo(${v.id})">
-                        ▶️ 보기
-                    </button>
-                </div>
-            </div>
-        `).join("");
-    }
-
-    if(!html){
-        html='<div class="empty">검색 결과가 없어요 🔎</div>';
-    }
-
-    target.innerHTML=html;
-}
-
-async function startCamera(){
-    try{
-        cameraStream=await navigator.mediaDevices.getUserMedia({
-            video:true,
-            audio:true
-        });
-
-        document.getElementById("cameraPreview").srcObject=cameraStream;
-
-        document.getElementById("cameraStatus").textContent=
-            "카메라가 준비됐어요.";
-    }catch(error){
-        alert("카메라를 사용할 수 없습니다.\n"+error.message);
-    }
-}
-
-function startRecording(){
-    if(!cameraStream){
-        alert("먼저 카메라 시작을 눌러주세요.");
-        return;
-    }
-
-    recordedChunks=[];
-
-    try{
-        mediaRecorder=new MediaRecorder(cameraStream);
-
-        mediaRecorder.ondataavailable=e=>{
-            if(e.data.size>0){
-                recordedChunks.push(e.data);
-            }
-        };
-
-        mediaRecorder.onstop=()=>{
-            const blob=new Blob(recordedChunks,{
-                type:"video/webm"
-            });
-
-            const url=URL.createObjectURL(blob);
-
-            document.getElementById("recordedArea").innerHTML=`
-                <h3>🎬 촬영한 동영상</h3>
-
-                <video controls
-                       src="${url}"
-                       style="width:100%;border-radius:15px;"></video>
-
-                <br><br>
-
-                <button class="primary"
-                        onclick="useRecordedVideo('${url}')">
-                    ⬆️ 업로드 화면에서 사용
-                </button>
-            `;
-        };
-
-        mediaRecorder.start();
-
-        document.getElementById("cameraStatus").textContent=
-            "🔴 촬영 중...";
-
-    }catch(error){
-        alert("촬영을 시작할 수 없습니다.\n"+error.message);
-    }
-}
-
-function stopRecording(){
-    if(mediaRecorder && mediaRecorder.state!=="inactive"){
-        mediaRecorder.stop();
-
-        document.getElementById("cameraStatus").textContent=
-            "촬영이 끝났어요.";
-    }
-}
-
-function useRecordedVideo(url){
-    showPage("upload");
+    status.textContent =
+      "❌ 업로드 실패";
 
     alert(
-        "촬영한 동영상이 준비됐어요.\n"+
-        "브라우저 보안 때문에 파일 선택창에서 직접 선택해야 하는 경우가 있어요."
+      "업로드에 실패했어요.\n\n" +
+      (error.message || error)
     );
+
+  }
+
 }
 
-setInterval(async()=>{
-    try{
-        await loadNotifications();
-    }catch(e){}
-},30000);
 
-loadAll();
+// ==========================
+// 영상 길이
+// ==========================
 
-if("Notification" in window &&
-   Notification.permission==="default"){
-    setTimeout(()=>{
-        Notification.requestPermission().catch(()=>{});
-    },3000);
+function getVideoDuration(file){
+
+  return new Promise((resolve,reject) => {
+
+    const video =
+      document.createElement("video");
+
+    const url =
+      URL.createObjectURL(file);
+
+    video.preload = "metadata";
+
+    video.onloadedmetadata = () => {
+
+      const duration =
+        video.duration;
+
+      URL.revokeObjectURL(url);
+
+      resolve(duration);
+
+    };
+
+    video.onerror = () => {
+
+      URL.revokeObjectURL(url);
+
+      reject(
+        new Error("영상 정보를 읽을 수 없습니다.")
+      );
+
+    };
+
+    video.src = url;
+
+  });
+
 }
+
+
+// ==========================
+// 채널 만들기
+// ==========================
+
+async function createChannel(){
+
+  const name =
+    document.getElementById("channelName")
+      .value.trim();
+
+  const description =
+    document.getElementById("channelDescription")
+      .value.trim();
+
+  const owner =
+    document.getElementById("channelOwner")
+      .value.trim() ||
+    "사용자";
+
+  if(!name){
+
+    alert("채널 이름을 입력해주세요.");
+
+    return;
+  }
+
+  try{
+
+    const {data,error} =
+      await supabaseClient
+        .from("channels")
+        .insert({
+          name:name,
+          description:description,
+          owner:owner
+        })
+        .select()
+        .single();
+
+    if(error){
+      throw error;
+    }
+
+    await supabaseClient
+      .from("notifications")
+      .insert({
+        type:"channel",
+        title:"새 채널 📺",
+        message:
+          `${name} 채널이 만들어졌어요.`,
+        related_id:
+          data?.id || null
+      });
+
+    alert(
+      `"${name}" 채널이 만들어졌어요! 🎉`
+    );
+
+    document.getElementById("channelName").value = "";
+    document.getElementById("channelDescription").value = "";
+    document.getElementById("channelOwner").value = "";
+
+    loadChannels();
+
+    showPage("channels");
+
+  }catch(error){
+
+    console.error(error);
+
+    alert(
+      "채널 만들기에 실패했어요.\n\n" +
+      (error.message || error)
+    );
+
+  }
+
+}
+
+
+// ==========================
+// 동영상 불러오기
+// ==========================
+
+async function loadVideos(containerId){
+
+  const container =
+    document.getElementById(containerId);
+
+  if(!container){
+    return;
+  }
+
+  container.innerHTML =
+    '<div class="empty">불러오는 중...</div>';
+
+  const {data,error} =
+    await supabaseClient
+      .from("videos")
+      .select(`
+        *,
+        channels (
+          name,
+          owner
+        )
+      `)
+      .order("created_at",{ascending:false});
+
+  if(error){
+
+    console.error(error);
+
+    container.innerHTML =
+      '<div class="empty">동영상을 불러오지 못했어요.</div>';
+
+    return;
+  }
+
+  if(!data || data.length === 0){
+
+    container.innerHTML =
+      '<div class="empty">아직 동영상이 없어요 🎬</div>';
+
+    return;
+  }
+
+  container.innerHTML = "";
+
+  data.forEach(video => {
+
+    const card =
+      document.createElement("div");
+
+    card.className =
+      "card videoCard";
+
+    card.innerHTML = `
+
+      <video
+        class="videoThumb"
+        src="${escapeHtml(video.video_url)}"
+        muted
+        playsinline
+        preload="metadata">
+      </video>
+
+      <div class="videoInfo">
+
+        <div class="videoTitle">
+          ${escapeHtml(video.title)}
+        </div>
+
+        <div class="muted">
+          📺 ${escapeHtml(video.channels?.name || "채널 없음")}
+        </div>
+
+        <div class="muted" style="margin-top:5px">
+          ❤️ ${video.likes || 0}
+        </div>
+
+      </div>
+    `;
+
+    card.onclick =
+      () => openVideo(video);
+
+    container.appendChild(card);
+
+  });
+
+}
+
+
+// ==========================
+// 채널 목록
+// ==========================
+
+async function loadChannels(){
+
+  const container =
+    document.getElementById("channelList");
+
+  container.innerHTML =
+    '<div class="empty">불러오는 중...</div>';
+
+  const {data,error} =
+    await supabaseClient
+      .from("channels")
+      .select("*")
+      .order("created_at",{ascending:false});
+
+  if(error){
+
+    console.error(error);
+
+    container.innerHTML =
+      '<div class="empty">채널을 불러오지 못했어요.</div>';
+
+    return;
+  }
+
+  if(!data || data.length === 0){
+
+    container.innerHTML =
+      '<div class="empty">아직 채널이 없어요 📺</div>';
+
+    return;
+  }
+
+  container.innerHTML = "";
+
+  data.forEach(channel => {
+
+    const card =
+      document.createElement("div");
+
+    card.className =
+      "card channelCard";
+
+    card.innerHTML = `
+
+      <div class="channelIcon">📺</div>
+
+      <div>
+
+        <div class="channelName">
+          ${escapeHtml(channel.name)}
+        </div>
+
+        <div class="muted">
+          ${escapeHtml(channel.description || "")}
+        </div>
+
+        <div class="muted" style="margin-top:4px">
+          만든 사람: ${escapeHtml(channel.owner || "사용자")}
+        </div>
+
+      </div>
+    `;
+
+    container.appendChild(card);
+
+  });
+
+}
+
+
+// ==========================
+// 영상 열기
+// ==========================
+
+async function openVideo(video){
+
+  currentVideo =
+    video;
+
+  currentVideoId =
+    video.id;
+
+  document.getElementById("modalTitle")
+    .textContent =
+      video.title;
+
+  document.getElementById("modalVideo")
+    .src =
+      video.video_url;
+
+  document.getElementById("modalDescription")
+    .textContent =
+      video.description || "";
+
+  document.getElementById("videoModal")
+    .classList.add("show");
+
+  loadComments();
+
+}
+
+
+// ==========================
+// 영상 닫기
+// ==========================
+
+function closeVideo(){
+
+  const video =
+    document.getElementById("modalVideo");
+
+  video.pause();
+  video.src = "";
+
+  document.getElementById("videoModal")
+    .classList.remove("show");
+
+}
+
+
+// ==========================
+// 좋아요
+// ==========================
+
+async function likeCurrentVideo(){
+
+  if(!currentVideoId){
+    return;
+  }
+
+  const newLikes =
+    (currentVideo.likes || 0) + 1;
+
+  const {error} =
+    await supabaseClient
+      .from("videos")
+      .update({
+        likes:newLikes
+      })
+      .eq("id",currentVideoId);
+
+  if(error){
+
+    alert("좋아요 처리에 실패했어요.");
+
+    return;
+  }
+
+  currentVideo.likes =
+    newLikes;
+
+  alert("❤️ 좋아요!");
+
+  loadVideos("homeVideos");
+  loadVideos("videoList");
+
+}
+
+
+// ==========================
+// 즐겨찾기
+// ==========================
+
+async function favoriteCurrentVideo(){
+
+  if(!currentVideoId){
+    return;
+  }
+
+  const userName =
+    localStorage.getItem("harmony_user") ||
+    "사용자";
+
+  const {data:existing} =
+    await supabaseClient
+      .from("favorites")
+      .select("id")
+      .eq("video_id",currentVideoId)
+      .eq("user_name",userName)
+      .maybeSingle();
+
+  if(existing){
+
+    alert("이미 즐겨찾기에 있어요 ⭐");
+
+    return;
+  }
+
+  const {error} =
+    await supabaseClient
+      .from("favorites")
+      .insert({
+        video_id:currentVideoId,
+        user_name:userName
+      });
+
+  if(error){
+
+    alert("즐겨찾기 저장에 실패했어요.");
+
+    return;
+  }
+
+  alert("⭐ 즐겨찾기에 추가했어요!");
+
+}
+
+
+// ==========================
+// 즐겨찾기 목록
+// ==========================
+
+async function loadFavorites(){
+
+  const container =
+    document.getElementById("favoriteList");
+
+  container.innerHTML =
+    '<div class="empty">불러오는 중...</div>';
+
+  const userName =
+    localStorage.getItem("harmony_user") ||
+    "사용자";
+
+  const {data,error} =
+    await supabaseClient
+      .from("favorites")
+      .select(`
+        *,
+        videos (
+          *,
+          channels (
+            name
+          )
+        )
+      `)
+      .eq("user_name",userName)
+      .order("created_at",{ascending:false});
+
+  if(error){
+
+    console.error(error);
+
+    container.innerHTML =
+      '<div class="empty">즐겨찾기를 불러오지 못했어요.</div>';
+
+    return;
+  }
+
+  if(!data || data.length === 0){
+
+    container.innerHTML =
+      '<div class="empty">아직 즐겨찾기한 영상이 없어요 ⭐</div>';
+
+    return;
+  }
+
+  container.innerHTML = "";
+
+  data.forEach(item => {
+
+    if(!item.videos){
+      return;
+    }
+
+    const video =
+      item.videos;
+
+    const card =
+      document.createElement("div");
+
+    card.className =
+      "card videoCard";
+
+    card.innerHTML = `
+
+      <video
+        class="videoThumb"
+        src="${escapeHtml(video.video_url)}"
+        muted
+        playsinline
+        preload="metadata">
+      </video>
+
+      <div class="videoInfo">
+
+        <div class="videoTitle">
+          ${escapeHtml(video.title)}
+        </div>
+
+        <div class="muted">
+          📺 ${escapeHtml(video.channels?.name || "")}
+        </div>
+
+      </div>
+    `;
+
+    card.onclick =
+      () => openVideo(video);
+
+    container.appendChild(card);
+
+  });
+
+}
+
+
+// ==========================
+// 댓글 불러오기
+// ==========================
+
+async function loadComments(){
+
+  const container =
+    document.getElementById("commentList");
+
+  container.innerHTML =
+    '<div class="empty">댓글을 불러오는 중...</div>';
+
+  const {data,error} =
+    await supabaseClient
+      .from("comments")
+      .select("*")
+      .eq("video_id",currentVideoId)
+      .order("created_at",{ascending:false});
+
+  if(error){
+
+    console.error(error);
+
+    container.innerHTML =
+      '<div class="empty">댓글을 불러오지 못했어요.</div>';
+
+    return;
+  }
+
+  if(!data || data.length === 0){
+
+    container.innerHTML =
+      '<div class="empty">첫 번째 댓글을 남겨보세요 💬</div>';
+
+    return;
+  }
+
+  container.innerHTML = "";
+
+  data.forEach(comment => {
+
+    const div =
+      document.createElement("div");
+
+    div.className =
+      "comment";
+
+    div.innerHTML = `
+
+      <strong>
+        ${escapeHtml(comment.author)}
+      </strong>
+
+      <div style="margin-top:4px">
+        ${escapeHtml(comment.text)}
+      </div>
+
+    `;
+
+    container.appendChild(div);
+
+  });
+
+}
+
+
+// ==========================
+// 댓글 추가
+// ==========================
+
+async function addComment(){
+
+  if(!currentVideoId){
+    return;
+  }
+
+  const author =
+    document.getElementById("commentAuthor")
+      .value.trim();
+
+  const text =
+    document.getElementById("commentText")
+      .value.trim();
+
+  if(!author){
+    alert("이름을 입력해주세요.");
+    return;
+  }
+
+  if(!text){
+    alert("댓글을 입력해주세요.");
+    return;
+  }
+
+  const {error} =
+    await supabaseClient
+      .from("comments")
+      .insert({
+        video_id:currentVideoId,
+        author:author,
+        text:text
+      });
+
+  if(error){
+
+    alert(
+      "댓글 저장에 실패했어요.\n" +
+      error.message
+    );
+
+    return;
+  }
+
+  await supabaseClient
+    .from("notifications")
+    .insert({
+      type:"comment",
+      title:"새 댓글 💬",
+      message:
+        `${author}님이 댓글을 남겼어요.`,
+      related_id:
+        currentVideoId
+    });
+
+  document.getElementById("commentText")
+    .value = "";
+
+  loadComments();
+
+}
+
+
+// ==========================
+// 검색
+// ==========================
+
+async function searchVideos(){
+
+  const keyword =
+    document.getElementById("searchInput")
+      .value
+      .trim();
+
+  if(!keyword){
+
+    showPage("home");
+
+    return;
+  }
+
+  showPage("videos");
+
+  const container =
+    document.getElementById("videoList");
+
+  container.innerHTML =
+    '<div class="empty">검색 중...</div>';
+
+  const {data,error} =
+    await supabaseClient
+      .from("videos")
+      .select(`
+        *,
+        channels (
+          name
+        )
+      `)
+      .ilike(
+        "title",
+        "%" + keyword + "%"
+      )
+      .order("created_at",{ascending:false});
+
+  if(error){
+
+    console.error(error);
+
+    container.innerHTML =
+      '<div class="empty">검색에 실패했어요.</div>';
+
+    return;
+  }
+
+  if(!data || data.length === 0){
+
+    container.innerHTML =
+      '<div class="empty">검색 결과가 없어요 🔎</div>';
+
+    return;
+  }
+
+  container.innerHTML = "";
+
+  data.forEach(video => {
+
+    const card =
+      document.createElement("div");
+
+    card.className =
+      "card videoCard";
+
+    card.innerHTML = `
+
+      <video
+        class="videoThumb"
+        src="${escapeHtml(video.video_url)}"
+        muted
+        playsinline
+        preload="metadata">
+      </video>
+
+      <div class="videoInfo">
+
+        <div class="videoTitle">
+          ${escapeHtml(video.title)}
+        </div>
+
+        <div class="muted">
+          📺 ${escapeHtml(video.channels?.name || "")}
+        </div>
+
+      </div>
+    `;
+
+    card.onclick =
+      () => openVideo(video);
+
+    container.appendChild(card);
+
+  });
+
+}
+
+
+// ==========================
+// 알림 불러오기
+// ==========================
+
+async function loadNotifications(){
+
+  const container =
+    document.getElementById("notificationList");
+
+  container.innerHTML =
+    '<div class="empty">불러오는 중...</div>';
+
+  const {data,error} =
+    await supabaseClient
+      .from("notifications")
+      .select("*")
+      .order("created_at",{ascending:false})
+      .limit(50);
+
+  if(error){
+
+    console.error(error);
+
+    container.innerHTML =
+      '<div class="empty">알림을 불러오지 못했어요.</div>';
+
+    return;
+  }
+
+  if(!data || data.length === 0){
+
+    container.innerHTML =
+      '<div class="empty">새로운 소식이 없어요 🔔</div>';
+
+    updateBadge(0);
+
+    return;
+  }
+
+  container.innerHTML = "";
+
+  data.forEach(item => {
+
+    const div =
+      document.createElement("div");
+
+    div.className =
+      "notice";
+
+    div.innerHTML = `
+
+      <strong>
+        ${escapeHtml(item.title)}
+      </strong>
+
+      <div style="margin-top:5px">
+        ${escapeHtml(item.message)}
+      </div>
+
+      <div class="muted" style="margin-top:5px">
+        ${formatDate(item.created_at)}
+      </div>
+    `;
+
+    container.appendChild(div);
+
+  });
+
+  updateBadge(0);
+
+}
+
+
+// ==========================
+// 알림 개수
+// ==========================
+
+async function updateNotificationCount(){
+
+  const {count,error} =
+    await supabaseClient
+      .from("notifications")
+      .select("*",{count:"exact",head:true});
+
+  if(error){
+    return;
+  }
+
+  updateBadge(count || 0);
+
+}
+
+
+function updateBadge(count){
+
+  const badge =
+    document.getElementById(
+      "notificationBadge"
+    );
+
+  if(count > 0){
+
+    badge.textContent =
+      count > 99 ? "99+" : count;
+
+    badge.style.display =
+      "flex";
+
+  }else{
+
+    badge.style.display =
+      "none";
+
+  }
+
+}
+
+
+// ==========================
+// 브라우저 알림
+// ==========================
+
+async function requestNotifications(){
+
+  if(!("Notification" in window)){
+
+    alert(
+      "이 브라우저에서는 알림을 사용할 수 없어요."
+    );
+
+    return;
+  }
+
+  const permission =
+    await Notification.requestPermission();
+
+  if(permission === "granted"){
+
+    alert("🔔 알림이 켜졌어요!");
+
+    new Notification(
+      "HARMONY",
+      {
+        body:"새로운 가족 소식을 알려드릴게요!"
+      }
+    );
+
+  }else{
+
+    alert(
+      "브라우저 설정에서 알림을 허용해주세요."
+    );
+
+  }
+
+}
+
+
+// ==========================
+// 새 소식 확인
+// ==========================
+
+let lastNotificationCheck =
+  new Date().toISOString();
+
+async function checkNewNotifications(){
+
+  const {data,error} =
+    await supabaseClient
+      .from("notifications")
+      .select("*")
+      .gt(
+        "created_at",
+        lastNotificationCheck
+      )
+      .order("created_at",{ascending:true});
+
+  if(error){
+    return;
+  }
+
+  if(data && data.length > 0){
+
+    data.forEach(item => {
+
+      if(
+        "Notification" in window &&
+        Notification.permission === "granted"
+      ){
+
+        new Notification(
+          item.title,
+          {
+            body:item.message
+          }
+        );
+
+      }
+
+    });
+
+    lastNotificationCheck =
+      data[data.length - 1].created_at;
+
+    updateNotificationCount();
+
+  }
+
+}
+
+
+// ==========================
+// XSS 방지
+// ==========================
+
+function escapeHtml(value){
+
+  return String(value ?? "")
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+
+}
+
+
+// ==========================
+// 날짜
+// ==========================
+
+function formatDate(value){
+
+  try{
+
+    return new Date(value)
+      .toLocaleString(
+        "ko-KR",
+        {
+          year:"numeric",
+          month:"numeric",
+          day:"numeric",
+          hour:"2-digit",
+          minute:"2-digit"
+        }
+      );
+
+  }catch(e){
+
+    return "";
+
+  }
+
+}
+
+
+// ==========================
+// 사용자 이름
+// ==========================
+
+function setupUser(){
+
+  let user =
+    localStorage.getItem("harmony_user");
+
+  if(!user){
+
+    user =
+      prompt(
+        "HARMONY에서 사용할 이름을 입력해주세요.",
+        "사용자"
+      ) ||
+      "사용자";
+
+    localStorage.setItem(
+      "harmony_user",
+      user
+    );
+
+  }
+
+}
+
+
+// ==========================
+// 초기 실행
+// ==========================
+
+async function init(){
+
+  setupUser();
+
+  await loadVideos("homeVideos");
+  await loadChannels();
+  await loadChannelSelect();
+  await updateNotificationCount();
+
+  setInterval(
+    checkNewNotifications,
+    30000
+  );
+
+}
+
+init();
+
 </script>
 
 </body>
