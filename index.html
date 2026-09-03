@@ -1283,16 +1283,21 @@ async function uploadVideo(){
       throw videoError;
     }
 
-    await supabaseClient
-      .from("notifications")
-      .insert({
-        type:"video",
-        title:"새 동영상 🎬",
-        message:
-          `"${title}" 동영상이 올라왔어요.`,
-        related_id:
-          videoData?.id || null
-      });
+    const {error:notificationError} =
+      await supabaseClient
+        .from("notifications")
+        .insert({
+          type:"video",
+          title:"새 동영상 🎬",
+          message:
+            `"${title}" 동영상이 올라왔어요.`,
+          related_id:
+            videoData?.id || null
+        });
+
+    if(notificationError){
+      console.warn("알림 저장 실패:",notificationError);
+    }
 
     status.textContent =
       "✅ 동영상 업로드 완료!";
@@ -1331,7 +1336,7 @@ async function uploadVideo(){
 
 function getVideoDuration(file){
 
-  return new Promise((resolve,reject) => {
+  return new Promise((resolve) => {
 
     const video =
       document.createElement("video");
@@ -1339,30 +1344,43 @@ function getVideoDuration(file){
     const url =
       URL.createObjectURL(file);
 
+    let finished = false;
+
+    const done = (value) => {
+
+      if(finished) return;
+
+      finished = true;
+
+      URL.revokeObjectURL(url);
+
+      if(Number.isFinite(value) && value > 0){
+        resolve(value);
+      }else{
+        resolve(0);
+      }
+
+    };
+
     video.preload = "metadata";
 
     video.onloadedmetadata = () => {
-
-      const duration =
-        video.duration;
-
-      URL.revokeObjectURL(url);
-
-      resolve(duration);
-
+      done(video.duration);
     };
 
     video.onerror = () => {
-
-      URL.revokeObjectURL(url);
-
-      reject(
-        new Error("영상 정보를 읽을 수 없습니다.")
-      );
-
+      console.warn("영상 길이를 읽지 못했지만 업로드를 계속합니다.");
+      done(0);
     };
 
     video.src = url;
+
+    setTimeout(() => {
+      if(!finished){
+        console.warn("영상 길이 확인 시간이 오래 걸려 업로드를 계속합니다.");
+        done(0);
+      }
+    },5000);
 
   });
 
