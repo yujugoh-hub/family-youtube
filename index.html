@@ -1,0 +1,1259 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0">
+<title>우리 YouTube V3</title>
+
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Arial,"Noto Sans KR",sans-serif;
+  background:#f7f7fb;
+  color:#202124;
+}
+button,input,textarea{font:inherit}
+button{
+  border:0;
+  border-radius:14px;
+  padding:11px 16px;
+  cursor:pointer;
+  background:#222;
+  color:white;
+}
+button:hover{opacity:.88}
+.top{
+  position:sticky;
+  top:0;
+  z-index:20;
+  background:white;
+  border-bottom:1px solid #ddd;
+  padding:12px;
+}
+.top-inner{
+  max-width:1100px;
+  margin:auto;
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.logo{
+  font-size:22px;
+  font-weight:900;
+  white-space:nowrap;
+}
+.logo span{color:#ff0033}
+.search{
+  flex:1;
+  min-width:100px;
+  border:1px solid #ddd;
+  border-radius:25px;
+  padding:11px 16px;
+  outline:none;
+}
+.container{
+  max-width:1100px;
+  margin:auto;
+  padding:20px;
+}
+.hero{
+  background:white;
+  border-radius:24px;
+  padding:25px;
+  margin-bottom:20px;
+  box-shadow:0 4px 18px #0000000d;
+}
+.hero h1{margin-top:0}
+.tabs{
+  display:flex;
+  gap:8px;
+  overflow:auto;
+  margin-bottom:18px;
+}
+.tabs button{white-space:nowrap;background:#eee;color:#222}
+.tabs button.active{background:#222;color:white}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(230px,1fr));
+  gap:18px;
+}
+.card{
+  background:white;
+  border-radius:18px;
+  overflow:hidden;
+  box-shadow:0 4px 15px #00000012;
+}
+.thumb{
+  width:100%;
+  aspect-ratio:16/9;
+  background:#ddd;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+  font-size:40px;
+}
+.thumb img,.thumb video{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+.card-body{padding:14px}
+.card h3{margin:0 0 7px}
+.small{color:#777;font-size:13px}
+.actions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:7px;
+  margin-top:10px;
+}
+.actions button{
+  background:#eee;
+  color:#222;
+  padding:8px 11px;
+  border-radius:10px;
+}
+.channel-card{
+  background:white;
+  border-radius:20px;
+  padding:18px;
+  box-shadow:0 4px 15px #00000012;
+}
+.avatar{
+  width:70px;
+  height:70px;
+  border-radius:50%;
+  background:#eee;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:35px;
+  margin-bottom:10px;
+  overflow:hidden;
+}
+.avatar img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+.form{
+  background:white;
+  border-radius:20px;
+  padding:20px;
+  margin-bottom:20px;
+}
+.form input,.form textarea,.form select{
+  width:100%;
+  padding:12px;
+  border:1px solid #ddd;
+  border-radius:12px;
+  margin:6px 0 12px;
+}
+.form textarea{min-height:100px;resize:vertical}
+.hidden{display:none!important}
+.modal{
+  position:fixed;
+  inset:0;
+  z-index:100;
+  background:#0009;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:15px;
+}
+.modal-box{
+  width:min(700px,100%);
+  max-height:92vh;
+  overflow:auto;
+  background:white;
+  border-radius:22px;
+  padding:20px;
+}
+.modal-box video{
+  width:100%;
+  max-height:55vh;
+  background:#000;
+  border-radius:15px;
+}
+.close{
+  float:right;
+  background:#eee;
+  color:#222;
+}
+.comment{
+  padding:10px 0;
+  border-bottom:1px solid #eee;
+}
+.status{
+  background:#fff8d9;
+  border:1px solid #f0d66b;
+  border-radius:14px;
+  padding:12px;
+  margin-bottom:15px;
+}
+.empty{
+  text-align:center;
+  padding:50px 20px;
+  color:#777;
+}
+@media(max-width:600px){
+  .container{padding:12px}
+  .top-inner{flex-wrap:wrap}
+  .logo{width:100%}
+  .search{order:3;width:100%;flex:none}
+  .grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+
+<body>
+
+<header class="top">
+<div class="top-inner">
+  <div class="logo">▶ <span>우리</span> YouTube</div>
+  <input id="search" class="search" placeholder="동영상이나 채널 검색">
+  <button onclick="showPage('home')">홈</button>
+</div>
+</header>
+
+<main class="container">
+
+<div id="status" class="status">
+  🔄 Firebase 연결을 확인하고 있어요...
+</div>
+
+<div class="hero">
+  <h1>📺 우리 YouTube</h1>
+  <p>우리 가족만의 동영상 세상</p>
+
+  <div class="tabs">
+    <button id="tabHome" class="active" onclick="showPage('home')">🏠 홈</button>
+    <button id="tabChannels" onclick="showPage('channels')">📺 채널</button>
+    <button id="tabUpload" onclick="showPage('upload')">⬆️ 영상 올리기</button>
+    <button id="tabCamera" onclick="showPage('camera')">🎥 동영상 찍기</button>
+    <button id="tabFavorites" onclick="showPage('favorites')">⭐ 즐겨찾기</button>
+  </div>
+</div>
+
+<section id="homePage">
+  <div class="hero">
+    <h2>최근 동영상</h2>
+    <div id="videoGrid" class="grid"></div>
+  </div>
+</section>
+
+<section id="channelsPage" class="hidden">
+  <div class="hero">
+    <h2>📺 채널</h2>
+    <button onclick="openChannelForm()">＋ 새 채널 만들기</button>
+  </div>
+  <div id="channelGrid" class="grid"></div>
+</section>
+
+<section id="uploadPage" class="hidden">
+  <div class="form">
+    <h2>⬆️ 동영상 올리기</h2>
+
+    <label>채널</label>
+    <select id="uploadChannel"></select>
+
+    <label>동영상</label>
+    <input id="videoFile" type="file" accept="video/*">
+
+    <label>제목</label>
+    <input id="videoTitle" placeholder="동영상 제목">
+
+    <label>설명</label>
+    <textarea id="videoDescription" placeholder="동영상 설명"></textarea>
+
+    <label>썸네일</label>
+    <input id="thumbFile" type="file" accept="image/*">
+
+    <button onclick="uploadVideo()">동영상 올리기</button>
+  </div>
+</section>
+
+<section id="cameraPage" class="hidden">
+  <div class="form">
+    <h2>🎥 동영상 찍기</h2>
+
+    <video id="cameraPreview" autoplay muted playsinline
+      style="width:100%;max-height:55vh;background:#111;border-radius:18px"></video>
+
+    <div class="actions">
+      <button onclick="startCamera()">📷 카메라 켜기</button>
+      <button onclick="startRecording()">🔴 촬영 시작</button>
+      <button onclick="stopRecording()">⏹️ 촬영 끝</button>
+    </div>
+
+    <p id="recordStatus" class="small">카메라를 켜주세요.</p>
+
+    <video id="recordedPreview" controls
+      class="hidden"
+      style="width:100%;margin-top:15px;border-radius:15px"></video>
+
+    <div id="recordUploadBox" class="hidden">
+      <hr>
+      <label>채널</label>
+      <select id="recordChannel"></select>
+
+      <label>제목</label>
+      <input id="recordTitle" placeholder="촬영한 영상 제목">
+
+      <button onclick="saveRecordedVideo()">촬영한 영상 올리기</button>
+    </div>
+  </div>
+</section>
+
+<section id="favoritesPage" class="hidden">
+  <div class="hero">
+    <h2>⭐ 즐겨찾기</h2>
+    <div id="favoriteGrid" class="grid"></div>
+  </div>
+</section>
+
+</main>
+
+<div id="modal" class="modal hidden">
+  <div class="modal-box">
+    <button class="close" onclick="closeModal()">닫기</button>
+    <div id="modalContent"></div>
+  </div>
+</div>
+
+<script type="module">
+
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  getDocs,
+  query,
+  orderBy,
+  serverTimestamp,
+  doc,
+  updateDoc,
+  arrayUnion
+} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+
+import {
+  getStorage,
+  ref,
+  uploadBytes,
+  getDownloadURL
+} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-storage.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDD0pJ3pWHPLw_bgte-0Jbr-YaDqhiABv0",
+  authDomain: "family-98068.firebaseapp.com",
+  projectId: "family-98068",
+  storageBucket: "family-98068.firebasestorage.app",
+  messagingSenderId: "844890840827",
+  appId: "1:844890840827:web:d7f98a4e54eb418b595a5e",
+  measurementId: "G-LXQT974FF6"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const storage = getStorage(app);
+
+let firebaseOK = false;
+let channels = [];
+let videos = [];
+let favorites = JSON.parse(localStorage.getItem("familyYT_favorites") || "[]");
+
+let mediaRecorder = null;
+let recordedChunks = [];
+let recordedBlob = null;
+let cameraStream = null;
+
+const $ = id => document.getElementById(id);
+
+function setStatus(text, good=false){
+  $("status").textContent = text;
+  $("status").style.background = good ? "#e9ffe9" : "#fff8d9";
+}
+
+async function loadData(){
+
+  try{
+    const cSnap = await getDocs(collection(db,"channels"));
+
+    channels = [];
+    cSnap.forEach(d=>{
+      channels.push({
+        id:d.id,
+        ...d.data()
+      });
+    });
+
+    const vSnap = await getDocs(collection(db,"videos"));
+
+    videos = [];
+    vSnap.forEach(d=>{
+      videos.push({
+        id:d.id,
+        ...d.data()
+      });
+    });
+
+    firebaseOK = true;
+    setStatus("☁️ Firebase 연결 성공! 가족과 공유할 준비가 됐어요.",true);
+
+  }catch(e){
+
+    console.log(e);
+
+    firebaseOK = false;
+
+    channels = JSON.parse(localStorage.getItem("familyYT_channels") || "[]");
+    videos = JSON.parse(localStorage.getItem("familyYT_videos") || "[]");
+
+    setStatus("⚠️ Firebase 데이터베이스 설정 전이에요. 현재 이 기기에서 먼저 사용할 수 있어요.");
+  }
+
+  renderAll();
+}
+
+function saveLocal(){
+
+  localStorage.setItem(
+    "familyYT_channels",
+    JSON.stringify(channels)
+  );
+
+  localStorage.setItem(
+    "familyYT_videos",
+    JSON.stringify(videos)
+  );
+}
+
+function renderAll(){
+  renderVideos();
+  renderChannels();
+  renderFavorites();
+  fillChannelSelects();
+}
+
+function renderVideos(list=videos){
+
+  const grid = $("videoGrid");
+
+  if(!list.length){
+    grid.innerHTML = `
+      <div class="empty">
+        <div style="font-size:50px">🎬</div>
+        <h3>아직 동영상이 없어요.</h3>
+        <p>첫 번째 동영상을 올려보세요!</p>
+      </div>`;
+    return;
+  }
+
+  grid.innerHTML = list.map(videoCard).join("");
+}
+
+function videoCard(v){
+
+  const channel = channels.find(c=>c.id===v.channelId);
+  const channelName = channel ? channel.name : "알 수 없는 채널";
+
+  return `
+  <article class="card">
+
+    <div class="thumb">
+      ${
+        v.thumbnail
+        ? `<img src="${v.thumbnail}">`
+        : `<span>🎬</span>`
+      }
+    </div>
+
+    <div class="card-body">
+      <h3>${escapeHTML(v.title || "제목 없음")}</h3>
+
+      <div class="small">
+        📺 ${escapeHTML(channelName)}
+      </div>
+
+      <div class="actions">
+        <button onclick="watchVideo('${v.id}')">▶ 보기</button>
+        <button onclick="likeVideo('${v.id}')">❤️ ${v.likes || 0}</button>
+        <button onclick="favoriteVideo('${v.id}')">⭐</button>
+      </div>
+    </div>
+
+  </article>`;
+}
+
+function renderChannels(){
+
+  const grid = $("channelGrid");
+
+  if(!channels.length){
+
+    grid.innerHTML = `
+      <div class="empty">
+        <div style="font-size:50px">📺</div>
+        <h3>아직 채널이 없어요.</h3>
+        <button onclick="openChannelForm()">＋ 첫 채널 만들기</button>
+      </div>`;
+
+    return;
+  }
+
+  grid.innerHTML = channels.map(c=>`
+
+    <article class="channel-card">
+
+      <div class="avatar">
+        ${
+          c.icon
+          ? `<img src="${c.icon}">`
+          : `📺`
+        }
+      </div>
+
+      <h2>${escapeHTML(c.name)}</h2>
+
+      <p>${escapeHTML(c.owner || "")}</p>
+
+      <p class="small">${escapeHTML(c.bio || "소개가 없습니다.")}</p>
+
+      <button onclick="showChannel('${c.id}')">
+        채널 보기
+      </button>
+
+    </article>
+
+  `).join("");
+}
+
+function renderFavorites(){
+
+  const list = videos.filter(v=>favorites.includes(v.id));
+
+  $("favoriteGrid").innerHTML = list.length
+    ? list.map(videoCard).join("")
+    : `<div class="empty">⭐ 아직 즐겨찾기한 영상이 없어요.</div>`;
+}
+
+function fillChannelSelects(){
+
+  const selects = [
+    $("uploadChannel"),
+    $("recordChannel")
+  ];
+
+  selects.forEach(select=>{
+
+    if(!select)return;
+
+    select.innerHTML = channels.length
+      ? channels.map(c=>
+          `<option value="${c.id}">
+            ${escapeHTML(c.name)}
+          </option>`
+        ).join("")
+      : `<option value="">채널을 먼저 만들어주세요</option>`;
+  });
+}
+
+window.openChannelForm = function(){
+
+  $("modalContent").innerHTML = `
+
+    <h2>📺 새 채널 만들기</h2>
+
+    <label>채널 이름</label>
+    <input id="newChannelName" placeholder="예: 유주의 하루">
+
+    <label>만든 사람</label>
+    <input id="newChannelOwner" placeholder="예: 유주">
+
+    <label>채널 소개</label>
+    <textarea id="newChannelBio"
+      placeholder="이 채널에서는 어떤 영상을 올릴까요?"></textarea>
+
+    <label>채널 아이콘</label>
+    <input id="newChannelIcon" type="file" accept="image/*">
+
+    <button onclick="createChannel()">
+      채널 만들기
+    </button>
+  `;
+
+  $("modal").classList.remove("hidden");
+};
+
+window.createChannel = async function(){
+
+  const name = $("newChannelName").value.trim();
+  const owner = $("newChannelOwner").value.trim();
+  const bio = $("newChannelBio").value.trim();
+  const iconFile = $("newChannelIcon").files[0];
+
+  if(!name){
+    alert("채널 이름을 입력해주세요.");
+    return;
+  }
+
+  let icon = "";
+
+  if(iconFile){
+    icon = await fileToDataURL(iconFile);
+  }
+
+  const data = {
+    name,
+    owner,
+    bio,
+    icon,
+    createdAt:serverTimestamp()
+  };
+
+  try{
+
+    if(firebaseOK){
+
+      const result = await addDoc(
+        collection(db,"channels"),
+        data
+      );
+
+      channels.push({
+        id:result.id,
+        ...data
+      });
+
+    }else{
+
+      channels.push({
+        id:"local_" + Date.now(),
+        ...data
+      });
+
+      saveLocal();
+    }
+
+    closeModal();
+    renderAll();
+
+    alert("채널이 만들어졌어요! 📺");
+
+  }catch(e){
+
+    console.error(e);
+    alert("채널 만들기에 실패했어요.");
+  }
+};
+
+window.uploadVideo = async function(){
+
+  const channelId = $("uploadChannel").value;
+  const file = $("videoFile").files[0];
+  const title = $("videoTitle").value.trim();
+  const description = $("videoDescription").value.trim();
+  const thumbFile = $("thumbFile").files[0];
+
+  if(!channelId){
+    alert("먼저 채널을 만들어주세요.");
+    return;
+  }
+
+  if(!file){
+    alert("동영상 파일을 선택해주세요.");
+    return;
+  }
+
+  if(!title){
+    alert("동영상 제목을 입력해주세요.");
+    return;
+  }
+
+  if(!firebaseOK){
+
+    if(file.size > 8*1024*1024){
+
+      alert(
+        "현재 Firebase 연결 전이라 큰 동영상은 저장할 수 없어요.\n" +
+        "8MB 이하의 영상을 사용해주세요."
+      );
+
+      return;
+    }
+
+    const videoURL = await fileToDataURL(file);
+    const thumbnail = thumbFile
+      ? await fileToDataURL(thumbFile)
+      : "";
+
+    videos.unshift({
+      id:"local_" + Date.now(),
+      channelId,
+      title,
+      description,
+      videoURL,
+      thumbnail,
+      likes:0,
+      createdAt:Date.now()
+    });
+
+    saveLocal();
+    renderAll();
+
+    alert("이 기기에 영상이 저장됐어요.\nFirebase를 연결하면 가족 공유가 가능해요.");
+
+    return;
+  }
+
+  try{
+
+    setStatus("⬆️ 동영상을 Firebase에 업로드하고 있어요...");
+
+    const fileRef = ref(
+      storage,
+      "videos/" + Date.now() + "_" + file.name
+    );
+
+    await uploadBytes(fileRef,file);
+
+    const videoURL = await getDownloadURL(fileRef);
+
+    let thumbnail = "";
+
+    if(thumbFile){
+
+      const thumbRef = ref(
+        storage,
+        "thumbnails/" + Date.now() + "_" + thumbFile.name
+      );
+
+      await uploadBytes(thumbRef,thumbFile);
+
+      thumbnail = await getDownloadURL(thumbRef);
+    }
+
+    const data = {
+      channelId,
+      title,
+      description,
+      videoURL,
+      thumbnail,
+      likes:0,
+      createdAt:serverTimestamp()
+    };
+
+    const result = await addDoc(
+      collection(db,"videos"),
+      data
+    );
+
+    videos.unshift({
+      id:result.id,
+      ...data
+    });
+
+    setStatus("☁️ 동영상이 가족 YouTube에 올라갔어요!",true);
+
+    alert("동영상 업로드 완료! 🎉");
+
+    $("videoFile").value="";
+    $("thumbFile").value="";
+    $("videoTitle").value="";
+    $("videoDescription").value="";
+
+    renderAll();
+
+  }catch(e){
+
+    console.error(e);
+
+    setStatus("⚠️ Firebase 업로드 설정을 확인해야 해요.");
+
+    alert(
+      "업로드에 실패했어요.\n\n" +
+      "Firebase Storage가 아직 설정되지 않았을 가능성이 있어요."
+    );
+  }
+};
+
+window.watchVideo = function(id){
+
+  const v = videos.find(x=>x.id===id);
+
+  if(!v)return;
+
+  const channel = channels.find(c=>c.id===v.channelId);
+
+  $("modalContent").innerHTML = `
+
+    <h2>${escapeHTML(v.title)}</h2>
+
+    <video src="${v.videoURL}" controls playsinline></video>
+
+    <p>
+      📺 ${escapeHTML(channel?.name || "채널 없음")}
+    </p>
+
+    <p>${escapeHTML(v.description || "")}</p>
+
+    <div class="actions">
+      <button onclick="likeVideo('${v.id}');watchVideo('${v.id}')">
+        ❤️ ${v.likes || 0}
+      </button>
+
+      <button onclick="favoriteVideo('${v.id}');watchVideo('${v.id}')">
+        ⭐ 즐겨찾기
+      </button>
+    </div>
+
+    <hr>
+
+    <h3>💬 댓글</h3>
+
+    <input id="commentInput"
+      placeholder="댓글을 입력하세요">
+
+    <button onclick="addComment('${v.id}')">
+      댓글 쓰기
+    </button>
+
+    <div id="commentList">
+      ${(v.comments || []).map(c=>`
+        <div class="comment">
+          <b>${escapeHTML(c.name || "가족")}</b>
+          <div>${escapeHTML(c.text)}</div>
+        </div>
+      `).join("")}
+    </div>
+  `;
+
+  $("modal").classList.remove("hidden");
+};
+
+window.likeVideo = async function(id){
+
+  const v = videos.find(x=>x.id===id);
+
+  if(!v)return;
+
+  v.likes = (v.likes || 0) + 1;
+
+  if(firebaseOK && !String(id).startsWith("local_")){
+
+    try{
+
+      await updateDoc(
+        doc(db,"videos",id),
+        {likes:v.likes}
+      );
+
+    }catch(e){
+      console.log(e);
+    }
+  }else{
+    saveLocal();
+  }
+
+  renderAll();
+};
+
+window.favoriteVideo = function(id){
+
+  if(favorites.includes(id)){
+
+    favorites = favorites.filter(x=>x!==id);
+
+  }else{
+
+    favorites.push(id);
+  }
+
+  localStorage.setItem(
+    "familyYT_favorites",
+    JSON.stringify(favorites)
+  );
+
+  renderFavorites();
+};
+
+window.addComment = async function(id){
+
+  const input = $("commentInput");
+
+  if(!input || !input.value.trim())return;
+
+  const comment = {
+    name:"가족",
+    text:input.value.trim(),
+    time:Date.now()
+  };
+
+  const v = videos.find(x=>x.id===id);
+
+  if(!v.comments)v.comments=[];
+
+  v.comments.push(comment);
+
+  if(firebaseOK && !String(id).startsWith("local_")){
+
+    try{
+
+      await updateDoc(
+        doc(db,"videos",id),
+        {comments:arrayUnion(comment)}
+      );
+
+    }catch(e){
+      console.log(e);
+    }
+  }else{
+    saveLocal();
+  }
+
+  watchVideo(id);
+};
+
+window.showChannel = function(id){
+
+  const channel = channels.find(c=>c.id===id);
+
+  if(!channel)return;
+
+  const list = videos.filter(v=>v.channelId===id);
+
+  $("modalContent").innerHTML = `
+
+    <div class="avatar">
+      ${channel.icon
+        ? `<img src="${channel.icon}">`
+        : `📺`
+      }
+    </div>
+
+    <h2>${escapeHTML(channel.name)}</h2>
+
+    <p>${escapeHTML(channel.bio || "")}</p>
+
+    <h3>동영상</h3>
+
+    <div class="grid">
+      ${
+        list.length
+        ? list.map(videoCard).join("")
+        : `<div class="empty">아직 영상이 없어요.</div>`
+      }
+    </div>
+  `;
+
+  $("modal").classList.remove("hidden");
+};
+
+window.showPage = function(page){
+
+  const pages = [
+    "homePage",
+    "channelsPage",
+    "uploadPage",
+    "cameraPage",
+    "favoritesPage"
+  ];
+
+  pages.forEach(x=>$(x).classList.add("hidden"));
+
+  const target = {
+    home:"homePage",
+    channels:"channelsPage",
+    upload:"uploadPage",
+    camera:"cameraPage",
+    favorites:"favoritesPage"
+  }[page];
+
+  $(target).classList.remove("hidden");
+
+  document.querySelectorAll(".tabs button")
+    .forEach(b=>b.classList.remove("active"));
+
+  const tab = {
+    home:"tabHome",
+    channels:"tabChannels",
+    upload:"tabUpload",
+    camera:"tabCamera",
+    favorites:"tabFavorites"
+  }[page];
+
+  $(tab).classList.add("active");
+
+  fillChannelSelects();
+};
+
+window.closeModal = function(){
+  $("modal").classList.add("hidden");
+};
+
+$("search").addEventListener("input",function(){
+
+  const q = this.value.trim().toLowerCase();
+
+  if(!q){
+    renderVideos();
+    return;
+  }
+
+  const result = videos.filter(v=>{
+
+    const channel = channels.find(c=>c.id===v.channelId);
+
+    return (
+      (v.title || "").toLowerCase().includes(q) ||
+      (v.description || "").toLowerCase().includes(q) ||
+      (channel?.name || "").toLowerCase().includes(q)
+    );
+  });
+
+  renderVideos(result);
+});
+
+window.startCamera = async function(){
+
+  try{
+
+    cameraStream = await navigator.mediaDevices.getUserMedia({
+      video:true,
+      audio:true
+    });
+
+    $("cameraPreview").srcObject = cameraStream;
+
+    $("recordStatus").textContent =
+      "📷 카메라가 켜졌어요. 촬영 시작을 눌러주세요.";
+
+  }catch(e){
+
+    console.error(e);
+
+    alert(
+      "카메라를 사용할 수 없어요.\n\n" +
+      "브라우저의 카메라 권한을 허용해주세요."
+    );
+  }
+};
+
+window.startRecording = function(){
+
+  if(!cameraStream){
+
+    alert("먼저 카메라를 켜주세요.");
+    return;
+  }
+
+  recordedChunks=[];
+
+  let options={};
+
+  if(MediaRecorder.isTypeSupported("video/webm;codecs=vp9,opus")){
+    options={mimeType:"video/webm;codecs=vp9,opus"};
+  }else if(MediaRecorder.isTypeSupported("video/webm")){
+    options={mimeType:"video/webm"};
+  }
+
+  try{
+
+    mediaRecorder = new MediaRecorder(
+      cameraStream,
+      options
+    );
+
+  }catch(e){
+
+    mediaRecorder = new MediaRecorder(cameraStream);
+  }
+
+  mediaRecorder.ondataavailable = e=>{
+
+    if(e.data.size>0){
+      recordedChunks.push(e.data);
+    }
+  };
+
+  mediaRecorder.onstop = ()=>{
+
+    recordedBlob = new Blob(
+      recordedChunks,
+      {type:mediaRecorder.mimeType || "video/webm"}
+    );
+
+    const url = URL.createObjectURL(recordedBlob);
+
+    $("recordedPreview").src=url;
+    $("recordedPreview").classList.remove("hidden");
+    $("recordUploadBox").classList.remove("hidden");
+
+    $("recordStatus").textContent =
+      "🎬 촬영 완료! 미리 보고 올릴 수 있어요.";
+  };
+
+  mediaRecorder.start();
+
+  $("recordStatus").textContent =
+    "🔴 촬영 중...";
+
+};
+
+window.stopRecording = function(){
+
+  if(mediaRecorder && mediaRecorder.state!=="inactive"){
+    mediaRecorder.stop();
+  }
+
+  if(cameraStream){
+    cameraStream.getTracks().forEach(t=>t.stop());
+    cameraStream=null;
+  }
+};
+
+window.saveRecordedVideo = async function(){
+
+  if(!recordedBlob){
+    alert("먼저 영상을 촬영해주세요.");
+    return;
+  }
+
+  const channelId = $("recordChannel").value;
+  const title = $("recordTitle").value.trim();
+
+  if(!channelId){
+    alert("채널을 선택해주세요.");
+    return;
+  }
+
+  if(!title){
+    alert("영상 제목을 입력해주세요.");
+    return;
+  }
+
+  if(!firebaseOK){
+
+    if(recordedBlob.size > 8*1024*1024){
+
+      alert(
+        "Firebase 연결 전에는 8MB 이하 영상만 저장할 수 있어요."
+      );
+
+      return;
+    }
+
+    const url = await blobToDataURL(recordedBlob);
+
+    videos.unshift({
+      id:"local_"+Date.now(),
+      channelId,
+      title,
+      description:"카메라로 촬영한 영상",
+      videoURL:url,
+      thumbnail:"",
+      likes:0,
+      createdAt:Date.now()
+    });
+
+    saveLocal();
+    renderAll();
+
+    alert("촬영한 영상이 이 기기에 저장됐어요.");
+
+    showPage("home");
+    return;
+  }
+
+  try{
+
+    setStatus("⬆️ 촬영 영상을 Firebase에 올리는 중...");
+
+    const fileRef = ref(
+      storage,
+      "videos/camera_" + Date.now() + ".webm"
+    );
+
+    await uploadBytes(fileRef,recordedBlob);
+
+    const videoURL = await getDownloadURL(fileRef);
+
+    const data={
+      channelId,
+      title,
+      description:"카메라로 촬영한 영상",
+      videoURL,
+      thumbnail:"",
+      likes:0,
+      createdAt:serverTimestamp()
+    };
+
+    const result = await addDoc(
+      collection(db,"videos"),
+      data
+    );
+
+    videos.unshift({
+      id:result.id,
+      ...data
+    });
+
+    renderAll();
+
+    alert("촬영 영상이 가족 YouTube에 올라갔어요! 🎉");
+
+    showPage("home");
+
+  }catch(e){
+
+    console.error(e);
+
+    alert(
+      "Firebase Storage 설정이 아직 준비되지 않았어요."
+    );
+  }
+};
+
+function escapeHTML(value){
+
+  return String(value ?? "")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+
+function fileToDataURL(file){
+
+  return new Promise((resolve,reject)=>{
+
+    const reader=new FileReader();
+
+    reader.onload=()=>resolve(reader.result);
+    reader.onerror=reject;
+
+    reader.readAsDataURL(file);
+  });
+}
+
+function blobToDataURL(blob){
+
+  return fileToDataURL(
+    new File([blob],"recorded.webm",{
+      type:blob.type
+    })
+  );
+}
+
+loadData();
+
+</script>
+
+</body>
+</html>
