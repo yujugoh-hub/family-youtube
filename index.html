@@ -2,2130 +2,1382 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<meta name="theme-color" content="#7c5cff">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>HARMONY</title>
 
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop stop-color='%237c5cff'/%3E%3Cstop offset='1' stop-color='%23ff5ca8'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' rx='25' fill='url(%23g)'/%3E%3Cpath d='M35 28v42a15 15 0 1 0 8 13V48l27-8v22a15 15 0 1 0 8 13V20z' fill='white'/%3E%3C/svg%3E">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
-*{box-sizing:border-box}
-
-:root{
- --purple:#7c5cff;
- --pink:#ff5ca8;
- --bg:#f7f7fb;
- --card:#fff;
- --text:#202124;
- --muted:#747681;
- --line:#e7e7ee;
- --shadow:0 10px 30px rgba(40,30,90,.09)
+*{
+  box-sizing:border-box;
 }
 
 body{
- margin:0;
- background:var(--bg);
- color:var(--text);
- font-family:"Malgun Gothic","Noto Sans KR",Arial,sans-serif
+  margin:0;
+  font-family:Arial,"Noto Sans KR",sans-serif;
+  background:#f7f8fc;
+  color:#202124;
 }
 
-button,input,textarea,select{font:inherit}
-button{cursor:pointer;border:0}
-
-.top{
- position:sticky;
- top:0;
- z-index:20;
- height:72px;
- background:rgba(255,255,255,.95);
- backdrop-filter:blur(14px);
- border-bottom:1px solid var(--line);
- display:flex;
- align-items:center;
- gap:20px;
- padding:0 28px
+header{
+  height:70px;
+  background:white;
+  border-bottom:1px solid #eee;
+  display:flex;
+  align-items:center;
+  gap:18px;
+  padding:0 22px;
+  position:sticky;
+  top:0;
+  z-index:20;
 }
 
 .logo{
- display:flex;
- align-items:center;
- gap:10px;
- font-weight:900;
- font-size:23px;
- min-width:180px
+  font-size:26px;
+  font-weight:900;
+  color:#675cff;
+  cursor:pointer;
+  letter-spacing:1px;
 }
-
-.logoIcon{
- width:42px;
- height:42px;
- border-radius:13px;
- background:linear-gradient(135deg,var(--purple),var(--pink));
- display:grid;
- place-items:center;
- box-shadow:0 7px 18px rgba(124,92,255,.25)
-}
-
-.logoIcon svg{width:25px;height:25px}
 
 .search{
- flex:1;
- max-width:650px;
- display:flex;
- align-items:center;
- background:#f1f1f6;
- border:1px solid transparent;
- border-radius:18px;
- padding:0 15px
-}
-
-.search:focus-within{
- background:#fff;
- border-color:#d8d2ff;
- box-shadow:0 0 0 4px rgba(124,92,255,.08)
-}
-
-.search span{
- font-size:20px;
- color:#777
+  flex:1;
+  max-width:600px;
+  display:flex;
 }
 
 .search input{
- width:100%;
- height:45px;
- border:0;
- outline:0;
- background:transparent;
- padding:0 10px
+  width:100%;
+  padding:13px 18px;
+  border:1px solid #ddd;
+  border-radius:25px;
+  outline:none;
+  font-size:15px;
 }
 
-.topActions{
- display:flex;
- gap:8px;
- margin-left:auto
+button{
+  border:0;
+  border-radius:12px;
+  padding:11px 16px;
+  cursor:pointer;
+  font-weight:700;
+  background:#675cff;
+  color:white;
 }
 
-.iconBtn,.profileBtn{
- width:42px;
- height:42px;
- border-radius:50%;
- background:#f1f1f5;
- font-size:19px
+button:hover{
+  opacity:.88;
 }
 
-.profileBtn{
- background:#eee7ff;
- color:var(--purple);
- font-weight:800
+.secondary{
+  background:#eeeef5;
+  color:#333;
 }
 
-.layout{
- display:flex;
- min-height:calc(100vh - 72px)
-}
-
-.side{
- width:230px;
- background:#fff;
- border-right:1px solid var(--line);
- padding:22px 14px;
- position:sticky;
- top:72px;
- height:calc(100vh - 72px)
-}
-
-.navBtn{
- width:100%;
- padding:13px 15px;
- border-radius:13px;
- background:transparent;
- text-align:left;
- margin-bottom:5px;
- color:#555;
- font-weight:700
-}
-
-.navBtn:hover,
-.navBtn.active{
- background:#eeeaff;
- color:var(--purple)
-}
-
-.main{
- flex:1;
- padding:28px;
- min-width:0
+main{
+  max-width:1200px;
+  margin:auto;
+  padding:25px 18px 80px;
 }
 
 .hero{
- background:linear-gradient(135deg,#ece8ff,#fff1f7);
- border:1px solid #e5ddff;
- border-radius:28px;
- padding:35px;
- display:flex;
- justify-content:space-between;
- align-items:center;
- gap:25px;
- overflow:hidden;
- margin-bottom:28px
+  background:linear-gradient(135deg,#7568ff,#9a91ff);
+  color:white;
+  border-radius:24px;
+  padding:30px;
+  margin-bottom:25px;
 }
 
 .hero h1{
- font-size:38px;
- margin:0 0 12px
+  margin:0 0 8px;
+  font-size:36px;
 }
 
 .hero p{
- color:#686974;
- line-height:1.7;
- margin:0 0 20px
+  margin:0 0 20px;
+  opacity:.9;
 }
 
-.heroBtns{
- display:flex;
- gap:10px;
- flex-wrap:wrap
+.tabs{
+  display:flex;
+  gap:8px;
+  overflow:auto;
+  margin-bottom:25px;
 }
 
-.primary,
-.secondary{
- padding:12px 17px;
- border-radius:13px;
- font-weight:800
+.tabs button{
+  white-space:nowrap;
 }
 
-.primary{
- background:var(--purple);
- color:white
+.section{
+  margin-bottom:35px;
 }
 
-.secondary{
- background:white;
- color:#555;
- border:1px solid var(--line)
+.section h2{
+  margin-bottom:16px;
 }
 
-.primary:hover{
- filter:brightness(.95)
+.video-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(250px,1fr));
+  gap:20px;
 }
 
-.heroLogo{
- width:180px;
- height:180px;
- flex:none;
- border-radius:50%;
- background:linear-gradient(135deg,var(--purple),var(--pink));
- display:grid;
- place-items:center;
- box-shadow:0 20px 45px rgba(124,92,255,.25)
-}
-
-.heroLogo svg{
- width:95px;
- height:95px
-}
-
-.sectionHead{
- display:flex;
- justify-content:space-between;
- align-items:center;
- margin:26px 0 15px
-}
-
-.sectionHead h2{
- margin:0;
- font-size:21px
-}
-
-.videoGrid{
- display:grid;
- grid-template-columns:repeat(auto-fill,minmax(235px,1fr));
- gap:20px
-}
-
-.videoCard{
- background:#fff;
- border:1px solid var(--line);
- border-radius:18px;
- overflow:hidden;
- box-shadow:var(--shadow);
- transition:.2s
-}
-
-.videoCard:hover{
- transform:translateY(-3px)
+.card{
+  background:white;
+  border-radius:18px;
+  overflow:hidden;
+  box-shadow:0 5px 20px rgba(0,0,0,.06);
 }
 
 .thumb{
- height:150px;
- background:linear-gradient(135deg,#ded7ff,#ffddec);
- display:grid;
- place-items:center;
- position:relative;
- overflow:hidden
+  width:100%;
+  aspect-ratio:16/9;
+  background:#ddd;
+  object-fit:cover;
+  display:block;
 }
 
-.thumb video{
- width:100%;
- height:100%;
- object-fit:cover
+.card-body{
+  padding:15px;
 }
 
-.play{
- width:52px;
- height:52px;
- border-radius:50%;
- background:rgba(255,255,255,.9);
- display:grid;
- place-items:center;
- position:absolute;
- box-shadow:0 5px 20px rgba(0,0,0,.12)
-}
-
-.cardBody{
- padding:14px
-}
-
-.cardTitle{
- font-weight:800;
- white-space:nowrap;
- overflow:hidden;
- text-overflow:ellipsis;
- margin-bottom:7px
+.card-title{
+  font-size:17px;
+  font-weight:800;
+  margin-bottom:8px;
 }
 
 .meta{
- color:var(--muted);
- font-size:13px
+  color:#777;
+  font-size:13px;
+  margin-bottom:10px;
 }
 
-.cardBtns{
- display:flex;
- gap:7px;
- margin-top:12px
+.actions{
+  display:flex;
+  gap:7px;
+  flex-wrap:wrap;
 }
 
-.smallBtn{
- background:#f3f3f7;
- border-radius:10px;
- padding:8px 10px;
- font-size:13px
+.actions button{
+  padding:8px 11px;
+  font-size:12px;
 }
 
-.smallBtn.on{
- background:#eee8ff;
- color:var(--purple)
+.channel-card{
+  background:white;
+  padding:20px;
+  border-radius:18px;
+  box-shadow:0 5px 20px rgba(0,0,0,.05);
 }
 
-.channelGrid{
- display:grid;
- grid-template-columns:repeat(auto-fill,minmax(210px,1fr));
- gap:18px
-}
-
-.channelCard{
- background:#fff;
- border:1px solid var(--line);
- border-radius:18px;
- padding:22px;
- text-align:center;
- box-shadow:var(--shadow)
-}
-
-.avatar{
- width:70px;
- height:70px;
- border-radius:24px;
- background:linear-gradient(135deg,#e7ddff,#ffdceb);
- display:grid;
- place-items:center;
- font-size:33px;
- margin:0 auto 12px
-}
-
-.channelName{
- font-size:18px;
- font-weight:900
-}
-
-.channelDesc{
- color:var(--muted);
- font-size:13px;
- margin:7px 0 15px;
- min-height:36px
-}
-
-.empty{
- text-align:center;
- background:white;
- border:1px dashed #d9d9e3;
- padding:50px 20px;
- border-radius:20px;
- color:var(--muted)
+.modal-bg{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.55);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  z-index:100;
 }
 
 .modal{
- display:none;
- position:fixed;
- inset:0;
- background:rgba(15,15,25,.55);
- z-index:100;
- padding:20px;
- overflow:auto
-}
-
-.modal.show{
- display:flex;
- align-items:center;
- justify-content:center
-}
-
-.modalBox{
- width:min(700px,100%);
- background:#fff;
- border-radius:24px;
- padding:25px;
- box-shadow:0 30px 80px rgba(0,0,0,.25);
- position:relative
-}
-
-.close{
- position:absolute;
- right:18px;
- top:16px;
- width:36px;
- height:36px;
- border-radius:50%;
- background:#f2f2f5
+  background:white;
+  width:min(650px,100%);
+  max-height:90vh;
+  overflow:auto;
+  border-radius:22px;
+  padding:25px;
 }
 
 .modal h2{
- margin:0 35px 20px 0
+  margin-top:0;
 }
 
-.field{
- margin-bottom:15px
+label{
+  display:block;
+  margin-top:15px;
+  font-weight:700;
 }
 
-.field label{
- display:block;
- font-weight:800;
- font-size:14px;
- margin-bottom:7px
+input,textarea,select{
+  width:100%;
+  padding:12px;
+  border:1px solid #ddd;
+  border-radius:10px;
+  margin-top:7px;
+  font:inherit;
 }
 
-.field input,
-.field textarea,
-.field select{
- width:100%;
- border:1px solid #dddde5;
- border-radius:12px;
- padding:12px;
- outline:0;
- background:#fff
+textarea{
+  min-height:100px;
+  resize:vertical;
 }
 
-.field textarea{
- min-height:100px;
- resize:vertical
+.form-buttons{
+  display:flex;
+  justify-content:flex-end;
+  gap:8px;
+  margin-top:20px;
 }
 
-.modalActions{
- display:flex;
- justify-content:flex-end;
- gap:8px;
- margin-top:20px
-}
-
-.preview{
- width:100%;
- max-height:330px;
- background:#111;
- border-radius:15px;
- object-fit:contain;
- display:none;
- margin-bottom:15px
-}
-
-.videoInfo{
- background:#f5f4fa;
- border-radius:13px;
- padding:12px;
- margin-bottom:15px;
- display:none
-}
-
-.videoInfo.ok{
- display:block
-}
-
-.videoInfo.bad{
- display:block;
- background:#fff0f2;
- color:#d92d4b
-}
-
-.camera{
- width:100%;
- max-height:430px;
- background:#111;
- border-radius:16px;
- display:block
-}
-
-.recordDot{
- display:inline-block;
- width:10px;
- height:10px;
- border-radius:50%;
- background:#ff4d67;
- margin-right:6px
-}
-
-.viewerVideo{
- width:100%;
- max-height:450px;
- background:#111;
- border-radius:16px;
- display:block
-}
-
-.viewerTitle{
- font-size:22px;
- font-weight:900;
- margin:17px 0 6px
-}
-
-.viewerMeta{
- color:var(--muted);
- font-size:14px
-}
-
-.viewerActions{
- display:flex;
- gap:8px;
- margin:15px 0
-}
-
-.comments{
- border-top:1px solid var(--line);
- margin-top:18px;
- padding-top:18px
-}
-
-.commentForm{
- display:flex;
- gap:8px
-}
-
-.commentForm input{
- flex:1;
- border:1px solid #dddde5;
- border-radius:12px;
- padding:11px;
- outline:0
-}
-
-.commentList{
- margin-top:15px
+video{
+  width:100%;
+  border-radius:15px;
+  background:#111;
 }
 
 .comment{
- padding:11px 0;
- border-bottom:1px solid #f0f0f4
+  padding:12px 0;
+  border-bottom:1px solid #eee;
 }
 
-.comment strong{
- display:block;
- font-size:13px;
- margin-bottom:3px
+.comment-name{
+  font-weight:800;
 }
 
-.comment span{
- font-size:14px
+.empty{
+  background:white;
+  padding:40px;
+  border-radius:18px;
+  text-align:center;
+  color:#777;
 }
 
-.toast{
- position:fixed;
- left:50%;
- bottom:25px;
- transform:translateX(-50%) translateY(20px);
- background:#222;
- color:#fff;
- padding:12px 17px;
- border-radius:13px;
- opacity:0;
- pointer-events:none;
- transition:.25s;
- z-index:300
-}
-
-.toast.show{
- opacity:1;
- transform:translateX(-50%) translateY(0)
+.status{
+  position:fixed;
+  right:15px;
+  bottom:15px;
+  background:#222;
+  color:white;
+  padding:10px 15px;
+  border-radius:20px;
+  font-size:12px;
+  z-index:200;
 }
 
 .hidden{
- display:none!important
+  display:none!important;
 }
 
-@media(max-width:850px){
- .side{display:none}
+@media(max-width:700px){
+  header{
+    padding:0 12px;
+    gap:8px;
+  }
 
- .main{padding:17px}
+  .logo{
+    font-size:21px;
+  }
 
- .top{
-  padding:0 13px;
-  gap:9px
- }
+  header button{
+    display:none;
+  }
 
- .logo{
-  min-width:auto;
-  font-size:19px
- }
+  .hero{
+    padding:22px;
+  }
 
- .logoIcon{
-  width:38px;
-  height:38px
- }
+  .hero h1{
+    font-size:28px;
+  }
 
- .search{
-  max-width:none
- }
+  main{
+    padding:18px 12px 60px;
+  }
 
- .topActions .iconBtn{
-  display:none
- }
-
- .hero{
-  padding:25px
- }
-
- .heroLogo{
-  display:none
- }
-
- .hero h1{
-  font-size:29px
- }
-
- .videoGrid{
-  grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:12px
- }
-
- .thumb{
-  height:120px
- }
-}
-
-@media(max-width:520px){
- .videoGrid{
-  grid-template-columns:1fr
- }
-
- .top{
-  height:62px
- }
-
- .layout{
-  min-height:calc(100vh - 62px)
- }
-
- .search input{
-  height:40px
- }
-
- .logo span{
-  display:none
- }
-
- .hero{
-  border-radius:20px
- }
-
- .heroBtns button{
-  width:100%
- }
+  .video-grid{
+    grid-template-columns:1fr;
+  }
 }
 </style>
 </head>
 
 <body>
 
-<header class="top">
+<header>
+  <div class="logo" onclick="showHome()">HARMONY</div>
 
- <div class="logo">
-
-  <div class="logoIcon">
-   <svg viewBox="0 0 100 100" fill="none">
-    <path d="M35 28v42a15 15 0 1 0 8 13V48l27-8v22a15 15 0 1 0 8 13V20z" fill="white"/>
-   </svg>
+  <div class="search">
+    <input
+      id="searchInput"
+      placeholder="🔎 영상이나 채널 검색"
+      oninput="searchVideos()"
+    >
   </div>
 
-  <span>HARMONY</span>
-
- </div>
-
- <div class="search">
-  <span>⌕</span>
-  <input id="searchInput" placeholder="동영상, 채널 검색">
- </div>
-
- <div class="topActions">
-  <button class="iconBtn" onclick="cameraOpen()">●</button>
-  <button class="iconBtn" onclick="uploadOpen()">＋</button>
-  <button class="profileBtn" onclick="createChannelOpen()">나</button>
- </div>
-
+  <button onclick="openChannelModal()">채널 만들기</button>
+  <button onclick="openUploadModal()">＋ 업로드</button>
 </header>
 
-<div class="layout">
+<main>
 
-<aside class="side">
+<section class="hero">
+  <h1>🎵 HARMONY</h1>
+  <p>우리 가족이 함께 만드는 영상 공간</p>
 
- <button class="navBtn active" onclick="showHome()">⌂　홈</button>
- <button class="navBtn" onclick="showFavorites()">★　즐겨찾기</button>
- <button class="navBtn" onclick="showAllChannels()">▣　모든 채널</button>
- <button class="navBtn" onclick="createChannelOpen()">＋　채널 만들기</button>
-
- <hr style="border:0;border-top:1px solid var(--line);margin:18px 5px">
-
- <button class="navBtn" onclick="uploadOpen()">↑　동영상 업로드</button>
- <button class="navBtn" onclick="cameraOpen()">●　동영상 촬영</button>
-
-</aside>
-
-<main class="main">
-
-<section id="homePage">
-
- <div class="hero">
-
-  <div>
-
-   <h1>우리 가족의 영상 공간<br>HARMONY</h1>
-
-   <p>
-    가족이 만든 영상을 모으고,<br>
-    채널을 만들고, 서로 댓글을 남겨보세요.
-   </p>
-
-   <div class="heroBtns">
-    <button class="primary" onclick="cameraOpen()">● 동영상 찍기</button>
-    <button class="secondary" onclick="uploadOpen()">↑ 업로드하기</button>
-    <button class="secondary" onclick="createChannelOpen()">＋ 채널 만들기</button>
-   </div>
-
-  </div>
-
-  <div class="heroLogo">
-   <svg viewBox="0 0 100 100" fill="none">
-    <path d="M35 28v42a15 15 0 1 0 8 13V48l27-8v22a15 15 0 1 0 8 13V20z" fill="white"/>
-   </svg>
-  </div>
-
- </div>
-
- <div class="sectionHead">
-  <h2>최신 동영상</h2>
- </div>
-
- <div id="homeVideos" class="videoGrid"></div>
-
- <div class="sectionHead">
-  <h2>가족 채널</h2>
- </div>
-
- <div id="homeChannels" class="channelGrid"></div>
-
+  <button onclick="openCameraModal()">📹 동영상 찍기</button>
+  <button class="secondary" onclick="openUploadModal()">🎬 영상 올리기</button>
 </section>
 
-<section id="listPage" class="hidden">
+<div class="tabs">
+  <button onclick="showHome()">🏠 홈</button>
+  <button onclick="showVideos()">🎬 모든 영상</button>
+  <button onclick="showChannels()">📺 채널</button>
+  <button onclick="showFavorites()">⭐ 즐겨찾기</button>
+</div>
 
- <div class="sectionHead">
-  <h2 id="listTitle">동영상</h2>
-  <button class="secondary" onclick="showHome()">홈으로</button>
- </div>
-
- <div id="listContent"></div>
-
-</section>
+<div id="app"></div>
 
 </main>
+
+<div id="status" class="status">HARMONY 준비 완료</div>
+
+<!-- 채널 만들기 -->
+
+<div class="modal-bg" id="channelModal">
+<div class="modal">
+
+<h2>📺 새 채널 만들기</h2>
+
+<label>채널 이름</label>
+<input id="channelName" placeholder="예: 유주의 만들기 채널">
+
+<label>채널 소개</label>
+<textarea id="channelDescription"
+placeholder="내 채널을 소개해 주세요"></textarea>
+
+<div class="form-buttons">
+<button class="secondary" onclick="closeModal('channelModal')">취소</button>
+<button onclick="createChannel()">채널 만들기</button>
 </div>
 
-<!-- 채널 생성 -->
-
-<div class="modal" id="channelModal">
-
- <div class="modalBox">
-
-  <button class="close" onclick="closeModal('channelModal')">×</button>
-
-  <h2>새 채널 만들기</h2>
-
-  <div class="field">
-   <label>채널 이름</label>
-   <input id="channelName" maxlength="30" placeholder="예: 유주의 만들기 채널">
-  </div>
-
-  <div class="field">
-   <label>채널 소개</label>
-   <textarea id="channelDesc" maxlength="100" placeholder="채널을 소개해 주세요"></textarea>
-  </div>
-
-  <div class="field">
-   <label>채널 아이콘</label>
-   <select id="channelEmoji">
-    <option value="🎵">음악</option>
-    <option value="🎨">미술</option>
-    <option value="🍳">요리</option>
-    <option value="🎮">게임</option>
-    <option value="📚">책</option>
-    <option value="🐰">토끼</option>
-    <option value="🐱">고양이</option>
-    <option value="⭐">별</option>
-   </select>
-  </div>
-
-  <div class="modalActions">
-   <button class="secondary" onclick="closeModal('channelModal')">취소</button>
-   <button class="primary" onclick="createChannel()">채널 만들기</button>
-  </div>
-
- </div>
+</div>
 </div>
 
-<!-- 업로드 -->
+<!-- 영상 업로드 -->
 
-<div class="modal" id="uploadModal">
+<div class="modal-bg" id="uploadModal">
+<div class="modal">
 
- <div class="modalBox">
+<h2>🎬 영상 업로드</h2>
 
-  <button class="close" onclick="closeModal('uploadModal')">×</button>
+<label>영상 제목</label>
+<input id="videoTitle" placeholder="영상 제목">
 
-  <h2>동영상 업로드</h2>
+<label>설명</label>
+<textarea id="videoDescription"
+placeholder="영상 설명"></textarea>
 
-  <div class="field">
+<label>채널</label>
+<select id="videoChannel"></select>
 
-   <label>동영상 파일</label>
+<label>영상 파일</label>
+<input
+  id="videoFile"
+  type="file"
+  accept="video/*"
+  onchange="previewVideo()"
+>
 
-   <input
-    id="videoFile"
-    type="file"
-    accept="video/*"
-    onchange="previewVideo()">
+<div id="uploadPreview"></div>
 
-  </div>
+<div class="form-buttons">
+<button class="secondary" onclick="closeModal('uploadModal')">취소</button>
+<button onclick="uploadVideo()">업로드</button>
+</div>
 
-  <div id="videoInfo" class="videoInfo"></div>
-
-  <video id="uploadPreview" class="preview" controls></video>
-
-  <div class="field">
-   <label>제목</label>
-   <input id="videoTitle" maxlength="80" placeholder="동영상 제목">
-  </div>
-
-  <div class="field">
-   <label>설명</label>
-   <textarea id="videoDesc" maxlength="300" placeholder="동영상 설명"></textarea>
-  </div>
-
-  <div class="field">
-   <label>채널</label>
-   <select id="videoChannel"></select>
-  </div>
-
-  <div class="modalActions">
-   <button class="secondary" onclick="closeModal('uploadModal')">취소</button>
-   <button id="uploadButton" class="primary" onclick="uploadVideo()">업로드</button>
-  </div>
-
- </div>
+</div>
 </div>
 
 <!-- 카메라 -->
 
-<div class="modal" id="cameraModal">
+<div class="modal-bg" id="cameraModal">
+<div class="modal">
 
- <div class="modalBox">
+<h2>📹 동영상 찍기</h2>
 
-  <button class="close" onclick="cameraClose()">×</button>
+<video id="cameraVideo" autoplay playsinline></video>
 
-  <h2>동영상 촬영</h2>
+<div class="form-buttons">
+<button class="secondary" onclick="stopCamera()">닫기</button>
+<button onclick="startRecording()">🔴 녹화 시작</button>
+<button onclick="stopRecording()">⏹️ 녹화 끝</button>
+</div>
 
-  <video id="cameraVideo" class="camera" autoplay muted playsinline></video>
+<div id="recordStatus"></div>
 
-  <p id="recordState" class="meta">
-   카메라를 준비하고 있어요.
-  </p>
-
-  <div class="modalActions">
-   <button class="secondary" onclick="cameraClose()">닫기</button>
-   <button id="recordButton" class="primary" onclick="toggleRecording()">● 촬영 시작</button>
-  </div>
-
- </div>
+</div>
 </div>
 
 <!-- 영상 보기 -->
 
-<div class="modal" id="viewerModal">
+<div class="modal-bg" id="watchModal">
+<div class="modal">
 
- <div class="modalBox">
+<h2 id="watchTitle"></h2>
 
-  <button class="close" onclick="closeModal('viewerModal')">×</button>
+<video id="watchVideo" controls></video>
 
-  <video id="viewerVideo" class="viewerVideo" controls></video>
+<p id="watchDescription"></p>
 
-  <div id="viewerTitle" class="viewerTitle"></div>
-
-  <div id="viewerMeta" class="viewerMeta"></div>
-
-  <div class="viewerActions">
-
-   <button id="viewerLike" class="smallBtn" onclick="likeCurrent()">
-    ♡ 좋아요
-   </button>
-
-   <button id="viewerFavorite" class="smallBtn" onclick="favoriteCurrent()">
-    ☆ 즐겨찾기
-   </button>
-
-  </div>
-
-  <div class="comments">
-
-   <h3>댓글</h3>
-
-   <div class="commentForm">
-    <input id="commentInput" placeholder="댓글을 입력하세요">
-    <button class="primary" onclick="addComment()">등록</button>
-   </div>
-
-   <div id="commentList" class="commentList"></div>
-
-  </div>
-
- </div>
+<div class="actions">
+<button onclick="likeCurrent()">❤️ 좋아요</button>
+<button onclick="favoriteCurrent()">⭐ 즐겨찾기</button>
 </div>
 
-<div id="toast" class="toast"></div>
+<hr>
+
+<h3>💬 댓글</h3>
+
+<input id="commentAuthor" placeholder="이름">
+<textarea id="commentText" placeholder="댓글을 입력하세요"></textarea>
+
+<button onclick="addComment()">댓글 작성</button>
+
+<div id="comments"></div>
+
+<div class="form-buttons">
+<button class="secondary" onclick="closeModal('watchModal')">닫기</button>
+</div>
+
+</div>
+</div>
 
 <script>
 
-const MAX_VIDEO_SIZE = 7 * 1024 * 1024;
+const SUPABASE_URL = "여기에_SUPABASE_PROJECT_URL";
+const SUPABASE_KEY = "여기에_PUBLISHABLE_또는_ANON_KEY";
+
+const sb = supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
+
 const MAX_VIDEO_DURATION = 30 * 60;
 
-const KEYS={
- channels:"harmony_channels_v3",
- videos:"harmony_videos_v3",
- favorites:"harmony_favorites_v3"
-};
+let videos = [];
+let channels = [];
+let currentVideo = null;
+let cameraStream = null;
+let mediaRecorder = null;
+let recordedChunks = [];
 
-let channels=load(KEYS.channels,[]);
-let videos=load(KEYS.videos,[]);
-let favorites=load(KEYS.favorites,[]);
-
-let currentVideo=null;
-let selectedVideoFile=null;
-let selectedVideoDuration=0;
-
-let mediaRecorder=null;
-let recordedChunks=[];
-let cameraStream=null;
-
-function load(key,fallback){
-
- try{
-
-  const data=localStorage.getItem(key);
-
-  return data ? JSON.parse(data) : fallback;
-
- }catch(e){
-
-  return fallback;
-
- }
-
+function status(text){
+  document.getElementById("status").textContent = text;
 }
 
-function save(){
+async function loadAll(){
 
- localStorage.setItem(KEYS.channels,JSON.stringify(channels));
- localStorage.setItem(KEYS.videos,JSON.stringify(videos));
- localStorage.setItem(KEYS.favorites,JSON.stringify(favorites));
+  try{
 
-}
+    const c = await sb
+      .from("channels")
+      .select("*")
+      .order("created_at",{ascending:false});
 
-function id(){
+    if(c.error) throw c.error;
 
- return Date.now().toString(36)+Math.random().toString(36).slice(2,8);
+    channels = c.data || [];
 
-}
+    const v = await sb
+      .from("videos")
+      .select("*, channels(name)")
+      .order("created_at",{ascending:false});
 
-function toast(message){
+    if(v.error) throw v.error;
 
- const el=document.getElementById("toast");
+    videos = v.data || [];
 
- el.textContent=message;
+    renderHome();
 
- el.classList.add("show");
+  }catch(e){
 
- setTimeout(()=>el.classList.remove("show"),2000);
+    console.error(e);
 
-}
+    status("⚠️ Supabase 연결을 확인해 주세요");
 
-function openModal(id){
-
- document.getElementById(id).classList.add("show");
-
-}
-
-function closeModal(id){
-
- document.getElementById(id).classList.remove("show");
-
+    document.getElementById("app").innerHTML =
+      `<div class="empty">
+        <h2>Supabase 연결이 필요해요</h2>
+        <p>index.html의 SUPABASE_URL과 SUPABASE_KEY를 확인해 주세요.</p>
+      </div>`;
+  }
 }
 
 function showHome(){
-
- document.getElementById("homePage").classList.remove("hidden");
-
- document.getElementById("listPage").classList.add("hidden");
-
- render();
-
+  renderHome();
 }
 
-function showList(title,items){
-
- document.getElementById("homePage").classList.add("hidden");
-
- document.getElementById("listPage").classList.remove("hidden");
-
- document.getElementById("listTitle").textContent=title;
-
- const box=document.getElementById("listContent");
-
- if(!items.length){
-
-  box.innerHTML=
-   '<div class="empty">아직 동영상이 없어요.</div>';
-
-  return;
-
- }
-
- box.innerHTML=
-  '<div class="videoGrid">'+
-  items.map(videoCard).join("")+
-  '</div>';
-
-}
-
-function createChannelOpen(){
-
- document.getElementById("channelName").value="";
- document.getElementById("channelDesc").value="";
-
- openModal("channelModal");
-
-}
-
-function createChannel(){
-
- const name=document.getElementById("channelName").value.trim();
- const desc=document.getElementById("channelDesc").value.trim();
- const emoji=document.getElementById("channelEmoji").value;
-
- if(!name){
-
-  toast("채널 이름을 입력해 주세요.");
-
-  return;
-
- }
-
- channels.push({
-
-  id:id(),
-  name:name,
-  desc:desc,
-  emoji:emoji,
-  createdAt:Date.now()
-
- });
-
- save();
-
- closeModal("channelModal");
-
- render();
-
- toast("채널을 만들었어요!");
-
-}
-
-function showAllChannels(){
-
- document.getElementById("homePage").classList.add("hidden");
-
- document.getElementById("listPage").classList.remove("hidden");
-
- document.getElementById("listTitle").textContent="모든 채널";
-
- const box=document.getElementById("listContent");
-
- if(!channels.length){
-
-  box.innerHTML=
-   '<div class="empty">'+
-   '아직 채널이 없어요.<br><br>'+
-   '<button class="primary" onclick="createChannelOpen()">＋ 첫 채널 만들기</button>'+
-   '</div>';
-
-  return;
-
- }
-
- box.innerHTML=
-  '<div class="channelGrid">'+
-  channels.map(channelCard).join("")+
-  '</div>';
-
-}
-
-function showFavorites(){
-
- const items=videos.filter(v=>favorites.includes(v.id));
-
- showList("즐겨찾기",items);
-
-}
-
-function channelCard(ch){
-
- const count=videos.filter(v=>v.channelId===ch.id).length;
-
- return `
-
- <div class="channelCard">
-
-  <div class="avatar">
-   ${escapeHTML(ch.emoji)}
-  </div>
-
-  <div class="channelName">
-   ${escapeHTML(ch.name)}
-  </div>
-
-  <div class="channelDesc">
-   ${escapeHTML(ch.desc||"가족 채널입니다.")}
-  </div>
-
-  <div class="meta">
-   동영상 ${count}개
-  </div>
-
-  <br>
-
-  <button class="primary"
-   onclick="showChannel('${ch.id}')">
-   채널 보기
-  </button>
-
- </div>
-
- `;
-
-}
-
-function showChannel(channelId){
-
- const ch=channels.find(c=>c.id===channelId);
-
- if(!ch)return;
-
- const items=videos.filter(v=>v.channelId===channelId);
-
- document.getElementById("homePage").classList.add("hidden");
-
- document.getElementById("listPage").classList.remove("hidden");
-
- document.getElementById("listTitle").textContent=
-  ch.emoji+" "+ch.name;
-
- const box=document.getElementById("listContent");
-
- let html=`
-
- <div class="channelCard"
-  style="margin-bottom:20px;text-align:left">
-
-  <div style="display:flex;gap:15px;align-items:center">
-
-   <div class="avatar" style="margin:0">
-    ${escapeHTML(ch.emoji)}
-   </div>
-
-   <div>
-
-    <div class="channelName">
-     ${escapeHTML(ch.name)}
-    </div>
-
-    <div class="meta">
-     ${escapeHTML(ch.desc||"")}
-    </div>
-
-   </div>
-
-  </div>
-
- </div>
-
- `;
-
- html += items.length
-
-  ? '<div class="videoGrid">'+items.map(videoCard).join("")+'</div>'
-
-  : '<div class="empty">이 채널에는 아직 동영상이 없어요.</div>';
-
- box.innerHTML=html;
-
-}
-
-function uploadOpen(){
-
- if(!channels.length){
-
-  toast("먼저 채널을 만들어 주세요.");
-
-  createChannelOpen();
-
-  return;
-
- }
-
- fillChannelSelect();
-
- document.getElementById("videoFile").value="";
- document.getElementById("videoTitle").value="";
- document.getElementById("videoDesc").value="";
-
- const preview=document.getElementById("uploadPreview");
-
- preview.removeAttribute("src");
- preview.style.display="none";
-
- const info=document.getElementById("videoInfo");
-
- info.style.display="none";
- info.className="videoInfo";
- info.innerHTML="";
-
- selectedVideoFile=null;
- selectedVideoDuration=0;
-
- document.getElementById("uploadButton").disabled=false;
-
- openModal("uploadModal");
-
-}
-
-function fillChannelSelect(){
-
- const select=document.getElementById("videoChannel");
-
- select.innerHTML=
-
-  channels.map(c=>
-   `<option value="${c.id}">
-    ${escapeHTML(c.emoji)} ${escapeHTML(c.name)}
-   </option>`
-  ).join("");
-
-}
-
-function formatDuration(seconds){
-
- seconds=Math.floor(seconds);
-
- const minutes=Math.floor(seconds/60);
- const secs=seconds%60;
-
- return minutes+"분 "+String(secs).padStart(2,"0")+"초";
-
-}
-
-function formatSize(bytes){
-
- return (bytes/(1024*1024)).toFixed(2)+" MB";
-
-}
-
-function previewVideo(){
-
- const input=document.getElementById("videoFile");
- const file=input.files[0];
-
- const preview=document.getElementById("uploadPreview");
- const info=document.getElementById("videoInfo");
- const button=document.getElementById("uploadButton");
-
- selectedVideoFile=null;
- selectedVideoDuration=0;
-
- if(!file){
-
-  preview.style.display="none";
-  info.style.display="none";
-  button.disabled=false;
-
-  return;
-
- }
-
- if(file.size>MAX_VIDEO_SIZE){
-
-  info.className="videoInfo bad";
-  info.style.display="block";
-
-  info.innerHTML=
-   "❌ 파일 크기가 "+formatSize(file.size)+
-   "예요.<br><br>"+
-   "HARMONY에서는 <strong>7MB 이하</strong> 영상만 업로드할 수 있어요.";
-
-  button.disabled=true;
-
- }else{
-
-  button.disabled=false;
-
- }
-
- const url=URL.createObjectURL(file);
-
- preview.src=url;
- preview.style.display="block";
-
- preview.onloadedmetadata=()=>{
-
-  const duration=preview.duration;
-
-  selectedVideoDuration=duration;
-
-  const durationOK=duration<=MAX_VIDEO_DURATION;
-  const sizeOK=file.size<=MAX_VIDEO_SIZE;
-
-  if(durationOK && sizeOK){
-
-   selectedVideoFile=file;
-
-   info.className="videoInfo ok";
-   info.style.display="block";
-
-   info.innerHTML=
-    "✅ 업로드 가능<br>"+
-    "영상 길이: <strong>"+formatDuration(duration)+"</strong><br>"+
-    "파일 크기: <strong>"+formatSize(file.size)+"</strong>";
-
-   button.disabled=false;
+function renderHome(){
+
+  const app = document.getElementById("app");
+
+  let html = `
+    <section class="section">
+      <h2>🎬 최신 영상</h2>
+      <div class="video-grid">
+  `;
+
+  if(!videos.length){
+
+    html += `
+      <div class="empty">
+        아직 영상이 없어요.<br><br>
+        첫 번째 영상을 올려보세요! 🎥
+      </div>
+    `;
 
   }else{
 
-   selectedVideoFile=null;
-
-   info.className="videoInfo bad";
-   info.style.display="block";
-
-   let messages=[];
-
-   if(!durationOK){
-
-    messages.push(
-     "영상 길이가 "+
-     formatDuration(duration)+
-     "로 30분을 초과했어요."
-    );
-
-   }
-
-   if(!sizeOK){
-
-    messages.push(
-     "파일 크기가 "+
-     formatSize(file.size)+
-     "로 7MB를 초과했어요."
-    );
-
-   }
-
-   info.innerHTML=
-    "❌ 업로드할 수 없어요.<br><br>"+
-    messages.join("<br>")+"<br><br>"+
-    "<strong>조건: 30분 이하 + 7MB 이하</strong>";
-
-   button.disabled=true;
-
+    videos.slice(0,12).forEach(v=>{
+      html += videoCard(v);
+    });
   }
 
- };
-
- preview.onerror=()=>{
-
-  selectedVideoFile=null;
-
-  info.className="videoInfo bad";
-  info.style.display="block";
-
-  info.textContent=
-   "❌ 이 동영상 파일을 확인할 수 없어요.";
-
-  button.disabled=true;
-
- };
-
-}
-
-function uploadVideo(){
-
- const file=selectedVideoFile;
-
- const title=document.getElementById("videoTitle").value.trim();
- const desc=document.getElementById("videoDesc").value.trim();
- const channelId=document.getElementById("videoChannel").value;
-
- if(!file){
-
-  toast("30분 이하, 7MB 이하 영상을 선택해 주세요.");
-
-  return;
-
- }
-
- if(file.size>MAX_VIDEO_SIZE){
-
-  toast("7MB를 초과해서 업로드할 수 없어요.");
-
-  return;
-
- }
-
- if(selectedVideoDuration>MAX_VIDEO_DURATION){
-
-  toast("30분을 초과해서 업로드할 수 없어요.");
-
-  return;
-
- }
-
- if(!title){
-
-  toast("제목을 입력해 주세요.");
-
-  return;
-
- }
-
- const button=document.getElementById("uploadButton");
-
- button.disabled=true;
- button.textContent="업로드 중...";
-
- const reader=new FileReader();
-
- reader.onload=()=>{
-
-  videos.unshift({
-
-   id:id(),
-   title:title,
-   desc:desc,
-   channelId:channelId,
-   src:reader.result,
-   duration:selectedVideoDuration,
-   size:file.size,
-   likes:0,
-   comments:[],
-   createdAt:Date.now()
-
-  });
-
-  save();
-
-  closeModal("uploadModal");
-
-  button.disabled=false;
-  button.textContent="업로드";
-
-  render();
-
-  toast("동영상을 올렸어요!");
-
- };
-
- reader.onerror=()=>{
-
-  button.disabled=false;
-  button.textContent="업로드";
-
-  toast("동영상 저장에 실패했어요.");
-
- };
-
- reader.readAsDataURL(file);
-
-}
-
-async function cameraOpen(){
-
- openModal("cameraModal");
-
- const video=document.getElementById("cameraVideo");
- const state=document.getElementById("recordState");
-
- try{
-
-  cameraStream=
-   await navigator.mediaDevices.getUserMedia({
-    video:true,
-    audio:true
-   });
-
-  video.srcObject=cameraStream;
-
-  state.innerHTML=
-   '<span class="recordDot"></span>'+
-   '촬영할 준비가 됐어요.';
-
- }catch(e){
-
-  state.textContent=
-   "카메라를 사용할 수 없어요. 브라우저 권한을 확인해 주세요.";
-
- }
-
-}
-
-function cameraClose(){
-
- stopCameraTracks();
-
- document.getElementById("cameraVideo").srcObject=null;
-
- document.getElementById("recordState").textContent=
-  "카메라를 준비하고 있어요.";
-
- document.getElementById("recordButton").textContent=
-  "● 촬영 시작";
-
- closeModal("cameraModal");
-
-}
-
-function stopCameraTracks(){
-
- if(cameraStream){
-
-  cameraStream.getTracks().forEach(track=>track.stop());
-
-  cameraStream=null;
-
- }
-
-}
-
-function toggleRecording(){
-
- if(mediaRecorder &&
-    mediaRecorder.state==="recording"){
-
-  stopRecording();
-
- }else{
-
-  startRecording();
-
- }
-
-}
-
-function startRecording(){
-
- if(!cameraStream){
-
-  toast("카메라가 준비되지 않았어요.");
-
-  return;
-
- }
-
- recordedChunks=[];
-
- let options={};
-
- if(MediaRecorder.isTypeSupported("video/webm;codecs=vp9")){
-
-  options.mimeType="video/webm;codecs=vp9";
-
- }else if(MediaRecorder.isTypeSupported("video/webm")){
-
-  options.mimeType="video/webm";
-
- }
-
- try{
-
-  mediaRecorder=
-   new MediaRecorder(cameraStream,options);
-
- }catch(e){
-
-  mediaRecorder=
-   new MediaRecorder(cameraStream);
-
- }
-
- mediaRecorder.ondataavailable=e=>{
-
-  if(e.data.size){
-
-   recordedChunks.push(e.data);
-
-  }
-
- };
-
- mediaRecorder.onstop=()=>{
-
-  const blob=
-   new Blob(recordedChunks,{type:"video/webm"});
-
-  if(blob.size>MAX_VIDEO_SIZE){
-
-   toast(
-    "촬영 영상이 7MB를 넘었어요. 다시 짧게 촬영해 주세요."
-   );
-
-   return;
-
-  }
-
-  const url=URL.createObjectURL(blob);
-
-  const link=document.createElement("a");
-
-  link.href=url;
-  link.download="harmony-video.webm";
-
-  link.click();
-
-  URL.revokeObjectURL(url);
-
-  toast("촬영한 영상을 저장했어요.");
-
- };
-
- mediaRecorder.start();
-
- document.getElementById("recordButton").textContent=
-  "■ 촬영 종료";
-
- document.getElementById("recordState").innerHTML=
-  '<span class="recordDot"></span>'+
-  '촬영 중이에요!';
-
-}
-
-function stopRecording(){
-
- if(mediaRecorder &&
-    mediaRecorder.state==="recording"){
-
-  mediaRecorder.stop();
-
- }
-
- document.getElementById("recordButton").textContent=
-  "● 촬영 시작";
-
- document.getElementById("recordState").textContent=
-  "촬영이 끝났어요.";
-
+  html += `
+      </div>
+    </section>
+  `;
+
+  app.innerHTML = html;
 }
 
 function videoCard(v){
 
- const ch=channels.find(c=>c.id===v.channelId);
+  const channelName =
+    v.channels?.name || "채널 없음";
 
- const channelName=
-  ch?ch.name:"알 수 없는 채널";
+  return `
+    <div class="card">
 
- const isFav=favorites.includes(v.id);
+      <video
+        class="thumb"
+        src="${escapeAttr(v.video_url)}"
+        preload="metadata"
+      ></video>
 
- return `
+      <div class="card-body">
 
- <article class="videoCard">
+        <div class="card-title">
+          ${escapeHtml(v.title)}
+        </div>
 
-  <div class="thumb"
-   onclick="openVideo('${v.id}')">
+        <div class="meta">
+          📺 ${escapeHtml(channelName)}
+          · ❤️ ${v.likes || 0}
+        </div>
 
-   <video
-    src="${v.src}"
-    preload="metadata"
-    muted>
-   </video>
+        <div class="actions">
+          <button onclick="watchVideo(${v.id})">
+            ▶️ 보기
+          </button>
 
-   <div class="play">▶</div>
+          <button onclick="likeVideo(${v.id})">
+            ❤️ 좋아요
+          </button>
 
-  </div>
+          <button onclick="favoriteVideo(${v.id})">
+            ⭐ 저장
+          </button>
+        </div>
 
-  <div class="cardBody">
+      </div>
+    </div>
+  `;
+}
 
-   <div class="cardTitle">
-    ${escapeHTML(v.title)}
-   </div>
+function showVideos(){
 
-   <div class="meta">
-    ${escapeHTML(channelName)}
-    · 좋아요 ${v.likes||0}
-   </div>
+  document.getElementById("app").innerHTML = `
+    <section class="section">
+      <h2>🎬 모든 영상</h2>
+      <div class="video-grid" id="allVideos"></div>
+    </section>
+  `;
 
-   <div class="cardBtns">
+  renderVideoList(videos);
+}
 
-    <button
-     class="smallBtn"
-     onclick="event.stopPropagation();likeVideo('${v.id}')">
+function renderVideoList(list){
 
-     ♡ ${v.likes||0}
+  const box = document.getElementById("allVideos");
 
-    </button>
+  if(!box) return;
 
-    <button
-     class="smallBtn ${isFav?"on":""}"
-     onclick="event.stopPropagation();toggleFavorite('${v.id}')">
+  if(!list.length){
 
-     ${isFav?"★":"☆"}
+    box.innerHTML =
+      `<div class="empty">검색 결과가 없어요.</div>`;
 
-    </button>
+    return;
+  }
 
-    <button
-     class="smallBtn"
-     onclick="openVideo('${v.id}')">
+  box.innerHTML = list.map(videoCard).join("");
+}
 
-     💬 ${v.comments?v.comments.length:0}
+function searchVideos(){
 
-    </button>
+  const q =
+    document
+      .getElementById("searchInput")
+      .value
+      .trim()
+      .toLowerCase();
 
-   </div>
+  if(!q){
 
-  </div>
+    renderHome();
 
- </article>
+    return;
+  }
 
- `;
+  const result = videos.filter(v => {
+
+    const channel =
+      v.channels?.name || "";
+
+    return (
+      (v.title || "").toLowerCase().includes(q) ||
+      (v.description || "").toLowerCase().includes(q) ||
+      channel.toLowerCase().includes(q)
+    );
+
+  });
+
+  document.getElementById("app").innerHTML = `
+    <section class="section">
+      <h2>🔎 검색 결과</h2>
+      <div class="video-grid" id="allVideos"></div>
+    </section>
+  `;
+
+  renderVideoList(result);
+}
+
+function showChannels(){
+
+  let html = `
+    <section class="section">
+      <h2>📺 채널</h2>
+      <div class="video-grid">
+  `;
+
+  if(!channels.length){
+
+    html += `
+      <div class="empty">
+        아직 채널이 없어요.
+      </div>
+    `;
+
+  }else{
+
+    channels.forEach(c=>{
+
+      const count =
+        videos.filter(v=>v.channel_id === c.id).length;
+
+      html += `
+        <div class="channel-card">
+
+          <h2>📺 ${escapeHtml(c.name)}</h2>
+
+          <p>
+            ${escapeHtml(c.description || "소개가 없습니다.")}
+          </p>
+
+          <p class="meta">
+            🎬 영상 ${count}개
+          </p>
+
+          <button onclick="showChannelVideos(${c.id})">
+            채널 보기
+          </button>
+
+        </div>
+      `;
+
+    });
+  }
+
+  html += `
+      </div>
+    </section>
+  `;
+
+  document.getElementById("app").innerHTML = html;
+}
+
+function showChannelVideos(id){
+
+  const channel =
+    channels.find(c=>c.id===id);
+
+  const list =
+    videos.filter(v=>v.channel_id===id);
+
+  document.getElementById("app").innerHTML = `
+
+    <section class="section">
+
+      <h2>📺 ${escapeHtml(channel.name)}</h2>
+
+      <p>${escapeHtml(channel.description || "")}</p>
+
+      <div class="video-grid" id="allVideos"></div>
+
+    </section>
+  `;
+
+  renderVideoList(list);
+}
+
+function showFavorites(){
+
+  const saved =
+    JSON.parse(
+      localStorage.getItem("harmonyFavorites") || "[]"
+    );
+
+  const list =
+    videos.filter(v=>saved.includes(v.id));
+
+  document.getElementById("app").innerHTML = `
+
+    <section class="section">
+
+      <h2>⭐ 즐겨찾기</h2>
+
+      <div class="video-grid" id="allVideos"></div>
+
+    </section>
+  `;
+
+  renderVideoList(list);
+}
+
+function openChannelModal(){
+
+  document.getElementById("channelModal").style.display="flex";
 
 }
 
-function openVideo(videoId){
+async function createChannel(){
 
- const v=videos.find(x=>x.id===videoId);
+  const name =
+    document.getElementById("channelName").value.trim();
 
- if(!v)return;
+  const description =
+    document
+      .getElementById("channelDescription")
+      .value.trim();
 
- currentVideo=v;
+  if(!name){
 
- document.getElementById("viewerVideo").src=v.src;
+    alert("채널 이름을 입력해 주세요.");
 
- document.getElementById("viewerTitle").textContent=
-  v.title;
+    return;
+  }
 
- const ch=channels.find(c=>c.id===v.channelId);
+  status("📺 채널을 만드는 중...");
 
- document.getElementById("viewerMeta").textContent=
+  const {error} =
+    await sb
+      .from("channels")
+      .insert({
+        name,
+        description
+      });
 
-  (ch
-   ? ch.emoji+" "+ch.name
-   : "알 수 없는 채널"
-  )+
+  if(error){
 
-  " · 좋아요 "+(v.likes||0);
+    alert("채널 생성 실패: " + error.message);
 
- updateViewerButtons();
+    return;
+  }
 
- renderComments();
+  closeModal("channelModal");
 
- document.getElementById("commentInput").value="";
+  document.getElementById("channelName").value="";
+  document.getElementById("channelDescription").value="";
 
- openModal("viewerModal");
+  status("✅ 채널이 만들어졌어요!");
+
+  await loadAll();
+
+  showChannels();
+}
+
+function openUploadModal(){
+
+  if(!channels.length){
+
+    alert("먼저 채널을 하나 만들어 주세요.");
+
+    openChannelModal();
+
+    return;
+  }
+
+  const select =
+    document.getElementById("videoChannel");
+
+  select.innerHTML =
+    channels.map(c =>
+      `<option value="${c.id}">
+        ${escapeHtml(c.name)}
+      </option>`
+    ).join("");
+
+  document.getElementById("uploadModal").style.display="flex";
+}
+
+function previewVideo(){
+
+  const file =
+    document.getElementById("videoFile").files[0];
+
+  const box =
+    document.getElementById("uploadPreview");
+
+  if(!file){
+
+    box.innerHTML="";
+
+    return;
+  }
+
+  const url =
+    URL.createObjectURL(file);
+
+  box.innerHTML = `
+    <p>🎥 영상 확인</p>
+    <video id="previewPlayer" controls src="${url}"></video>
+  `;
+
+  const player =
+    document.getElementById("previewPlayer");
+
+  player.addEventListener("loadedmetadata",()=>{
+
+    if(player.duration > MAX_VIDEO_DURATION){
+
+      alert("⏰ 영상은 최대 30분까지 올릴 수 있어요.");
+
+      document.getElementById("videoFile").value="";
+
+      box.innerHTML="";
+
+    }
+
+  });
 
 }
 
-function updateViewerButtons(){
+async function uploadVideo(){
 
- if(!currentVideo)return;
+  const file =
+    document.getElementById("videoFile").files[0];
 
- const like=
-  document.getElementById("viewerLike");
+  const title =
+    document.getElementById("videoTitle").value.trim();
 
- const fav=
-  document.getElementById("viewerFavorite");
+  const description =
+    document
+      .getElementById("videoDescription")
+      .value.trim();
 
- like.textContent=
-  "♡ 좋아요 "+(currentVideo.likes||0);
+  const channelId =
+    document.getElementById("videoChannel").value;
 
- const on=
-  favorites.includes(currentVideo.id);
+  if(!file){
 
- fav.textContent=
-  on
-  ? "★ 즐겨찾기"
-  : "☆ 즐겨찾기";
+    alert("영상 파일을 선택해 주세요.");
 
- fav.classList.toggle("on",on);
+    return;
+  }
+
+  if(!title){
+
+    alert("영상 제목을 입력해 주세요.");
+
+    return;
+  }
+
+  status("⏰ 영상 길이를 확인하는 중...");
+
+  const duration =
+    await getVideoDuration(file);
+
+  if(duration > MAX_VIDEO_DURATION){
+
+    alert(
+      "⏰ 30분을 초과한 영상은 업로드할 수 없어요."
+    );
+
+    return;
+  }
+
+  status("☁️ 영상을 업로드하는 중...");
+
+  const safeName =
+    file.name
+      .replace(/[^a-zA-Z0-9._-]/g,"_");
+
+  const path =
+    Date.now() + "_" + safeName;
+
+  const upload =
+    await sb.storage
+      .from("videos")
+      .upload(path,file,{
+        cacheControl:"3600",
+        upsert:false
+      });
+
+  if(upload.error){
+
+    alert(
+      "영상 업로드 실패:\n" +
+      upload.error.message
+    );
+
+    return;
+  }
+
+  const publicData =
+    sb.storage
+      .from("videos")
+      .getPublicUrl(path);
+
+  const videoUrl =
+    publicData.data.publicUrl;
+
+  const insert =
+    await sb
+      .from("videos")
+      .insert({
+        channel_id:Number(channelId),
+        title,
+        description,
+        video_url:videoUrl,
+        duration:Math.floor(duration),
+        likes:0
+      });
+
+  if(insert.error){
+
+    alert(
+      "영상 정보 저장 실패:\n" +
+      insert.error.message
+    );
+
+    return;
+  }
+
+  document.getElementById("videoTitle").value="";
+  document.getElementById("videoDescription").value="";
+  document.getElementById("videoFile").value="";
+  document.getElementById("uploadPreview").innerHTML="";
+
+  closeModal("uploadModal");
+
+  status("🎉 영상 업로드 완료!");
+
+  await loadAll();
+
+  showHome();
+}
+
+function getVideoDuration(file){
+
+  return new Promise((resolve,reject)=>{
+
+    const url =
+      URL.createObjectURL(file);
+
+    const video =
+      document.createElement("video");
+
+    video.preload="metadata";
+
+    video.onloadedmetadata=()=>{
+
+      URL.revokeObjectURL(url);
+
+      resolve(video.duration);
+
+    };
+
+    video.onerror=()=>{
+
+      URL.revokeObjectURL(url);
+
+      reject(
+        new Error("영상 정보를 읽을 수 없습니다.")
+      );
+
+    };
+
+    video.src=url;
+
+  });
 
 }
 
-function likeVideo(videoId){
+async function watchVideo(id){
 
- const v=videos.find(x=>x.id===videoId);
+  currentVideo =
+    videos.find(v=>v.id===id);
 
- if(!v)return;
+  if(!currentVideo) return;
 
- v.likes=(v.likes||0)+1;
+  document.getElementById("watchTitle")
+    .textContent=currentVideo.title;
 
- save();
+  document.getElementById("watchDescription")
+    .textContent=currentVideo.description || "";
 
- render();
+  document.getElementById("watchVideo")
+    .src=currentVideo.video_url;
 
- if(currentVideo &&
-    currentVideo.id===videoId){
+  document.getElementById("watchModal")
+    .style.display="flex";
 
-  currentVideo=v;
+  await loadComments(id);
+}
 
-  updateViewerButtons();
+async function likeVideo(id){
 
-  const ch=
-   channels.find(c=>c.id===v.channelId);
+  const v =
+    videos.find(v=>v.id===id);
 
-  document.getElementById("viewerMeta").textContent=
+  if(!v) return;
 
-   (ch
-    ? ch.emoji+" "+ch.name
-    : "알 수 없는 채널"
-   )+
-   " · 좋아요 "+v.likes;
+  const newLikes =
+    (v.likes || 0) + 1;
 
- }
+  const {error} =
+    await sb
+      .from("videos")
+      .update({
+        likes:newLikes
+      })
+      .eq("id",id);
 
- toast("좋아요!");
+  if(error){
+
+    alert("좋아요 실패: " + error.message);
+
+    return;
+  }
+
+  v.likes=newLikes;
+
+  status("❤️ 좋아요!");
+
+  renderHome();
+}
+
+async function likeCurrent(){
+
+  if(currentVideo){
+
+    await likeVideo(currentVideo.id);
+
+  }
 
 }
 
-function likeCurrent(){
+function favoriteVideo(id){
 
- if(currentVideo){
+  let saved =
+    JSON.parse(
+      localStorage.getItem("harmonyFavorites") || "[]"
+    );
 
-  likeVideo(currentVideo.id);
+  if(!saved.includes(id)){
 
- }
+    saved.push(id);
 
-}
+    localStorage.setItem(
+      "harmonyFavorites",
+      JSON.stringify(saved)
+    );
 
-function toggleFavorite(videoId){
+    status("⭐ 즐겨찾기에 저장했어요!");
 
- if(favorites.includes(videoId)){
+  }else{
 
-  favorites=
-   favorites.filter(id=>id!==videoId);
+    status("⭐ 이미 저장되어 있어요!");
 
-  toast("즐겨찾기에서 뺐어요.");
-
- }else{
-
-  favorites.push(videoId);
-
-  toast("즐겨찾기에 저장했어요.");
-
- }
-
- save();
-
- render();
-
- if(currentVideo &&
-    currentVideo.id===videoId){
-
-  updateViewerButtons();
-
- }
+  }
 
 }
 
 function favoriteCurrent(){
 
- if(currentVideo){
+  if(currentVideo){
 
-  toggleFavorite(currentVideo.id);
-
- }
-
-}
-
-function addComment(){
-
- if(!currentVideo)return;
-
- const input=
-  document.getElementById("commentInput");
-
- const text=input.value.trim();
-
- if(!text)return;
-
- if(!currentVideo.comments){
-
-  currentVideo.comments=[];
-
- }
-
- currentVideo.comments.push({
-
-  id:id(),
-  text:text,
-  createdAt:Date.now()
-
- });
-
- save();
-
- input.value="";
-
- renderComments();
-
- render();
-
- toast("댓글을 남겼어요!");
-
-}
-
-function renderComments(){
-
- const box=
-  document.getElementById("commentList");
-
- if(!currentVideo ||
-    !currentVideo.comments ||
-    !currentVideo.comments.length){
-
-  box.innerHTML=
-   '<div class="meta">'+
-   '아직 댓글이 없어요. 첫 댓글을 남겨보세요!'+
-   '</div>';
-
-  return;
-
- }
-
- box.innerHTML=
-
-  currentVideo.comments
-   .slice()
-   .reverse()
-   .map(c=>`
-
-    <div class="comment">
-
-     <strong>가족 사용자</strong>
-
-     <span>
-      ${escapeHTML(c.text)}
-     </span>
-
-    </div>
-
-   `)
-   .join("");
-
-}
-
-function searchVideos(){
-
- const q=
-  document
-   .getElementById("searchInput")
-   .value
-   .trim()
-   .toLowerCase();
-
- if(!q){
-
-  showHome();
-
-  return;
-
- }
-
- const matchedVideos=
-  videos.filter(v=>{
-
-   const ch=
-    channels.find(c=>c.id===v.channelId);
-
-   return(
-
-    v.title.toLowerCase().includes(q) ||
-
-    (v.desc||"").toLowerCase().includes(q) ||
-
-    (ch &&
-     ch.name.toLowerCase().includes(q))
-
-   );
-
-  });
-
- const matchedChannels=
-  channels.filter(c=>
-
-   c.name.toLowerCase().includes(q) ||
-
-   (c.desc||"").toLowerCase().includes(q)
-
- );
-
- document.getElementById("homePage")
-  .classList.add("hidden");
-
- document.getElementById("listPage")
-  .classList.remove("hidden");
-
- document.getElementById("listTitle")
-  .textContent='"'+q+'" 검색 결과';
-
- let html="";
-
- if(matchedChannels.length){
-
-  html+="<h3>채널</h3>";
-
-  html+=
-   '<div class="channelGrid">'+
-   matchedChannels.map(channelCard).join("")+
-   '</div>';
-
- }
-
- html+=
-  "<h3 style='margin-top:25px'>동영상</h3>";
-
- if(matchedVideos.length){
-
-  html+=
-   '<div class="videoGrid">'+
-   matchedVideos.map(videoCard).join("")+
-   '</div>';
-
- }else{
-
-  html+=
-   '<div class="empty">검색된 동영상이 없어요.</div>';
-
- }
-
- document.getElementById("listContent")
-  .innerHTML=html;
-
-}
-
-function render(){
-
- document.getElementById("homeVideos").innerHTML=
-
-  videos.length
-
-  ? videos
-    .slice(0,12)
-    .map(videoCard)
-    .join("")
-
-  :
-
-   '<div class="empty" style="grid-column:1/-1">'+
-   '아직 동영상이 없어요.<br><br>'+
-   '<button class="primary" onclick="uploadOpen()">'+
-   '↑ 첫 동영상 올리기'+
-   '</button>'+
-   '</div>';
-
- document.getElementById("homeChannels").innerHTML=
-
-  channels.length
-
-  ? channels
-    .slice(0,8)
-    .map(channelCard)
-    .join("")
-
-  :
-
-   '<div class="empty" style="grid-column:1/-1">'+
-   '아직 채널이 없어요.<br><br>'+
-   '<button class="primary" onclick="createChannelOpen()">'+
-   '＋ 첫 채널 만들기'+
-   '</button>'+
-   '</div>';
-
-}
-
-function escapeHTML(value){
-
- return String(value||"")
-
-  .replace(/&/g,"&amp;")
-  .replace(/</g,"&lt;")
-  .replace(/>/g,"&gt;")
-  .replace(/"/g,"&quot;")
-  .replace(/'/g,"&#039;");
-
-}
-
-document
- .getElementById("searchInput")
- .addEventListener("keydown",e=>{
-
-  if(e.key==="Enter"){
-
-   searchVideos();
+    favoriteVideo(currentVideo.id);
 
   }
 
- });
+}
 
-document
- .getElementById("commentInput")
- .addEventListener("keydown",e=>{
+async function loadComments(videoId){
 
-  if(e.key==="Enter"){
+  const box =
+    document.getElementById("comments");
 
-   addComment();
+  box.innerHTML =
+    "<p>댓글을 불러오는 중...</p>";
+
+  const {data,error} =
+    await sb
+      .from("comments")
+      .select("*")
+      .eq("video_id",videoId)
+      .order("created_at",{ascending:false});
+
+  if(error){
+
+    box.innerHTML =
+      "<p>댓글을 불러오지 못했어요.</p>";
+
+    return;
+  }
+
+  if(!data.length){
+
+    box.innerHTML =
+      "<p>첫 번째 댓글을 남겨보세요! 💬</p>";
+
+    return;
+  }
+
+  box.innerHTML =
+    data.map(c=>`
+
+      <div class="comment">
+
+        <div class="comment-name">
+          ${escapeHtml(c.author)}
+        </div>
+
+        <div>
+          ${escapeHtml(c.text)}
+        </div>
+
+      </div>
+
+    `).join("");
+
+}
+
+async function addComment(){
+
+  if(!currentVideo) return;
+
+  const author =
+    document
+      .getElementById("commentAuthor")
+      .value.trim();
+
+  const text =
+    document
+      .getElementById("commentText")
+      .value.trim();
+
+  if(!author || !text){
+
+    alert("이름과 댓글을 입력해 주세요.");
+
+    return;
+  }
+
+  const {error} =
+    await sb
+      .from("comments")
+      .insert({
+        video_id:currentVideo.id,
+        author,
+        text
+      });
+
+  if(error){
+
+    alert("댓글 작성 실패: " + error.message);
+
+    return;
+  }
+
+  document.getElementById("commentText").value="";
+
+  status("💬 댓글을 작성했어요!");
+
+  await loadComments(currentVideo.id);
+
+}
+
+async function openCameraModal(){
+
+  try{
+
+    cameraStream =
+      await navigator.mediaDevices.getUserMedia({
+        video:true,
+        audio:true
+      });
+
+    document.getElementById("cameraVideo")
+      .srcObject=cameraStream;
+
+    document.getElementById("cameraModal")
+      .style.display="flex";
+
+  }catch(e){
+
+    alert(
+      "카메라를 사용할 수 없어요.\n" +
+      "브라우저의 카메라 권한을 확인해 주세요."
+    );
 
   }
 
- });
+}
 
-window.addEventListener("beforeunload",()=>{
+function startRecording(){
 
- stopCameraTracks();
+  if(!cameraStream){
 
-});
+    alert("카메라를 먼저 열어주세요.");
 
-render();
+    return;
+  }
+
+  recordedChunks=[];
+
+  mediaRecorder =
+    new MediaRecorder(cameraStream);
+
+  mediaRecorder.ondataavailable=e=>{
+
+    if(e.data.size>0){
+
+      recordedChunks.push(e.data);
+
+    }
+
+  };
+
+  mediaRecorder.onstop=()=>{
+
+    const blob =
+      new Blob(
+        recordedChunks,
+        {type:"video/webm"}
+      );
+
+    const file =
+      new File(
+        [blob],
+        "harmony_camera_" +
+        Date.now() +
+        ".webm",
+        {type:"video/webm"}
+      );
+
+    stopCamera();
+
+    openUploadModal();
+
+    const dt =
+      new DataTransfer();
+
+    dt.items.add(file);
+
+    document.getElementById("videoFile")
+      .files=dt.files;
+
+    previewVideo();
+
+  };
+
+  mediaRecorder.start();
+
+  document.getElementById("recordStatus")
+    .textContent="🔴 녹화 중...";
+
+}
+
+function stopRecording(){
+
+  if(
+    mediaRecorder &&
+    mediaRecorder.state !== "inactive"
+  ){
+
+    mediaRecorder.stop();
+
+  }
+
+}
+
+function stopCamera(){
+
+  if(cameraStream){
+
+    cameraStream
+      .getTracks()
+      .forEach(track=>track.stop());
+
+    cameraStream=null;
+
+  }
+
+  document.getElementById("cameraModal")
+    .style.display="none";
+
+  document.getElementById("recordStatus")
+    .textContent="";
+
+}
+
+function closeModal(id){
+
+  document.getElementById(id)
+    .style.display="none";
+
+  if(id==="cameraModal"){
+
+    stopCamera();
+
+  }
+
+}
+
+function escapeHtml(value){
+
+  return String(value ?? "")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+
+}
+
+function escapeAttr(value){
+
+  return escapeHtml(value);
+
+}
+
+loadAll();
 
 </script>
 
