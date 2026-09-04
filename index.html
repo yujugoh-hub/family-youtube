@@ -2354,5 +2354,26 @@ padding:20px;box-sizing:border-box;">
 
 })();
 </script>
+<script id="HARMONY CHANNEL ID FIX">
+(function(){
+
+ const originalViewChannel = window.viewChannel;
+
+ window.viewChannel = async function(channelId){
+
+   const id = Number(channelId);
+
+   if(!id || Number.isNaN(id)){
+     console.error("잘못된 채널 ID:",channelId);
+     return;
+   }
+
+   if(typeof originalViewChannel === "function"){
+     return originalViewChannel(id);
+   }
+ };
+
+})();
+</script>
 </body>
 </html>
