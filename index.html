@@ -722,7 +722,11 @@ async function loadVideos(containerId){
   const thumb = document.createElement("video");
 
   thumb.className = "videoThumb";
-  thumb.src = video.video_url;
+  harmonyVideoUrl(video).then(function(url){
+   if(url){
+      thumb.src = url;
+   }
+});
   thumb.muted = true;
   thumb.playsInline = true;
   thumb.preload = "metadata";
@@ -826,7 +830,11 @@ async function searchVideos(){
   const thumb = document.createElement("video");
 
   thumb.className = "videoThumb";
-  thumb.src = video.video_url;
+  harmonyVideoUrl(video).then(function(url){
+   if(url){
+      thumb.src = url;
+   }
+});
   thumb.muted = true;
   thumb.playsInline = true;
   thumb.preload = "metadata";
@@ -1454,7 +1462,11 @@ async function loadChannelVideos(channelId){
    document.createElement("video");
 
   thumb.className = "videoThumb";
-  thumb.src = video.video_url;
+  harmonyVideoUrl(video).then(function(url){
+   if(url){
+      thumb.src = url;
+   }
+});
   thumb.muted = true;
   thumb.playsInline = true;
   thumb.preload = "metadata";
@@ -2084,7 +2096,11 @@ async function loadFavorites(){
    document.createElement("video");
 
   thumb.className = "videoThumb";
-  thumb.src = video.video_url;
+  harmonyVideoUrl(video).then(function(url){
+   if(url){
+      thumb.src = url;
+   }
+});
   thumb.muted = true;
   thumb.playsInline = true;
   thumb.preload = "metadata";
@@ -2443,6 +2459,57 @@ background:linear-gradient(135deg,#fff7fb,#eef7ff);">
     }
 
   });
+
+})();
+</script>
+<script id="HARMONY_PRIVATE_VIDEO_FIX">
+(function(){
+
+  async function harmonyVideoUrl(video){
+
+    if(!video) return "";
+
+    const raw = video.video_url || "";
+
+    try{
+
+      const marker = "/storage/v1/object/public/videos/";
+
+      if(raw.includes(marker)){
+
+        const filePath =
+          decodeURIComponent(
+            raw.substring(
+              raw.indexOf(marker) + marker.length
+            )
+          );
+
+        const result =
+          await supabaseClient
+            .storage
+            .from("videos")
+            .createSignedUrl(filePath, 3600);
+
+        if(result.error){
+          console.error("Signed URL error:",result.error);
+          return "";
+        }
+
+        return result.data.signedUrl;
+
+      }
+
+      return raw;
+
+    }catch(error){
+
+      console.error(error);
+      return "";
+
+    }
+  }
+
+  window.harmonyVideoUrl = harmonyVideoUrl;
 
 })();
 </script>
