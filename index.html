@@ -870,7 +870,7 @@ async function searchVideos(){
    동영상 열기
 ========================= */
 
-function openVideo(video){
+async function openVideo(video){
 
  currentVideo = video;
 
@@ -883,7 +883,14 @@ function openVideo(video){
  const player =
   document.getElementById("modalVideo");
 
- player.src = video.video_url;
+ const url = await window.harmonyVideoUrl(video);
+
+ if(!url){
+   alert("동영상을 불러오지 못했어요.");
+   return;
+ }
+
+ player.src = url;
  player.currentTime = 0;
 
  document.getElementById("videoModal")
