@@ -3381,5 +3381,222 @@ background:linear-gradient(135deg,#fff7fb,#eef7ff);">
 
 })();
 </script>
+<!-- HARMONY_ADMIN_GATE_V1 -->
+<style>
+#harmonyAdminGate{
+ position:fixed;
+ inset:0;
+ z-index:2000000;
+ display:none;
+ align-items:center;
+ justify-content:center;
+ padding:20px;
+ background:linear-gradient(135deg,#eef5ff,#f8efff);
+}
+#harmonyAdminGate.show{display:flex}
+.harmonyAdminBox{
+ width:min(430px,100%);
+ background:white;
+ border-radius:28px;
+ padding:28px 22px;
+ box-shadow:0 15px 50px rgba(0,0,0,.15);
+ text-align:center;
+}
+.harmonyAdminLogo{
+ font-size:30px;
+ font-weight:900;
+ margin-bottom:8px;
+}
+.harmonyAdminSub{
+ color:#777;
+ line-height:1.5;
+ margin-bottom:22px;
+}
+.harmonyAdminInput{
+ width:100%;
+ height:54px;
+ border:1px solid #ddd;
+ border-radius:15px;
+ padding:0 16px;
+ font-size:17px;
+ outline:none;
+ margin-bottom:10px;
+}
+.harmonyAdminBtn{
+ width:100%;
+ height:54px;
+ border:0;
+ border-radius:15px;
+ background:#111;
+ color:white;
+ font-size:17px;
+ font-weight:900;
+}
+.harmonyAdminError{
+ min-height:24px;
+ color:#e53935;
+ font-weight:800;
+ margin:6px 0;
+}
+.harmonyAdminSmall{
+ margin-top:14px;
+ color:#999;
+ font-size:12px;
+ line-height:1.5;
+}
+</style>
+
+<div id="harmonyAdminGate">
+ <div class="harmonyAdminBox">
+
+  <div class="harmonyAdminLogo">HARMONY 🔐</div>
+
+  <div id="harmonyAdminText" class="harmonyAdminSub">
+   가족 이름을 등록하려면<br>
+   먼저 관리자 인증이 필요해요.
+  </div>
+
+  <input
+   id="harmonyAdminPin"
+   class="harmonyAdminInput"
+   type="password"
+   inputmode="numeric"
+   maxlength="8"
+   placeholder="관리자 PIN"
+  >
+
+  <div id="harmonyAdminError" class="harmonyAdminError"></div>
+
+  <button
+   class="harmonyAdminBtn"
+   type="button"
+   onclick="harmonyAdminCheck()"
+  >
+   🔐 관리자 인증
+  </button>
+
+  <div class="harmonyAdminSmall">
+   가족 PIN 50601과는 다른 관리자 PIN을 사용하세요.
+  </div>
+
+ </div>
+</div>
+
+<script>
+(function(){
+
+ const ADMIN_KEY = "harmonyAdminPinV1";
+ const NAMES_KEY = "harmonyFamilyNamesV2";
+
+ function gate(){
+  const el = document.getElementById("harmonyAdminGate");
+  if(el) el.classList.add("show");
+ }
+
+ function hide(){
+  const el = document.getElementById("harmonyAdminGate");
+  if(el) el.classList.remove("show");
+ }
+
+ function hasAdmin(){
+  return !!localStorage.getItem(ADMIN_KEY);
+ }
+
+ window.harmonyAdminCheck = function(){
+
+  const input =
+   document.getElementById("harmonyAdminPin");
+
+  const error =
+   document.getElementById("harmonyAdminError");
+
+  const pin = input.value.trim();
+
+  if(!pin){
+   error.textContent = "관리자 PIN을 입력해주세요.";
+   return;
+  }
+
+  if(!hasAdmin()){
+
+   if(pin === "50601"){
+    error.textContent =
+     "가족 PIN과 다른 관리자 PIN을 설정해주세요.";
+    input.value = "";
+    return;
+   }
+
+   localStorage.setItem(ADMIN_KEY,pin);
+
+   error.textContent = "";
+
+   hide();
+
+   setTimeout(function(){
+
+    if(typeof window.harmonyShowSelectV2 === "function"){
+     window.harmonyShowSelectV2();
+    }
+
+   },100);
+
+   return;
+  }
+
+  if(pin !== localStorage.getItem(ADMIN_KEY)){
+   error.textContent = "관리자 PIN이 맞지 않아요.";
+   input.value = "";
+   return;
+  }
+
+  error.textContent = "";
+  hide();
+
+  setTimeout(function(){
+
+   if(typeof window.harmonyShowRegisterV2 === "function"){
+    window.harmonyShowRegisterV2();
+   }
+
+  },100);
+ };
+
+ window.harmonyOpenAdmin = function(){
+  document.getElementById("harmonyAdminPin").value = "";
+  document.getElementById("harmonyAdminError").textContent = "";
+  gate();
+ };
+
+ window.harmonyAdminHasNames = function(){
+  try{
+   const names =
+    JSON.parse(localStorage.getItem(NAMES_KEY) || "{}");
+
+   return !!(
+    names.me &&
+    names.dad &&
+    names.mom &&
+    names.sibling
+   );
+
+  }catch(e){
+   return false;
+  }
+ };
+
+ window.addEventListener("load",function(){
+
+  if(!hasAdmin()){
+
+   setTimeout(function(){
+    gate();
+   },50);
+
+  }
+
+ });
+
+})();
+</script>
 </body>
 </html>
