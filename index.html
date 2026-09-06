@@ -260,252 +260,62 @@ button:active{transform:scale(.97)}
 </head>
 
 <body>
-<div id="harmonyFamilyAuth">
-
+<div id="harmonyFamilyAuth" style="display:flex;position:fixed;inset:0;z-index:1000000;align-items:center;justify-content:center;padding:20px;background:linear-gradient(135deg,#eef5ff,#f8efff)">
   <div class="harmonyFamilyAuthBox">
-
-    <div class="harmonyFamilyLogo">
-      HARMONY 🏠
+    <div class="harmonyFamilyLogo">HARMONY 🏠</div>
+    <div class="harmonyFamilySub">우리 가족만 들어올 수 있어요 🔒</div>
+    <div id="hvChoose">
+      <div class="harmonyFamilyTitle">누구인가요?</div>
+      <button class="harmonyFamilyButton" type="button" onclick="hvPerson('나')">👤 나</button>
+      <button class="harmonyFamilyButton" type="button" onclick="hvPerson('엄마')">👩 엄마</button>
+      <button class="harmonyFamilyButton" type="button" onclick="hvPerson('아빠')">👨 아빠</button>
+      <button class="harmonyFamilyButton" type="button" onclick="hvPerson('동생')">🧒 동생</button>
     </div>
-
-    <div class="harmonyFamilySub">
-      우리 가족만 들어올 수 있어요 🔒
+    <div id="hvLogin" style="display:none">
+      <div id="hvTitle" class="harmonyFamilyTitle">로그인</div>
+      <div class="harmonyFamilySub">이메일과 비밀번호로 로그인하세요.</div>
+      <input id="hvEmail" class="harmonyFamilyInput" type="email" autocomplete="email" placeholder="이메일">
+      <input id="hvPassword" class="harmonyFamilyInput" type="password" autocomplete="current-password" placeholder="비밀번호">
+      <div id="hvError" class="harmonyFamilyError"></div>
+      <button class="harmonyFamilyPrimary" type="button" onclick="hvLogin()">🏠 로그인</button>
+      <button class="harmonyFamilyBack" type="button" onclick="hvSignup()">✉️ 가족 계정 만들기</button>
+      <button class="harmonyFamilyBack" type="button" onclick="hvRecovery()">🔑 비밀번호를 잊으셨나요?</button>
+      <button class="harmonyFamilyBack" type="button" onclick="hvChoose()">← 가족 선택으로</button>
     </div>
-
-    <!-- 가족 선택 -->
-    <div id="harmonyFamilyChoose" class="harmonyFamilyStep active">
-
-      <div class="harmonyFamilyTitle">
-        누구인가요?
-      </div>
-
-      <button
-        class="harmonyFamilyButton"
-        type="button"
-        onclick="harmonySelectPerson('나')">
-        👤 나
-      </button>
-
-      <button
-        class="harmonyFamilyButton"
-        type="button"
-        onclick="harmonySelectPerson('엄마')">
-        👩 엄마
-      </button>
-
-      <button
-        class="harmonyFamilyButton"
-        type="button"
-        onclick="harmonySelectPerson('아빠')">
-        👨 아빠
-      </button>
-
-      <button
-        class="harmonyFamilyButton"
-        type="button"
-        onclick="harmonySelectPerson('동생')">
-        🧒 동생
-      </button>
-
+    <div id="hvSignup" style="display:none">
+      <div class="harmonyFamilyTitle">가족 계정 만들기</div>
+      <div class="harmonyFamilySub">이름을 등록하면 관리자 승인 후 사용할 수 있어요.</div>
+      <input id="hvName" class="harmonyFamilyInput" placeholder="이름">
+      <input id="hvSignupEmail" class="harmonyFamilyInput" type="email" placeholder="이메일">
+      <input id="hvSignupPassword" class="harmonyFamilyInput" type="password" placeholder="비밀번호 8자 이상">
+      <input id="hvSignupPassword2" class="harmonyFamilyInput" type="password" placeholder="비밀번호 다시 입력">
+      <div id="hvSignupError" class="harmonyFamilyError"></div>
+      <button class="harmonyFamilyPrimary" type="button" onclick="hvCreate()">✉️ 가족 계정 만들기</button>
+      <button class="harmonyFamilyBack" type="button" onclick="hvPerson(person || '나')">← 로그인으로</button>
     </div>
-
-    <!-- 관리자 로그인 -->
-    <div id="harmonyAdminLogin" class="harmonyFamilyStep">
-
-      <div class="harmonyFamilyTitle">
-        👤 나의 관리자 로그인
-      </div>
-
-      <div class="harmonyFamilySub">
-        HARMONY 관리자 계정으로 로그인하세요.
-      </div>
-
-      <input
-        id="harmonyLoginEmail"
-        class="harmonyFamilyInput"
-        type="email"
-        autocomplete="email"
-        placeholder="이메일"
-      >
-
-      <input
-        id="harmonyLoginPassword"
-        class="harmonyFamilyInput"
-        type="password"
-        autocomplete="current-password"
-        placeholder="비밀번호"
-      >
-
-      <div
-        id="harmonyLoginError"
-        class="harmonyFamilyError">
-      </div>
-
-      <button
-        class="harmonyFamilyPrimary"
-        type="button"
-        onclick="harmonySupabaseLogin()">
-        🔐 관리자 로그인
-      </button>
-
-      <button
-        class="harmonyFamilyBack"
-        type="button"
-        onclick="harmonyShowPasswordRecovery()">
-        🔑 비밀번호를 잊으셨나요?
-      </button>
-
-      <button
-        class="harmonyFamilyBack"
-        type="button"
-        onclick="harmonyBackToFamilyChoose()">
-        ← 가족 선택으로
-      </button>
-
+    <div id="hvRecovery" style="display:none">
+      <div class="harmonyFamilyTitle">🔑 비밀번호 찾기</div>
+      <div class="harmonyFamilySub">가입한 이메일로 재설정 링크를 보내요.</div>
+      <input id="hvRecoveryEmail" class="harmonyFamilyInput" type="email" placeholder="이메일">
+      <div id="hvRecoveryError" class="harmonyFamilyError"></div>
+      <button class="harmonyFamilyPrimary" type="button" onclick="hvSendRecovery()">📧 재설정 이메일 보내기</button>
+      <button class="harmonyFamilyBack" type="button" onclick="hvPerson(person || '나')">← 로그인으로</button>
     </div>
-
-    <!-- 일반 가족 로그인 -->
-    <div id="harmonyFamilyLogin" class="harmonyFamilyStep">
-
-      <div id="harmonyFamilyLoginTitle" class="harmonyFamilyTitle">
-        가족 로그인
-      </div>
-
-      <div class="harmonyFamilySub">
-        내 가족 계정으로 로그인하세요.
-      </div>
-
-      <input
-        id="harmonyMemberEmail"
-        class="harmonyFamilyInput"
-        type="email"
-        autocomplete="email"
-        placeholder="이메일"
-      >
-
-      <input
-        id="harmonyMemberPassword"
-        class="harmonyFamilyInput"
-        type="password"
-        autocomplete="current-password"
-        placeholder="비밀번호"
-      >
-
-      <div
-        id="harmonyMemberLoginError"
-        class="harmonyFamilyError">
-      </div>
-
-      <button
-        class="harmonyFamilyPrimary"
-        type="button"
-        onclick="harmonyFamilyMemberLogin()">
-        🏠 로그인
-      </button>
-
-      <button
-        class="harmonyFamilyBack"
-        type="button"
-        onclick="harmonyBackToFamilyChoose()">
-        ← 가족 선택으로
-      </button>
-
+    <div id="hvUpdate" style="display:none">
+      <div class="harmonyFamilyTitle">🔐 새 비밀번호 설정</div>
+      <div class="harmonyFamilySub">새 비밀번호를 입력해주세요.</div>
+      <input id="hvNewPassword" class="harmonyFamilyInput" type="password" autocomplete="new-password" placeholder="새 비밀번호">
+      <input id="hvNewPassword2" class="harmonyFamilyInput" type="password" autocomplete="new-password" placeholder="새 비밀번호 다시 입력">
+      <div id="hvUpdateError" class="harmonyFamilyError"></div>
+      <button class="harmonyFamilyPrimary" type="button" onclick="hvUpdatePassword()">✅ 비밀번호 변경</button>
     </div>
-
-  </div>
-
-</div>
-<div id="harmonyPasswordRecovery"
-     style="
-     display:none;
-     position:fixed;
-     inset:0;
-     z-index:3000000;
-     align-items:center;
-     justify-content:center;
-     padding:20px;
-     background:linear-gradient(135deg,#eef5ff,#f8efff);">
-
-  <div class="harmonyFamilyAuthBox">
-
-    <div class="harmonyFamilyLogo">
-      HARMONY 🔑
+    <div id="hvAdmin" style="display:none">
+      <div class="harmonyFamilyTitle">👑 가족 승인 관리</div>
+      <div class="harmonyFamilySub">새 가족 계정을 승인할 수 있어요.</div>
+      <div id="hvRequests">불러오는 중...</div>
+      <button class="harmonyFamilyBack" type="button" onclick="hvRefreshAdmin()">🔄 새로고침</button>
+      <button class="harmonyFamilyBack" type="button" onclick="hvCloseAdmin()">← HARMONY로</button>
     </div>
-
-    <div class="harmonyFamilySub">
-      비밀번호를 안전하게 다시 설정하세요.
-    </div>
-
-    <!-- 이메일 요청 -->
-    <div id="harmonyRecoveryRequest">
-
-      <div class="harmonyFamilyTitle">
-        재설정 이메일 보내기
-      </div>
-
-      <input
-        id="harmonyRecoveryEmail"
-        class="harmonyFamilyInput"
-        type="email"
-        autocomplete="email"
-        placeholder="관리자 이메일">
-
-      <div
-        id="harmonyRecoveryRequestError"
-        class="harmonyFamilyError">
-      </div>
-
-      <button
-        class="harmonyFamilyPrimary"
-        type="button"
-        onclick="harmonySendPasswordReset()">
-        📧 재설정 이메일 보내기
-      </button>
-
-      <button
-        class="harmonyFamilyBack"
-        type="button"
-        onclick="harmonyClosePasswordRecovery()">
-        ← 로그인으로 돌아가기
-      </button>
-
-    </div>
-
-    <!-- 새 비밀번호 -->
-    <div id="harmonyRecoveryUpdate" style="display:none">
-
-      <div class="harmonyFamilyTitle">
-        🔐 새 비밀번호 설정
-      </div>
-
-      <input
-        id="harmonyNewPassword"
-        class="harmonyFamilyInput"
-        type="password"
-        autocomplete="new-password"
-        placeholder="새 비밀번호">
-
-      <input
-        id="harmonyNewPassword2"
-        class="harmonyFamilyInput"
-        type="password"
-        autocomplete="new-password"
-        placeholder="새 비밀번호 다시 입력">
-
-      <div
-        id="harmonyRecoveryUpdateError"
-        class="harmonyFamilyError">
-      </div>
-
-      <button
-        class="harmonyFamilyPrimary"
-        type="button"
-        onclick="harmonyUpdatePassword()">
-        ✅ 비밀번호 변경
-      </button>
-
-    </div>
-
   </div>
 </div>
 <div class="app">
@@ -4163,6 +3973,106 @@ background:linear-gradient(135deg,#fff7fb,#eef7ff);">
     }
   );
 
+})();
+</script>
+<script id="HARMONY_AUTH_V5">
+(function(){
+  const AUTH='harmonyFamilyAuth';
+  let person='';
+  const $=id=>document.getElementById(id);
+  function show(id){['hvChoose','hvLogin','hvSignup','hvRecovery','hvUpdate','hvAdmin'].forEach(x=>{if($(x))$(x).style.display=x===id?'block':'none'});$(AUTH).style.display='flex'}
+  window.hvChoose=()=>{person='';show('hvChoose')};
+  window.hvPerson=p=>{person=p;show('hvLogin');$('hvTitle').textContent='👤 '+p+' 로그인';$('hvError').textContent='';$('hvEmail').focus()};
+  window.hvSignup=()=>show('hvSignup');
+  window.hvRecovery=()=>{show('hvRecovery');$('hvRecoveryError').textContent=''};
+  window.hvSendRecovery=async()=>{
+    const email=$('hvRecoveryEmail').value.trim();
+    if(!email){$('hvRecoveryError').textContent='이메일을 입력해주세요.';return}
+    const redirectTo=window.location.origin+window.location.pathname+'?mode=recovery';
+    const r=await supabaseClient.auth.resetPasswordForEmail(email,{redirectTo});
+    $('hvRecoveryError').textContent=r.error?r.error.message:'📧 재설정 이메일을 보냈어요.';
+  };
+  window.hvCreate=async()=>{
+    const name=$('hvName').value.trim(),email=$('hvSignupEmail').value.trim(),p=$('hvSignupPassword').value,p2=$('hvSignupPassword2').value;
+    const er=$('hvSignupError');er.textContent='';
+    if(!name||!email||!p||!p2){er.textContent='모두 입력해주세요.';return}
+    if(p.length<8){er.textContent='비밀번호는 8자 이상이어야 해요.';return}
+    if(p!==p2){er.textContent='두 비밀번호가 일치하지 않아요.';return}
+    const r=await supabaseClient.auth.signUp({email,password:p,options:{emailRedirectTo:window.location.origin+window.location.pathname}});
+    if(r.error){er.textContent=r.error.message;return}
+    localStorage.setItem('harmonyPendingName:'+email,name);
+    if(r.data.user){
+      const ins=await supabaseClient.from('family_members').upsert({user_id:r.data.user.id,name,approved:false});
+      if(ins.error) console.error(ins.error);
+    }
+    if(r.data.session) await supabaseClient.auth.signOut();
+    alert(r.data.session?'가입 완료! 관리자 승인 후 로그인할 수 있어요.':'가입 확인 이메일을 확인해주세요. 확인 후 관리자 승인을 받아주세요.');
+    hvPerson(person||'나');
+  };
+  window.hvLogin=async()=>{
+    const email=$('hvEmail').value.trim(),password=$('hvPassword').value,er=$('hvError');er.textContent='';
+    if(!email||!password){er.textContent='이메일과 비밀번호를 입력해주세요.';return}
+    const r=await supabaseClient.auth.signInWithPassword({email,password});
+    if(r.error){er.textContent='로그인에 실패했습니다. 이메일 또는 비밀번호를 확인해주세요.';return}
+    const u=r.data.user;
+    const a=await supabaseClient.from('family_admins').select('enabled').eq('user_id',u.id).eq('enabled',true).maybeSingle();
+    if(a.data){localStorage.setItem('harmonyUser','나');$(''+AUTH).style.display='none';addAdminButton();return}
+    let m=await supabaseClient.from('family_members').select('name,approved').eq('user_id',u.id).maybeSingle();
+    if(!m.data){
+      const name=localStorage.getItem('harmonyPendingName:'+email)||person||'가족';
+      const ins=await supabaseClient.from('family_members').insert({user_id:u.id,name,approved:false}).select('name,approved').maybeSingle();
+      m=ins;
+    }
+    if(!m.data||m.data.approved!==true){er.textContent='가족 승인 대기 중입니다. 관리자에게 승인을 요청해주세요.';await supabaseClient.auth.signOut();return}
+    localStorage.setItem('harmonyUser',m.data.name||person||'가족');$(AUTH).style.display='none';
+  };
+  function addAdminButton(){
+    if($('harmonyAdminOpenBtn'))return;
+    const b=document.createElement('button');b.id='harmonyAdminOpenBtn';b.className='secondaryBtn';b.textContent='👑 가족 승인 관리';b.style.cssText='position:fixed;right:12px;bottom:88px;z-index:999999;width:auto;padding:0 16px';b.onclick=hvAdmin;document.body.appendChild(b)
+  }
+  window.hvAdmin=async()=>{
+    const s=await supabaseClient.auth.getSession();
+    if(!s.data.session)return;
+    const a=await supabaseClient.from('family_admins').select('enabled').eq('user_id',s.data.session.user.id).eq('enabled',true).maybeSingle();
+    if(!a.data){alert('관리자만 사용할 수 있어요.');return}
+    show('hvAdmin');hvRefreshAdmin();
+  };
+  window.hvRefreshAdmin=async()=>{
+    const box=$('hvRequests');box.textContent='불러오는 중...';
+    const r=await supabaseClient.from('family_members').select('user_id,name,approved,created_at').order('created_at',{ascending:true});
+    if(r.error){box.innerHTML='<div class="notice">가족 요청을 불러오지 못했어요. Supabase 관리자 정책을 확인해주세요.</div>';return}
+    const rows=r.data||[];
+    box.innerHTML=rows.length?rows.map(x=>'<div class="card"><b>'+String(x.name||'가족').replace(/[&<>]/g,'')+'</b><div class="muted">'+(x.approved?'✅ 승인됨':'⏳ 승인 대기')+'</div>'+(x.approved?'':'<button class="primaryBtn" onclick="hvApprove(\''+x.user_id+'\')">✅ 승인</button>')+'</div>').join(''):'<div class="empty">가입 요청이 없어요.</div>';
+  };
+  window.hvApprove=async id=>{
+    const r=await supabaseClient.from('family_members').update({approved:true}).eq('user_id',id);
+    if(r.error){alert('승인에 실패했어요. Supabase의 family_members 관리자 UPDATE 정책이 필요합니다.');return}
+    hvRefreshAdmin();
+  };
+  window.hvCloseAdmin=()=>$(AUTH).style.display='none';
+  window.hvUpdatePassword=async()=>{
+    const p=$('hvNewPassword').value,p2=$('hvNewPassword2').value,er=$('hvUpdateError');er.textContent='';
+    if(p.length<8){er.textContent='비밀번호는 8자 이상이어야 해요.';return}
+    if(p!==p2){er.textContent='두 비밀번호가 일치하지 않아요.';return}
+    const r=await supabaseClient.auth.updateUser({password:p});
+    if(r.error){er.textContent=r.error.message;return}
+    alert('비밀번호가 변경됐어요.');hvChoose();
+  };
+  function recovery(){
+    const p=new URLSearchParams(location.search),h=location.hash||'';
+    if(p.get('mode')==='recovery'||h.includes('type=recovery')||h.includes('access_token=')){show('hvUpdate')}
+  }
+  if(window.supabaseClient){
+    supabaseClient.auth.onAuthStateChange((event)=>{if(event==='PASSWORD_RECOVERY')show('hvUpdate')});
+    setTimeout(recovery,50);
+    supabaseClient.auth.getSession().then(async r=>{
+      if(r.data.session){
+        const a=await supabaseClient.from('family_admins').select('enabled').eq('user_id',r.data.session.user.id).eq('enabled',true).maybeSingle();
+        if(a.data)addAdminButton();
+      }
+    });
+  }
+  document.addEventListener('DOMContentLoaded',()=>{show('hvChoose');document.querySelectorAll('#harmonyAdminLogin,#harmonyFamilyLogin,#harmonyPasswordRecovery').forEach(x=>x.style.display='none')});
 })();
 </script>
 </body>
