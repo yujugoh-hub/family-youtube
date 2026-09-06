@@ -2607,7 +2607,7 @@ background:linear-gradient(135deg,#fff7fb,#eef7ff);">
 <script>
 (function(){
 
-  const PASSWORD = "50601";
+  const PASSWORD = "";
 
   const lock = document.getElementById("harmonyLock");
   const pin = document.getElementById("harmonyPin");
@@ -2707,7 +2707,7 @@ background:linear-gradient(135deg,#fff7fb,#eef7ff);">
 
  let harmonySelectedFamily = "";
 
- const FAMILY_PIN = "50601";
+ const FAMILY_PIN = "";
 
  function hideOldLock(){
 
@@ -3172,7 +3172,7 @@ background:linear-gradient(135deg,#fff7fb,#eef7ff);">
 <script id="HARMONY_FAMILY_NAME_AUTH_V2">
 (function(){
 
-  const PIN = "50601";
+  const PIN = "";
 
   let selectedMember = "";
 
@@ -3446,10 +3446,7 @@ background:linear-gradient(135deg,#fff7fb,#eef7ff);">
 }
 </style>
 
-<div id="harmonyAdminGate">
- <div class="harmonyAdminBox">
 
-  <div class="harmonyAdminLogo">HARMONY 🔐</div>
 
   <div id="harmonyAdminText" class="harmonyAdminSub">
    가족 이름을 등록하려면<br>
@@ -3476,7 +3473,7 @@ background:linear-gradient(135deg,#fff7fb,#eef7ff);">
   </button>
 
   <div class="harmonyAdminSmall">
-   가족 PIN 50601과는 다른 관리자 PIN을 사용하세요.
+   가족 PIN 과는 다른 관리자 PIN을 사용하세요.
   </div>
 
  </div>
@@ -3519,7 +3516,7 @@ background:linear-gradient(135deg,#fff7fb,#eef7ff);">
 
   if(!hasAdmin()){
 
-   if(pin === "50601"){
+   if(pin === ""){
     error.textContent =
      "가족 PIN과 다른 관리자 PIN을 설정해주세요.";
     input.value = "";
@@ -3596,6 +3593,15 @@ background:linear-gradient(135deg,#fff7fb,#eef7ff);">
 
  });
 
+})();
+</script>
+<script id="HARMONY_OLD_AUTH_CLEANUP">
+(function(){
+  try{
+    localStorage.removeItem("harmonyAdminPinV1");
+    localStorage.removeItem("harmonyFamilyAccessV2");
+    localStorage.removeItem("harmonyCurrentMemberV2");
+  }catch(e){}
 })();
 </script>
 </body>
