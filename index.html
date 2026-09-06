@@ -2914,5 +2914,472 @@ background:linear-gradient(135deg,#fff7fb,#eef7ff);">
 
 })();
 </script>
+<style id="HARMONY_FAMILY_NAME_AUTH_V2">
+#harmonyNameAuthV2{
+  position:fixed;
+  inset:0;
+  z-index:999999;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:linear-gradient(135deg,#f7f3ff,#eef7ff);
+  padding:20px;
+  font-family:"Noto Sans KR",sans-serif;
+}
+
+#harmonyNameAuthV2 .box{
+  width:min(440px,100%);
+  background:white;
+  border-radius:28px;
+  padding:28px;
+  box-shadow:0 20px 60px rgba(60,40,100,.18);
+  text-align:center;
+}
+
+#harmonyNameAuthV2 .logo{
+  font-size:42px;
+  font-weight:900;
+  letter-spacing:3px;
+  margin-bottom:5px;
+}
+
+#harmonyNameAuthV2 .sub{
+  color:#777;
+  margin-bottom:24px;
+}
+
+#harmonyNameAuthV2 h2{
+  margin:10px 0 18px;
+}
+
+.harmonyMemberGridV2{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+
+.harmonyMemberBtnV2{
+  border:0;
+  border-radius:18px;
+  padding:18px 10px;
+  background:#f3f0ff;
+  font-size:18px;
+  font-weight:800;
+  cursor:pointer;
+}
+
+.harmonyMemberBtnV2:hover{
+  transform:translateY(-2px);
+}
+
+.harmonyInputV2{
+  width:100%;
+  box-sizing:border-box;
+  padding:15px;
+  border:2px solid #e4e0ef;
+  border-radius:15px;
+  font-size:17px;
+  margin-bottom:12px;
+  outline:none;
+}
+
+.harmonyInputV2:focus{
+  border-color:#8d6cff;
+}
+
+.harmonyBtnV2{
+  width:100%;
+  border:0;
+  border-radius:15px;
+  padding:15px;
+  margin-top:8px;
+  font-size:17px;
+  font-weight:800;
+  cursor:pointer;
+}
+
+.harmonyPrimaryV2{
+  background:#7657ff;
+  color:white;
+}
+
+.harmonySecondaryV2{
+  background:#f1f1f5;
+  color:#555;
+}
+
+.harmonyErrorV2{
+  min-height:24px;
+  color:#e5484d;
+  font-weight:700;
+  margin:5px 0;
+}
+
+.harmonySmallV2{
+  color:#888;
+  font-size:13px;
+  line-height:1.6;
+  margin-top:15px;
+}
+
+.harmonyStepV2{
+  display:none;
+}
+
+.harmonyStepV2.active{
+  display:block;
+}
+</style>
+
+<div id="harmonyNameAuthV2">
+
+  <div class="box">
+
+    <div class="logo">HARMONY</div>
+    <div class="sub">우리 가족만의 영상 공간</div>
+
+    <!-- 등록 -->
+    <div id="harmonyRegisterV2" class="harmonyStepV2">
+
+      <h2>🏠 가족 이름 등록</h2>
+
+      <p>처음 한 번만 가족의 이름을 등록해주세요.</p>
+
+      <input id="harmonyMeNameV2"
+             class="harmonyInputV2"
+             placeholder="나의 이름">
+
+      <input id="harmonyDadNameV2"
+             class="harmonyInputV2"
+             placeholder="아빠 이름">
+
+      <input id="harmonyMomNameV2"
+             class="harmonyInputV2"
+             placeholder="엄마 이름">
+
+      <input id="harmonySiblingNameV2"
+             class="harmonyInputV2"
+             placeholder="동생 이름">
+
+      <div id="harmonyRegisterErrorV2"
+           class="harmonyErrorV2"></div>
+
+      <button class="harmonyBtnV2 harmonyPrimaryV2"
+              onclick="harmonySaveFamilyNamesV2()">
+        가족 이름 저장하기
+      </button>
+
+      <div class="harmonySmallV2">
+        이름은 이 브라우저에 저장됩니다.
+      </div>
+
+    </div>
+
+    <!-- 사람 선택 -->
+    <div id="harmonySelectV2" class="harmonyStepV2">
+
+      <h2>👋 누가 들어오나요?</h2>
+
+      <div class="harmonyMemberGridV2">
+
+        <button class="harmonyMemberBtnV2"
+                onclick="harmonyChooseMemberV2('me')">
+          🙋 나
+        </button>
+
+        <button class="harmonyMemberBtnV2"
+                onclick="harmonyChooseMemberV2('dad')">
+          👨 아빠
+        </button>
+
+        <button class="harmonyMemberBtnV2"
+                onclick="harmonyChooseMemberV2('mom')">
+          👩 엄마
+        </button>
+
+        <button class="harmonyMemberBtnV2"
+                onclick="harmonyChooseMemberV2('sibling')">
+          👦 동생
+        </button>
+
+      </div>
+
+      <button class="harmonyBtnV2 harmonySecondaryV2"
+              onclick="harmonyShowRegisterV2()">
+        가족 이름 다시 등록
+      </button>
+
+    </div>
+
+    <!-- 이름 확인 -->
+    <div id="harmonyNameV2" class="harmonyStepV2">
+
+      <h2 id="harmonyWhoV2">👤 이름 확인</h2>
+
+      <input id="harmonyEnteredNameV2"
+             class="harmonyInputV2"
+             placeholder="등록한 이름을 입력하세요"
+             autocomplete="off">
+
+      <div id="harmonyNameErrorV2"
+           class="harmonyErrorV2"></div>
+
+      <button class="harmonyBtnV2 harmonyPrimaryV2"
+              onclick="harmonyCheckNameV2()">
+        이름 확인
+      </button>
+
+      <button class="harmonyBtnV2 harmonySecondaryV2"
+              onclick="harmonyShowSelectV2()">
+        뒤로
+      </button>
+
+    </div>
+
+    <!-- PIN -->
+    <div id="harmonyPinV2" class="harmonyStepV2">
+
+      <h2 id="harmonyPinWhoV2">🔐 가족 인증</h2>
+
+      <p>가족 PIN을 입력해주세요.</p>
+
+      <input id="harmonyPinInputV2"
+             class="harmonyInputV2"
+             type="password"
+             inputmode="numeric"
+             maxlength="5"
+             placeholder="PIN 5자리">
+
+      <div id="harmonyPinErrorV2"
+           class="harmonyErrorV2"></div>
+
+      <button class="harmonyBtnV2 harmonyPrimaryV2"
+              onclick="harmonyEnterV2()">
+        HARMONY 입장
+      </button>
+
+      <button class="harmonyBtnV2 harmonySecondaryV2"
+              onclick="harmonyShowNameV2()">
+        뒤로
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+<script id="HARMONY_FAMILY_NAME_AUTH_V2">
+(function(){
+
+  const PIN = "50601";
+
+  let selectedMember = "";
+
+  const members = {
+    me: "나",
+    dad: "아빠",
+    mom: "엄마",
+    sibling: "동생"
+  };
+
+  function getNames(){
+    try{
+      return JSON.parse(
+        localStorage.getItem("harmonyFamilyNamesV2") || "{}"
+      );
+    }catch(e){
+      return {};
+    }
+  }
+
+  function show(id){
+    document.querySelectorAll(".harmonyStepV2")
+      .forEach(function(el){
+        el.classList.remove("active");
+      });
+
+    const target = document.getElementById(id);
+
+    if(target){
+      target.classList.add("active");
+    }
+  }
+
+  function hasNames(){
+    const names = getNames();
+
+    return names.me &&
+           names.dad &&
+           names.mom &&
+           names.sibling;
+  }
+
+  window.harmonySaveFamilyNamesV2 = function(){
+
+    const names = {
+      me: document.getElementById("harmonyMeNameV2").value.trim(),
+      dad: document.getElementById("harmonyDadNameV2").value.trim(),
+      mom: document.getElementById("harmonyMomNameV2").value.trim(),
+      sibling: document.getElementById("harmonySiblingNameV2").value.trim()
+    };
+
+    if(!names.me || !names.dad || !names.mom || !names.sibling){
+
+      document.getElementById("harmonyRegisterErrorV2").textContent =
+        "네 사람의 이름을 모두 입력해주세요.";
+
+      return;
+    }
+
+    localStorage.setItem(
+      "harmonyFamilyNamesV2",
+      JSON.stringify(names)
+    );
+
+    show("harmonySelectV2");
+  };
+
+  window.harmonyChooseMemberV2 = function(member){
+
+    selectedMember = member;
+
+    document.getElementById("harmonyWhoV2").textContent =
+      "👤 " + members[member] + " 이름 확인";
+
+    document.getElementById("harmonyEnteredNameV2").value = "";
+    document.getElementById("harmonyNameErrorV2").textContent = "";
+
+    show("harmonyNameV2");
+
+    setTimeout(function(){
+      document.getElementById("harmonyEnteredNameV2").focus();
+    },100);
+  };
+
+  window.harmonyCheckNameV2 = function(){
+
+    const names = getNames();
+
+    const entered =
+      document.getElementById("harmonyEnteredNameV2")
+        .value.trim();
+
+    if(!entered){
+
+      document.getElementById("harmonyNameErrorV2").textContent =
+        "이름을 입력해주세요.";
+
+      return;
+    }
+
+    if(entered !== names[selectedMember]){
+
+      document.getElementById("harmonyNameErrorV2").textContent =
+        "등록된 이름과 일치하지 않아요.";
+
+      return;
+    }
+
+    document.getElementById("harmonyPinWhoV2").textContent =
+      "🔐 " + members[selectedMember] + " 가족 인증";
+
+    document.getElementById("harmonyPinInputV2").value = "";
+    document.getElementById("harmonyPinErrorV2").textContent = "";
+
+    show("harmonyPinV2");
+
+    setTimeout(function(){
+      document.getElementById("harmonyPinInputV2").focus();
+    },100);
+  };
+
+  window.harmonyEnterV2 = function(){
+
+    const pin =
+      document.getElementById("harmonyPinInputV2")
+        .value.trim();
+
+    if(pin !== PIN){
+
+      document.getElementById("harmonyPinErrorV2").textContent =
+        "PIN이 맞지 않아요.";
+
+      document.getElementById("harmonyPinInputV2").value = "";
+
+      return;
+    }
+
+    localStorage.setItem(
+      "harmonyCurrentMemberV2",
+      selectedMember
+    );
+
+    localStorage.setItem(
+      "harmonyFamilyAccessV2",
+      "yes"
+    );
+
+    const auth =
+      document.getElementById("harmonyNameAuthV2");
+
+    if(auth){
+      auth.style.display = "none";
+    }
+  };
+
+  window.harmonyShowRegisterV2 = function(){
+
+    const names = getNames();
+
+    document.getElementById("harmonyMeNameV2").value =
+      names.me || "";
+
+    document.getElementById("harmonyDadNameV2").value =
+      names.dad || "";
+
+    document.getElementById("harmonyMomNameV2").value =
+      names.mom || "";
+
+    document.getElementById("harmonySiblingNameV2").value =
+      names.sibling || "";
+
+    document.getElementById("harmonyRegisterErrorV2").textContent = "";
+
+    show("harmonyRegisterV2");
+  };
+
+  window.harmonyShowSelectV2 = function(){
+    show("harmonySelectV2");
+  };
+
+  window.harmonyShowNameV2 = function(){
+    show("harmonyNameV2");
+  };
+
+  document.addEventListener("DOMContentLoaded",function(){
+
+    const auth =
+      document.getElementById("harmonyNameAuthV2");
+
+    if(!auth) return;
+
+    if(localStorage.getItem("harmonyFamilyAccessV2") === "yes"){
+
+      auth.style.display = "none";
+
+      return;
+    }
+
+    if(hasNames()){
+      show("harmonySelectV2");
+    }else{
+      show("harmonyRegisterV2");
+    }
+
+  });
+
+})();
+</script>
 </body>
 </html>
