@@ -1,0 +1,169 @@
+name: Fix HARMONY unified login and approval
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Patch HARMONY
+        shell: python
+        run: |
+          from pathlib import Path
+          import re
+          p=Path('index.html')
+          s=p.read_text(encoding='utf-8-sig')
+
+          # Neutralize legacy family login overlays without deleting the app.
+          s=s.replace('placeholder="관리자 이메일"','placeholder="이메일"')
+          s=s.replace('HARMONY 관리자 계정으로 로그인하세요.','이메일과 비밀번호로 로그인하세요.')
+          s=s.replace('🔐 관리자 로그인','🏠 로그인')
+
+          fix=r'''
+<script id="HARMONY_FINAL_AUTH_V4">
+(function(){
+  const AUTH='harmonyFamilyAuth';
+  let person='';
+  let admin=false;
+  const q=id=>document.getElementById(id);
+  function esc(v){return String(v||'').replace(/[&<>\"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;'}[c]));}
+
+  function build(){
+    const a=q(AUTH); if(!a) return;
+    a.innerHTML=`<div class="harmonyFamilyAuthBox">
+      <div class="harmonyFamilyLogo">HARMONY 🏠</div>
+      <div class="harmonyFamilySub">우리 가족만 들어올 수 있어요 🔒</div>
+      <div id="hvChoose">
+        <div class="harmonyFamilyTitle">누구인가요?</div>
+        <button class="harmonyFamilyButton" onclick="window.hvPerson('나')">👤 나</button>
+        <button class="harmonyFamilyButton" onclick="window.hvPerson('엄마')">👩 엄마</button>
+        <button class="harmonyFamilyButton" onclick="window.hvPerson('아빠')">👨 아빠</button>
+        <button class="harmonyFamilyButton" onclick="window.hvPerson('동생')">🧒 동생</button>
+      </div>
+      <div id="hvLogin" style="display:none">
+        <div id="hvTitle" class="harmonyFamilyTitle">로그인</div>
+        <div class="harmonyFamilySub">이메일과 비밀번호로 로그인하세요.</div>
+        <input id="hvEmail" class="harmonyFamilyInput" type="email" autocomplete="email" placeholder="이메일">
+        <input id="hvPassword" class="harmonyFamilyInput" type="password" autocomplete="current-password" placeholder="비밀번호">
+        <div id="hvError" class="harmonyFamilyError"></div>
+        <button class="harmonyFamilyPrimary" onclick="window.hvLogin()">🏠 로그인</button>
+        <button class="harmonyFamilyBack" onclick="window.hvSignup()">✉️ 가족 계정 만들기</button>
+        <button class="harmonyFamilyBack" onclick="window.hvRecovery()">🔑 비밀번호를 잊으셨나요?</button>
+        <button class="harmonyFamilyBack" onclick="window.hvChoose()">← 가족 선택으로</button>
+      </div>
+      <div id="hvSignup" style="display:none">
+        <div class="harmonyFamilyTitle">가족 계정 만들기</div>
+        <input id="hvName" class="harmonyFamilyInput" placeholder="이름">
+        <input id="hvSignupEmail" class="harmonyFamilyInput" type="email" placeholder="이메일">
+        <input id="hvSignupPassword" class="harmonyFamilyInput" type="password" placeholder="비밀번호 8자 이상">
+        <input id="hvSignupPassword2" class="harmonyFamilyInput" type="password" placeholder="비밀번호 다시 입력">
+        <div id="hvSignupError" class="harmonyFamilyError"></div>
+        <button class="harmonyFamilyPrimary" onclick="window.hvCreate()">✉️ 가족 계정 만들기</button>
+        <button class="harmonyFamilyBack" onclick="window.hvPerson(person||'나')">← 로그인으로</button>
+      </div>
+      <div id="hvAdmin" style="display:none">
+        <div class="harmonyFamilyTitle">👑 가족 승인 관리</div>
+        <div class="harmonyFamilySub">새 가족 계정을 승인하거나 거절할 수 있어요.</div>
+        <div id="hvRequests">불러오는 중...</div>
+        <button class="harmonyFamilyBack" onclick="window.hvRefreshAdmin()">🔄 새로고침</button>
+        <button class="harmonyFamilyBack" onclick="window.hvCloseAdmin()">← HARMONY로</button>
+      </div>
+    </div>`;
+  }
+
+  window.hvChoose=function(){
+    person=''; admin=false;
+    q('hvChoose').style.display='block'; q('hvLogin').style.display='none'; q('hvSignup').style.display='none'; q('hvAdmin').style.display='none';
+    q(AUTH).style.display='flex';
+  };
+  window.hvPerson=function(p){
+    person=p; q('hvChoose').style.display='none'; q('hvLogin').style.display='block'; q('hvSignup').style.display='none'; q('hvAdmin').style.display='none';
+    q('hvTitle').textContent='👤 '+p+' 로그인'; q('hvError').textContent='';
+    q('hvEmail').focus();
+  };
+  window.hvSignup=function(){q('hvLogin').style.display='none';q('hvSignup').style.display='block';q('hvSignupError').textContent='';};
+  window.hvRecovery=function(){
+    const e=prompt('비밀번호를 재설정할 이메일을 입력하세요.');
+    if(!e) return;
+    supabaseClient.auth.resetPasswordForEmail(e.trim(),{redirectTo:window.location.origin+window.location.pathname+'?mode=recovery'}).then(r=>alert(r.error?r.error.message:'📧 재설정 이메일을 보냈어요.'));
+  };
+  window.hvCreate=async function(){
+    const name=q('hvName').value.trim(), email=q('hvSignupEmail').value.trim(), p=q('hvSignupPassword').value, p2=q('hvSignupPassword2').value, er=q('hvSignupError');
+    er.textContent='';
+    if(!name||!email||!p||!p2){er.textContent='모두 입력해주세요.';return;}
+    if(p.length<8){er.textContent='비밀번호는 8자 이상이어야 해요.';return;}
+    if(p!==p2){er.textContent='두 비밀번호가 일치하지 않아요.';return;}
+    const r=await supabaseClient.auth.signUp({email,password:p,options:{emailRedirectTo:window.location.origin+window.location.pathname}});
+    if(r.error){er.textContent='가입에 실패했습니다. 이미 가입된 이메일인지 확인해주세요.';return;}
+    localStorage.setItem('harmonyPendingName:'+email,name);
+    if(r.data.session && r.data.user){await supabaseClient.from('family_members').upsert({user_id:r.data.user.id,name,approved:false});await supabaseClient.auth.signOut();}
+    alert(r.data.session?'✅ 가입 완료! 관리자 승인 후 로그인할 수 있어요.':'📧 가입 확인 이메일을 확인해주세요. 확인 후 관리자 승인을 받아주세요.');
+    window.hvPerson(person||'나');
+  };
+  window.hvLogin=async function(){
+    const email=q('hvEmail').value.trim(), password=q('hvPassword').value, er=q('hvError'); er.textContent='';
+    if(!email||!password){er.textContent='이메일과 비밀번호를 입력해주세요.';return;}
+    const r=await supabaseClient.auth.signInWithPassword({email,password});
+    if(r.error){er.textContent='로그인에 실패했습니다. 이메일 또는 비밀번호를 확인해주세요.';return;}
+    const u=r.data.user;
+    const ar=await supabaseClient.from('family_admins').select('enabled').eq('user_id',u.id).eq('enabled',true).maybeSingle();
+    if(ar.data){admin=true;localStorage.setItem('harmonyUser','나');q(AUTH).style.display='none';setTimeout(()=>showAdminButton(),200);return;}
+    let m=await supabaseClient.from('family_members').select('name,approved').eq('user_id',u.id).maybeSingle();
+    if(!m.data){const name=localStorage.getItem('harmonyPendingName:'+email)||person||'가족';const ins=await supabaseClient.from('family_members').insert({user_id:u.id,name,approved:false}).select('name,approved').maybeSingle();m=ins;}
+    if(!m.data||m.data.approved!==true){er.textContent='가족 승인 대기 중입니다. 관리자에게 승인을 요청해주세요.';await supabaseClient.auth.signOut();return;}
+    localStorage.setItem('harmonyUser',m.data.name||person||'가족');q(AUTH).style.display='none';
+  };
+
+  function showAdminButton(){
+    if(q('harmonyAdminOpenBtn')) return;
+    const b=document.createElement('button');b.id='harmonyAdminOpenBtn';b.className='secondaryBtn';b.textContent='👑 가족 승인 관리';b.onclick=window.hvAdmin;b.style.position='fixed';b.style.right='12px';b.style.bottom='88px';b.style.zIndex='90';b.style.width='auto';b.style.padding='0 16px';document.body.appendChild(b);
+  }
+  window.hvAdmin=async function(){
+    const s=await supabaseClient.auth.getSession(); if(!s.data.session)return;
+    const a=await supabaseClient.from('family_admins').select('enabled').eq('user_id',s.data.session.user.id).eq('enabled',true).maybeSingle();
+    if(!a.data){alert('관리자만 사용할 수 있어요.');return;}
+    q(AUTH).style.display='flex';q('hvChoose').style.display='none';q('hvLogin').style.display='none';q('hvSignup').style.display='none';q('hvAdmin').style.display='block';window.hvRefreshAdmin();
+  };
+  window.hvRefreshAdmin=async function(){
+    const box=q('hvRequests');box.textContent='불러오는 중...';
+    const r=await supabaseClient.from('family_members').select('user_id,name,approved,created_at').order('created_at',{ascending:true});
+    if(r.error){box.innerHTML='<div class="notice">가족 요청을 불러오지 못했어요.</div>';return;}
+    const rows=r.data||[];
+    box.innerHTML=rows.length?rows.map(x=>`<div class="card"><b>${esc(x.name)}</b><div class="muted">${x.approved?'✅ 승인됨':'⏳ 승인 대기'}</div>${x.approved?'':'<button class="primaryBtn" onclick="window.hvApprove(\''+x.user_id+'\')">✅ 승인</button>'}</div>`).join(''):'<div class="empty">가입 요청이 없어요.</div>';
+  };
+  window.hvApprove=async function(id){
+    const r=await supabaseClient.from('family_members').update({approved:true}).eq('user_id',id);
+    if(r.error){alert('승인에 실패했어요. 관리자 UPDATE 권한 설정이 필요합니다.');return;}
+    window.hvRefreshAdmin();
+  };
+  window.hvCloseAdmin=function(){q(AUTH).style.display='none';};
+
+  build();
+  document.addEventListener('DOMContentLoaded',()=>{
+    build();
+    const old=q('harmonyAdminLogin');if(old)old.style.display='none';
+    const oldMember=q('harmonyFamilyLogin');if(oldMember)oldMember.style.display='none';
+    q(AUTH).style.display='flex';
+  });
+})();
+</script>
+'''
+          if 'id="HARMONY_FINAL_AUTH_V4"' not in s:
+              s=s.replace('</body>',fix+'</body>')
+          p.write_text(s,encoding='utf-8',newline='\n')
+      - name: Commit
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add index.html
+          git rm -f .github/workflows/fix-harmony-approval.yml 2>/dev/null || true
+          git commit -m "Add HARMONY family approval and unified login" || exit 0
+          git push origin HEAD:main
