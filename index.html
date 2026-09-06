@@ -262,83 +262,47 @@ button:active{transform:scale(.97)}
 <body>
 <div id="harmonyFamilyAuth">
   <div class="harmonyFamilyAuthBox">
+
     <div class="harmonyFamilyLogo">HARMONY 🏠</div>
-    <div class="harmonyFamilySub">우리 가족만 들어올 수 있어요 🔒</div>
 
-    <div id="harmonyFamilyStep1" class="harmonyFamilyStep active">
-      <div class="harmonyFamilyTitle">누구인가요?</div>
-
-      <button class="harmonyFamilyButton" type="button"
-        onclick="harmonySelectFamily('아빠')">
-        👨 아빠
-      </button>
-
-      <button class="harmonyFamilyButton" type="button"
-        onclick="harmonySelectFamily('엄마')">
-        👩 엄마
-      </button>
-
-      <button class="harmonyFamilyButton" type="button"
-        onclick="harmonySelectFamily('동생')">
-        🧒 동생
-      </button>
+    <div class="harmonyFamilySub">
+      가족 전용 공간에 로그인하세요 🔒
     </div>
 
-    <div id="harmonyFamilyStep2" class="harmonyFamilyStep">
-      <div id="harmonyFamilyNameTitle" class="harmonyFamilyTitle">
-        👤 이름
-      </div>
-
-      <input
-        id="harmonyFamilyNameInput"
-        class="harmonyFamilyInput"
-        type="text"
-        autocomplete="name"
-        placeholder="실제 이름을 입력하세요"
-      >
-
-      <div id="harmonyFamilyNameError" class="harmonyFamilyError"></div>
-
-      <button class="harmonyFamilyPrimary" type="button"
-        onclick="harmonyNextToPin()">
-        다음 →
-      </button>
-
-      <button class="harmonyFamilyBack" type="button"
-        onclick="harmonyFamilyBack()">
-        ← 다시 선택
-      </button>
+    <div class="harmonyFamilyTitle">
+      HARMONY 로그인
     </div>
 
-    <div id="harmonyFamilyStep3" class="harmonyFamilyStep">
-      <div id="harmonyFamilyPinTitle" class="harmonyFamilyTitle">
-        🔒 가족 PIN
-      </div>
+    <input
+      id="harmonyLoginEmail"
+      class="harmonyFamilyInput"
+      type="email"
+      autocomplete="email"
+      placeholder="이메일"
+    >
 
-      <input
-        id="harmonyFamilyPinInput"
-        class="harmonyFamilyInput"
-        type="password"
-        inputmode="numeric"
-        maxlength="5"
-        placeholder="PIN 5자리"
-      >
+    <input
+      id="harmonyLoginPassword"
+      class="harmonyFamilyInput"
+      type="password"
+      autocomplete="current-password"
+      placeholder="비밀번호"
+    >
 
-      <div id="harmonyFamilyPinError" class="harmonyFamilyError"></div>
-
-      <button class="harmonyFamilyPrimary" type="button"
-        onclick="harmonyEnter()">
-        🏠 HARMONY 입장
-      </button>
-
-      <button class="harmonyFamilyBack" type="button"
-        onclick="harmonyBackToName()">
-        ← 이름 다시 입력
-      </button>
+    <div
+      id="harmonyLoginError"
+      class="harmonyFamilyError">
     </div>
+
+    <button
+      class="harmonyFamilyPrimary"
+      type="button"
+      onclick="harmonySupabaseLogin()">
+      🏠 로그인
+    </button>
+
   </div>
 </div>
-
 <div class="app">
 
 <header class="header">
@@ -3378,6 +3342,200 @@ background:linear-gradient(135deg,#fff7fb,#eef7ff);">
     }
 
   });
+
+})();
+</script>
+<script id="HARMONY_SUPABASE_AUTH">
+(function(){
+
+  async function harmonySupabaseLogin(){
+
+    const email =
+      document.getElementById("harmonyLoginEmail").value.trim();
+
+    const password =
+      document.getElementById("harmonyLoginPassword").value;
+
+    const errorBox =
+      document.getElementById("harmonyLoginError");
+
+    errorBox.textContent = "";
+
+    if(!email || !password){
+
+      errorBox.textContent =
+        "이메일과 비밀번호를 입력해주세요.";
+
+      return;
+    }
+
+    const result =
+      await supabaseClient.auth.signInWithPassword({
+        email: email,
+        password: password
+      });
+
+    if(result.error){
+
+      console.error(result.error);
+
+      errorBox.textContent =
+        "로그인에 실패했습니다. 이메일 또는 비밀번호를 확인해주세요.";
+
+      return;
+    }
+
+    const user = result.data.user;
+
+    if(!user){
+
+      errorBox.textContent =
+        "로그인 정보를 확인할 수 없습니다.";
+
+      return;
+    }
+
+    const adminResult =
+      await supabaseClient
+        .from("family_admins")
+        .select("user_id,enabled")
+        .eq("user_id",user.id)
+        .eq("enabled",true)
+        .maybeSingle();
+
+    if(adminResult.data){
+
+      document.getElementById(
+        "harmonyFamilyAuth"
+      ).style.display = "none";
+
+      return;
+    }
+
+    const memberResult =
+      await supabaseClient
+        .from("family_members")
+        .select("user_id,name,approved")
+        .eq("user_id",user.id)
+        .maybeSingle();
+
+    if(memberResult.error){
+
+      console.error(memberResult.error);
+
+      errorBox.textContent =
+        "가족 정보를 확인하지 못했습니다.";
+
+      await supabaseClient.auth.signOut();
+
+      return;
+    }
+
+    if(!memberResult.data){
+
+      errorBox.textContent =
+        "아직 HARMONY 가족으로 등록되지 않았습니다.";
+
+      await supabaseClient.auth.signOut();
+
+      return;
+    }
+
+    if(memberResult.data.approved !== true){
+
+      errorBox.textContent =
+        "가족 승인 대기 중입니다.";
+
+      await supabaseClient.auth.signOut();
+
+      return;
+    }
+
+    document.getElementById(
+      "harmonyFamilyAuth"
+    ).style.display = "none";
+
+  }
+
+  async function harmonyCheckSession(){
+
+    const result =
+      await supabaseClient.auth.getSession();
+
+    if(result.error){
+
+      console.error(result.error);
+      return;
+    }
+
+    const session = result.data.session;
+
+    if(!session){
+
+      document.getElementById(
+        "harmonyFamilyAuth"
+      ).style.display = "flex";
+
+      return;
+    }
+
+    const user = session.user;
+
+    const adminResult =
+      await supabaseClient
+        .from("family_admins")
+        .select("user_id,enabled")
+        .eq("user_id",user.id)
+        .eq("enabled",true)
+        .maybeSingle();
+
+    if(adminResult.data){
+
+      document.getElementById(
+        "harmonyFamilyAuth"
+      ).style.display = "none";
+
+      return;
+    }
+
+    const memberResult =
+      await supabaseClient
+        .from("family_members")
+        .select("user_id,name,approved")
+        .eq("user_id",user.id)
+        .maybeSingle();
+
+    if(memberResult.data &&
+       memberResult.data.approved === true){
+
+      document.getElementById(
+        "harmonyFamilyAuth"
+      ).style.display = "none";
+
+      return;
+    }
+
+    await supabaseClient.auth.signOut();
+
+    document.getElementById(
+      "harmonyFamilyAuth"
+    ).style.display = "flex";
+  }
+
+  window.harmonySupabaseLogin =
+    harmonySupabaseLogin;
+
+  window.harmonyCheckSession =
+    harmonyCheckSession;
+
+  document.addEventListener(
+    "DOMContentLoaded",
+    function(){
+
+      harmonyCheckSession();
+
+    }
+  );
 
 })();
 </script>
