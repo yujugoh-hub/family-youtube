@@ -153,6 +153,110 @@ button:active{transform:scale(.97)}
  .hero h1{font-size:25px}
 }
 </style>
+<style id="HARMONY_FAMILY_SELECT_AUTH">
+#harmonyFamilyAuth{
+ position:fixed;
+ inset:0;
+ z-index:1000000;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ padding:20px;
+ background:linear-gradient(135deg,#eef5ff,#f8efff);
+}
+
+.harmonyFamilyAuthBox{
+ width:min(430px,100%);
+ background:white;
+ border-radius:28px;
+ padding:28px 22px;
+ box-shadow:0 15px 50px rgba(0,0,0,.14);
+ text-align:center;
+}
+
+.harmonyFamilyLogo{
+ font-size:30px;
+ font-weight:900;
+ margin-bottom:7px;
+}
+
+.harmonyFamilySub{
+ color:#777;
+ margin-bottom:24px;
+}
+
+.harmonyFamilyTitle{
+ font-size:21px;
+ font-weight:900;
+ margin-bottom:14px;
+}
+
+.harmonyFamilyButton{
+ width:100%;
+ min-height:62px;
+ margin:8px 0;
+ border:0;
+ border-radius:18px;
+ background:#f2f4f8;
+ font-size:18px;
+ font-weight:900;
+ cursor:pointer;
+}
+
+.harmonyFamilyButton:active{
+ transform:scale(.97);
+}
+
+.harmonyFamilyInput{
+ width:100%;
+ height:54px;
+ box-sizing:border-box;
+ border:1px solid #ddd;
+ border-radius:15px;
+ padding:0 16px;
+ font-size:17px;
+ outline:none;
+ margin-bottom:10px;
+}
+
+.harmonyFamilyPrimary{
+ width:100%;
+ height:54px;
+ border:0;
+ border-radius:15px;
+ background:#111;
+ color:white;
+ font-size:17px;
+ font-weight:900;
+ cursor:pointer;
+}
+
+.harmonyFamilyBack{
+ width:100%;
+ height:48px;
+ border:0;
+ border-radius:15px;
+ background:#eee;
+ margin-top:8px;
+ font-weight:800;
+ cursor:pointer;
+}
+
+.harmonyFamilyError{
+ min-height:24px;
+ margin:7px 0;
+ color:#e53935;
+ font-weight:700;
+}
+
+.harmonyFamilyStep{
+ display:none;
+}
+
+.harmonyFamilyStep.active{
+ display:block;
+}
+</style>
 </head>
 
 <body>
@@ -2517,6 +2621,218 @@ background:linear-gradient(135deg,#fff7fb,#eef7ff);">
   }
 
   window.harmonyVideoUrl = harmonyVideoUrl;
+
+})();
+</script>
+<script id="HARMONY_FAMILY_SELECT_AUTH">
+(function(){
+
+ let harmonySelectedFamily = "";
+
+ const FAMILY_PIN = "50601";
+
+ function hideOldLock(){
+
+   const oldLock =
+    document.getElementById("harmonyLock");
+
+   if(oldLock){
+     oldLock.style.display = "none";
+   }
+
+ }
+
+ function showStep(number){
+
+   document
+    .querySelectorAll(".harmonyFamilyStep")
+    .forEach(function(step){
+      step.classList.remove("active");
+    });
+
+   const target =
+    document.getElementById(
+      "harmonyFamilyStep" + number
+    );
+
+   if(target){
+     target.classList.add("active");
+   }
+
+ }
+
+ window.harmonySelectFamily = function(family){
+
+   harmonySelectedFamily = family;
+
+   document.getElementById(
+    "harmonyFamilyNameTitle"
+   ).textContent =
+    "👤 " + family;
+
+   document.getElementById(
+    "harmonyFamilyNameInput"
+   ).value = "";
+
+   document.getElementById(
+    "harmonyFamilyNameError"
+   ).textContent = "";
+
+   showStep(2);
+
+   setTimeout(function(){
+
+     document.getElementById(
+      "harmonyFamilyNameInput"
+     ).focus();
+
+   },100);
+
+ };
+
+ window.harmonyFamilyBack = function(){
+
+   harmonySelectedFamily = "";
+
+   showStep(1);
+
+ };
+
+ window.harmonyNextToPin = function(){
+
+   const name =
+    document.getElementById(
+     "harmonyFamilyNameInput"
+    ).value.trim();
+
+   if(!name){
+
+     document.getElementById(
+      "harmonyFamilyNameError"
+     ).textContent =
+      "이름을 입력해주세요.";
+
+     return;
+
+   }
+
+   /*
+    * 이름 자체는 지금 저장하지 않고
+    * 다음 단계에서 등록된 가족 이름과 비교합니다.
+    */
+
+   sessionStorage.setItem(
+    "harmonySelectedFamily",
+    harmonySelectedFamily
+   );
+
+   sessionStorage.setItem(
+    "harmonyEnteredName",
+    name
+   );
+
+   document.getElementById(
+    "harmonyFamilyPinTitle"
+   ).textContent =
+    "👤 " + harmonySelectedFamily;
+
+   document.getElementById(
+    "harmonyFamilyPinInput"
+   ).value = "";
+
+   document.getElementById(
+    "harmonyFamilyPinError"
+   ).textContent = "";
+
+   showStep(3);
+
+   setTimeout(function(){
+
+     document.getElementById(
+      "harmonyFamilyPinInput"
+     ).focus();
+
+   },100);
+
+ };
+
+ window.harmonyBackToName = function(){
+
+   showStep(2);
+
+ };
+
+ window.harmonyEnter = function(){
+
+   const pin =
+    document.getElementById(
+     "harmonyFamilyPinInput"
+    ).value.trim();
+
+   if(pin !== FAMILY_PIN){
+
+     document.getElementById(
+      "harmonyFamilyPinError"
+     ).textContent =
+      "PIN이 맞지 않아요.";
+
+     document.getElementById(
+      "harmonyFamilyPinInput"
+     ).value = "";
+
+     return;
+
+   }
+
+   sessionStorage.setItem(
+    "harmonyFamilyAccess",
+    "yes"
+   );
+
+   sessionStorage.setItem(
+    "harmonyFamily",
+    harmonySelectedFamily
+   );
+
+   const auth =
+    document.getElementById("harmonyFamilyAuth");
+
+   if(auth){
+     auth.style.display = "none";
+   }
+
+   hideOldLock();
+
+ };
+
+ function initFamilyAuth(){
+
+   hideOldLock();
+
+   const auth =
+    document.getElementById("harmonyFamilyAuth");
+
+   if(!auth) return;
+
+   if(
+    sessionStorage.getItem(
+     "harmonyFamilyAccess"
+    ) === "yes"
+   ){
+
+     auth.style.display = "none";
+     return;
+
+   }
+
+   auth.style.display = "flex";
+
+ }
+
+ document.addEventListener(
+  "DOMContentLoaded",
+  initFamilyAuth
+ );
 
 })();
 </script>
