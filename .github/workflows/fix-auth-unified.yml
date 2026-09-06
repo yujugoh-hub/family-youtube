@@ -1,0 +1,280 @@
+name: Fix HARMONY unified family authentication
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Patch HARMONY authentication
+        shell: python
+        run: |
+          from pathlib import Path
+          import re
+          import subprocess
+          import time
+
+          time.sleep(8)
+          subprocess.run(["git", "pull", "--rebase", "origin", "main"], check=False)
+
+          path = Path("index.html")
+          text = path.read_text(encoding="utf-8-sig")
+
+          # Remove obsolete PIN/name authentication layers completely.
+          text = re.sub(r'<div id="harmonyLock"[\s\S]*?<script id="HARMONY_PRIVATE_VIDEO_FIX">', '<script id="HARMONY_PRIVATE_VIDEO_FIX">', text, count=1)
+          text = re.sub(r'<style id="HARMONY_FAMILY_NAME_AUTH_V2">[\s\S]*?<script id="HARMONY_SUPABASE_AUTH">', '<script id="HARMONY_SUPABASE_AUTH">', text, count=1)
+          text = re.sub(r'<script id="HARMONY_FAMILY_SELECT_AUTH">[\s\S]*?</script>\s*', '', text, count=1)
+
+          # Make the existing family recovery request wording neutral.
+          text = text.replace('placeholder="관리자 이메일"', 'placeholder="이메일"')
+          text = text.replace('관리자 이메일을 입력해주세요.', '이메일을 입력해주세요.')
+
+          fix = r'''
+<script id="HARMONY_UNIFIED_FAMILY_AUTH_V3">
+(function(){
+  const auth = document.getElementById("harmonyFamilyAuth");
+  const choose = document.getElementById("harmonyFamilyChoose");
+  const login = document.getElementById("harmonyAdminLogin");
+  const title = login ? login.querySelector(".harmonyFamilyTitle") : null;
+  const sub = login ? login.querySelector(".harmonyFamilySub") : null;
+  const button = login ? login.querySelector(".harmonyFamilyPrimary") : null;
+  const error = document.getElementById("harmonyLoginError");
+  let selectedPerson = "";
+
+  function hideLegacy(){
+    const oldLock=document.getElementById("harmonyLock");
+    const oldV2=document.getElementById("harmonyNameAuthV2");
+    const oldMember=document.getElementById("harmonyFamilyLogin");
+    if(oldLock) oldLock.style.display="none";
+    if(oldV2) oldV2.style.display="none";
+    if(oldMember) oldMember.classList.remove("active");
+  }
+
+  function showChoose(){
+    hideLegacy();
+    document.querySelectorAll(".harmonyFamilyStep").forEach(function(el){el.classList.remove("active");});
+    if(choose) choose.classList.add("active");
+    if(auth) auth.style.display="flex";
+    selectedPerson="";
+  }
+
+  window.harmonySelectPerson=function(person){
+    selectedPerson=person;
+    hideLegacy();
+    document.querySelectorAll(".harmonyFamilyStep").forEach(function(el){el.classList.remove("active");});
+    if(login) login.classList.add("active");
+    if(title) title.textContent="👤 "+person+" 로그인";
+    if(sub) sub.textContent="이메일과 비밀번호로 로그인하세요.";
+    if(button) button.textContent="🏠 로그인";
+    if(error) error.textContent="";
+    const email=document.getElementById("harmonyLoginEmail");
+    if(email) setTimeout(function(){email.focus();},50);
+  };
+
+  window.harmonyBackToFamilyChoose=showChoose;
+  window.harmonyFamilyMemberLogin=window.harmonySupabaseLogin;
+
+  async function login(){
+    const email=(document.getElementById("harmonyLoginEmail")||{}).value?.trim() || "";
+    const password=(document.getElementById("harmonyLoginPassword")||{}).value || "";
+    if(error) error.textContent="";
+    if(!email || !password){
+      if(error) error.textContent="이메일과 비밀번호를 입력해주세요.";
+      return;
+    }
+
+    const result=await supabaseClient.auth.signInWithPassword({email,password});
+    if(result.error){
+      console.error(result.error);
+      if(error) error.textContent="로그인에 실패했습니다. 이메일 또는 비밀번호를 확인해주세요.";
+      return;
+    }
+
+    const user=result.data.user;
+    if(!user){
+      if(error) error.textContent="로그인 정보를 확인할 수 없습니다.";
+      return;
+    }
+
+    const admin=await supabaseClient
+      .from("family_admins")
+      .select("user_id,enabled")
+      .eq("user_id",user.id)
+      .eq("enabled",true)
+      .maybeSingle();
+
+    if(admin.data){
+      localStorage.setItem("harmonyUser", "나");
+      if(auth) auth.style.display="none";
+      return;
+    }
+
+    let member=await supabaseClient
+      .from("family_members")
+      .select("user_id,name,approved")
+      .eq("user_id",user.id)
+      .maybeSingle();
+
+    if(member.error){
+      console.error(member.error);
+      if(error) error.textContent="가족 정보를 확인하지 못했습니다.";
+      await supabaseClient.auth.signOut();
+      return;
+    }
+
+    // First successful login after email signup: create the family profile.
+    if(!member.data){
+      const pendingName=localStorage.getItem("harmonyPendingName:"+email) || selectedPerson || "가족";
+      const inserted=await supabaseClient
+        .from("family_members")
+        .insert({user_id:user.id,name:pendingName,approved:false})
+        .select("user_id,name,approved")
+        .maybeSingle();
+      if(inserted.error){
+        console.error(inserted.error);
+        if(error) error.textContent="가족 계정을 등록하지 못했습니다.";
+        await supabaseClient.auth.signOut();
+        return;
+      }
+      member=inserted;
+    }
+
+    if(member.data.approved !== true){
+      if(error) error.textContent="가족 승인 대기 중입니다. 관리자에게 승인을 요청해주세요.";
+      await supabaseClient.auth.signOut();
+      return;
+    }
+
+    localStorage.setItem("harmonyUser", member.data.name || selectedPerson || "가족");
+    if(auth) auth.style.display="none";
+  }
+
+  window.harmonySupabaseLogin=login;
+
+  window.harmonyShowFamilySignup=function(){
+    const box=document.getElementById("harmonyPasswordRecovery");
+    if(!box) return;
+    box.style.display="flex";
+    box.innerHTML='<div class="harmonyFamilyAuthBox">'
+      +'<div class="harmonyFamilyLogo">HARMONY 🏠</div>'
+      +'<div class="harmonyFamilyTitle">가족 계정 만들기</div>'
+      +'<div class="harmonyFamilySub">이메일로 가족 계정을 만들어요.</div>'
+      +'<input id="harmonySignupName" class="harmonyFamilyInput" placeholder="이름">'
+      +'<input id="harmonySignupEmail" class="harmonyFamilyInput" type="email" placeholder="이메일" autocomplete="email">'
+      +'<input id="harmonySignupPassword" class="harmonyFamilyInput" type="password" placeholder="비밀번호 8자 이상" autocomplete="new-password">'
+      +'<input id="harmonySignupPassword2" class="harmonyFamilyInput" type="password" placeholder="비밀번호 다시 입력" autocomplete="new-password">'
+      +'<div id="harmonySignupError" class="harmonyFamilyError"></div>'
+      +'<button class="harmonyFamilyPrimary" type="button" onclick="harmonyCreateFamilyAccount()">✉️ 가족 계정 만들기</button>'
+      +'<button class="harmonyFamilyBack" type="button" onclick="harmonyCloseFamilySignup()">← 로그인으로</button>'
+      +'</div>';
+  };
+
+  window.harmonyCloseFamilySignup=function(){
+    const box=document.getElementById("harmonyPasswordRecovery");
+    if(box) box.style.display="none";
+  };
+
+  window.harmonyCreateFamilyAccount=async function(){
+    const name=document.getElementById("harmonySignupName").value.trim();
+    const email=document.getElementById("harmonySignupEmail").value.trim();
+    const p=document.getElementById("harmonySignupPassword").value;
+    const p2=document.getElementById("harmonySignupPassword2").value;
+    const e=document.getElementById("harmonySignupError");
+    e.textContent="";
+    if(!name || !email || !p || !p2){e.textContent="모두 입력해주세요.";return;}
+    if(p.length<8){e.textContent="비밀번호는 8자 이상이어야 해요.";return;}
+    if(p!==p2){e.textContent="두 비밀번호가 일치하지 않아요.";return;}
+
+    const result=await supabaseClient.auth.signUp({
+      email:email,
+      password:p,
+      options:{emailRedirectTo:window.location.origin+window.location.pathname}
+    });
+    if(result.error){
+      console.error(result.error);
+      e.textContent="가입에 실패했습니다. 이미 가입된 이메일인지 확인해주세요.";
+      return;
+    }
+
+    localStorage.setItem("harmonyPendingName:"+email,name);
+    if(result.data.session){
+      const u=result.data.user;
+      await supabaseClient.from("family_members").insert({user_id:u.id,name:name,approved:false});
+      alert("✅ 가족 계정이 만들어졌어요. 관리자 승인 후 로그인할 수 있어요.");
+    }else{
+      alert("📧 가입 확인 이메일을 보냈어요. 이메일에서 확인한 뒤 로그인해주세요.");
+    }
+    harmonyCloseFamilySignup();
+  };
+
+  function addSignupButton(){
+    if(!login || document.getElementById("harmonySignupOpenBtn")) return;
+    const b=document.createElement("button");
+    b.id="harmonySignupOpenBtn";
+    b.className="harmonyFamilyBack";
+    b.type="button";
+    b.textContent="✉️ 가족 계정 만들기";
+    b.onclick=window.harmonyShowFamilySignup;
+    login.appendChild(b);
+  }
+
+  async function checkSession(){
+    hideLegacy();
+    if(!auth) return;
+    const result=await supabaseClient.auth.getSession();
+    const session=result.data && result.data.session;
+    if(!session){
+      auth.style.display="flex";
+      showChoose();
+      return;
+    }
+
+    const user=session.user;
+    const admin=await supabaseClient.from("family_admins").select("user_id,enabled").eq("user_id",user.id).eq("enabled",true).maybeSingle();
+    if(admin.data){auth.style.display="none";return;}
+
+    const member=await supabaseClient.from("family_members").select("user_id,name,approved").eq("user_id",user.id).maybeSingle();
+    if(member.data && member.data.approved===true){
+      localStorage.setItem("harmonyUser",member.data.name||"가족");
+      auth.style.display="none";
+      return;
+    }
+    await supabaseClient.auth.signOut();
+    auth.style.display="flex";
+    showChoose();
+  }
+
+  addSignupButton();
+  document.addEventListener("DOMContentLoaded",function(){addSignupButton();checkSession();});
+})();
+</script>
+'''
+
+          if 'id="HARMONY_UNIFIED_FAMILY_AUTH_V3"' not in text:
+              text = text.replace('</body>', fix + '</body>')
+
+          path.write_text(text, encoding="utf-8", newline="\n")
+
+      - name: Commit patched site
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git rm -f .github/workflows/fix-auth-unified.yml .github/workflows/fix-recovery.yml 2>/dev/null || true
+          git commit -m "Unify HARMONY family email authentication" || exit 0
+          for i in 1 2 3; do
+            git pull --rebase origin main || true
+            git push origin HEAD:main && exit 0
+            sleep 3
+          done
+          exit 1
