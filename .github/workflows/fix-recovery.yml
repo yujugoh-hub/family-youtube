@@ -1,4 +1,4 @@
-name: Fix HARMONY password recovery
+name: Fix HARMONY password recovery URL
 
 on:
   push:
@@ -15,7 +15,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Patch password recovery
+      - name: Patch recovery flow
         shell: python
         run: |
           from pathlib import Path
@@ -29,11 +29,16 @@ jobs:
           if end == -1:
               raise SystemExit("Recovery script end not found")
           end += len("</script>")
+
           new_script = '''<script id="HARMONY_PASSWORD_RECOVERY_V1">
 (function(){
+  const RECOVERY_PATH = window.location.origin + window.location.pathname + "?mode=recovery";
+
   function box(){ return document.getElementById("harmonyPasswordRecovery"); }
+
   function showUpdate(){
-    const b=box(); if(!b) return;
+    const b=box();
+    if(!b) return;
     b.style.display="flex";
     const r=document.getElementById("harmonyRecoveryRequest");
     const u=document.getElementById("harmonyRecoveryUpdate");
@@ -42,69 +47,124 @@ jobs:
     const a=document.getElementById("harmonyFamilyAuth");
     if(a) a.style.display="none";
   }
-  function recoveryUrl(){
+
+  function isRecoveryUrl(){
+    const params=new URLSearchParams(window.location.search);
+    const mode=params.get("mode");
     const h=window.location.hash||"";
-    const s=window.location.search||"";
-    return h.includes("type=recovery") || h.includes("access_token=") || s.includes("type=recovery") || s.includes("code=");
+    return mode==="recovery" || h.includes("type=recovery") || h.includes("access_token=");
   }
+
   window.harmonyShowPasswordRecovery=function(){
-    const b=box(); if(!b) return;
+    const b=box();
+    if(!b) return;
     b.style.display="flex";
     document.getElementById("harmonyRecoveryRequest").style.display="block";
     document.getElementById("harmonyRecoveryUpdate").style.display="none";
   };
-  window.harmonyClosePasswordRecovery=function(){ const b=box(); if(b) b.style.display="none"; };
+
+  window.harmonyClosePasswordRecovery=function(){
+    const b=box();
+    if(b) b.style.display="none";
+  };
+
   window.harmonySendPasswordReset=async function(){
     const email=document.getElementById("harmonyRecoveryEmail").value.trim();
-    const e=document.getElementById("harmonyRecoveryRequestError"); e.textContent="";
-    if(!email){e.textContent="관리자 이메일을 입력해주세요.";return;}
-    const result=await supabaseClient.auth.resetPasswordForEmail(email,{redirectTo:window.location.origin+window.location.pathname});
-    if(result.error){console.error(result.error);e.textContent="재설정 이메일을 보내지 못했습니다.";return;}
+    const e=document.getElementById("harmonyRecoveryRequestError");
+    e.textContent="";
+    if(!email){
+      e.textContent="관리자 이메일을 입력해주세요.";
+      return;
+    }
+
+    const result=await supabaseClient.auth.resetPasswordForEmail(email,{
+      redirectTo:RECOVERY_PATH
+    });
+
+    if(result.error){
+      console.error(result.error);
+      e.textContent="재설정 이메일을 보내지 못했습니다.";
+      return;
+    }
+
     e.textContent="✅ 재설정 이메일을 보냈습니다. 이메일의 링크를 눌러주세요.";
   };
+
   window.harmonyUpdatePassword=async function(){
     const p=document.getElementById("harmonyNewPassword").value;
     const p2=document.getElementById("harmonyNewPassword2").value;
-    const e=document.getElementById("harmonyRecoveryUpdateError"); e.textContent="";
-    if(!p||!p2){e.textContent="새 비밀번호를 두 번 입력해주세요.";return;}
-    if(p.length<8){e.textContent="비밀번호는 8자 이상으로 설정해주세요.";return;}
-    if(p!==p2){e.textContent="두 비밀번호가 일치하지 않습니다.";return;}
+    const e=document.getElementById("harmonyRecoveryUpdateError");
+    e.textContent="";
+
+    if(!p||!p2){
+      e.textContent="새 비밀번호를 두 번 입력해주세요.";
+      return;
+    }
+    if(p.length<8){
+      e.textContent="비밀번호는 8자 이상으로 설정해주세요.";
+      return;
+    }
+    if(p!==p2){
+      e.textContent="두 비밀번호가 일치하지 않습니다.";
+      return;
+    }
+
     const result=await supabaseClient.auth.updateUser({password:p});
-    if(result.error){console.error(result.error);e.textContent="비밀번호 변경에 실패했습니다.";return;}
+    if(result.error){
+      console.error(result.error);
+      e.textContent="비밀번호 변경에 실패했습니다.";
+      return;
+    }
+
     alert("✅ 비밀번호가 변경되었습니다.");
-    const b=box(); if(b) b.style.display="none";
+    const b=box();
+    if(b) b.style.display="none";
     window.history.replaceState({},document.title,window.location.pathname);
   };
+
   let handled=false;
+
   async function detect(){
-    if(handled||!recoveryUrl()) return;
+    if(handled || !isRecoveryUrl()) return;
     handled=true;
-    for(let i=0;i<50;i++){
+
+    for(let i=0;i<60;i++){
       try{
         const result=await supabaseClient.auth.getSession();
-        if(result&&result.data&&result.data.session){showUpdate();return;}
-      }catch(e){console.error(e);}
+        if(result && result.data && result.data.session){
+          showUpdate();
+          return;
+        }
+      }catch(e){
+        console.error(e);
+      }
       await new Promise(r=>setTimeout(r,200));
     }
+
     showUpdate();
     const e=document.getElementById("harmonyRecoveryUpdateError");
-    if(e) e.textContent="재설정 인증을 확인하지 못했습니다. 새 재설정 이메일을 보내주세요.";
+    if(e) e.textContent="재설정 인증을 확인하지 못했습니다. 이메일 링크를 새로 요청해주세요.";
   }
+
   supabaseClient.auth.onAuthStateChange(function(event,session){
-    if(event==="PASSWORD_RECOVERY"&&session) showUpdate();
+    if(event==="PASSWORD_RECOVERY"){
+      showUpdate();
+    }
   });
+
   document.addEventListener("DOMContentLoaded",detect);
   window.addEventListener("load",function(){setTimeout(detect,100);});
   detect();
 })();
 </script>'''
+
           path.write_text(text[:start] + new_script + text[end:], encoding="utf-8", newline="\n")
 
-      - name: Commit patch and remove fixer
+      - name: Commit and remove fixer
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add index.html
           git rm .github/workflows/fix-recovery.yml
-          git commit -m "Fix HARMONY password recovery redirect"
+          git commit -m "Fix HARMONY recovery page URL"
           git push origin HEAD:main
