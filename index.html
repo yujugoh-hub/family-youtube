@@ -260,6 +260,84 @@ button:active{transform:scale(.97)}
 </head>
 
 <body>
+<div id="harmonyFamilyAuth">
+  <div class="harmonyFamilyAuthBox">
+    <div class="harmonyFamilyLogo">HARMONY 🏠</div>
+    <div class="harmonyFamilySub">우리 가족만 들어올 수 있어요 🔒</div>
+
+    <div id="harmonyFamilyStep1" class="harmonyFamilyStep active">
+      <div class="harmonyFamilyTitle">누구인가요?</div>
+
+      <button class="harmonyFamilyButton" type="button"
+        onclick="harmonySelectFamily('아빠')">
+        👨 아빠
+      </button>
+
+      <button class="harmonyFamilyButton" type="button"
+        onclick="harmonySelectFamily('엄마')">
+        👩 엄마
+      </button>
+
+      <button class="harmonyFamilyButton" type="button"
+        onclick="harmonySelectFamily('동생')">
+        🧒 동생
+      </button>
+    </div>
+
+    <div id="harmonyFamilyStep2" class="harmonyFamilyStep">
+      <div id="harmonyFamilyNameTitle" class="harmonyFamilyTitle">
+        👤 이름
+      </div>
+
+      <input
+        id="harmonyFamilyNameInput"
+        class="harmonyFamilyInput"
+        type="text"
+        autocomplete="name"
+        placeholder="실제 이름을 입력하세요"
+      >
+
+      <div id="harmonyFamilyNameError" class="harmonyFamilyError"></div>
+
+      <button class="harmonyFamilyPrimary" type="button"
+        onclick="harmonyNextToPin()">
+        다음 →
+      </button>
+
+      <button class="harmonyFamilyBack" type="button"
+        onclick="harmonyFamilyBack()">
+        ← 다시 선택
+      </button>
+    </div>
+
+    <div id="harmonyFamilyStep3" class="harmonyFamilyStep">
+      <div id="harmonyFamilyPinTitle" class="harmonyFamilyTitle">
+        🔒 가족 PIN
+      </div>
+
+      <input
+        id="harmonyFamilyPinInput"
+        class="harmonyFamilyInput"
+        type="password"
+        inputmode="numeric"
+        maxlength="5"
+        placeholder="PIN 5자리"
+      >
+
+      <div id="harmonyFamilyPinError" class="harmonyFamilyError"></div>
+
+      <button class="harmonyFamilyPrimary" type="button"
+        onclick="harmonyEnter()">
+        🏠 HARMONY 입장
+      </button>
+
+      <button class="harmonyFamilyBack" type="button"
+        onclick="harmonyBackToName()">
+        ← 이름 다시 입력
+      </button>
+    </div>
+  </div>
+</div>
 
 <div class="app">
 
