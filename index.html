@@ -351,6 +351,13 @@ button:active{transform:scale(.97)}
       <button
         class="harmonyFamilyBack"
         type="button"
+        onclick="harmonyShowPasswordRecovery()">
+        🔑 비밀번호를 잊으셨나요?
+      </button>
+
+      <button
+        class="harmonyFamilyBack"
+        type="button"
         onclick="harmonyBackToFamilyChoose()">
         ← 가족 선택으로
       </button>
@@ -407,6 +414,99 @@ button:active{transform:scale(.97)}
 
   </div>
 
+</div>
+<div id="harmonyPasswordRecovery"
+     style="
+     display:none;
+     position:fixed;
+     inset:0;
+     z-index:3000000;
+     align-items:center;
+     justify-content:center;
+     padding:20px;
+     background:linear-gradient(135deg,#eef5ff,#f8efff);">
+
+  <div class="harmonyFamilyAuthBox">
+
+    <div class="harmonyFamilyLogo">
+      HARMONY 🔑
+    </div>
+
+    <div class="harmonyFamilySub">
+      비밀번호를 안전하게 다시 설정하세요.
+    </div>
+
+    <!-- 이메일 요청 -->
+    <div id="harmonyRecoveryRequest">
+
+      <div class="harmonyFamilyTitle">
+        재설정 이메일 보내기
+      </div>
+
+      <input
+        id="harmonyRecoveryEmail"
+        class="harmonyFamilyInput"
+        type="email"
+        autocomplete="email"
+        placeholder="관리자 이메일">
+
+      <div
+        id="harmonyRecoveryRequestError"
+        class="harmonyFamilyError">
+      </div>
+
+      <button
+        class="harmonyFamilyPrimary"
+        type="button"
+        onclick="harmonySendPasswordReset()">
+        📧 재설정 이메일 보내기
+      </button>
+
+      <button
+        class="harmonyFamilyBack"
+        type="button"
+        onclick="harmonyClosePasswordRecovery()">
+        ← 로그인으로 돌아가기
+      </button>
+
+    </div>
+
+    <!-- 새 비밀번호 -->
+    <div id="harmonyRecoveryUpdate" style="display:none">
+
+      <div class="harmonyFamilyTitle">
+        🔐 새 비밀번호 설정
+      </div>
+
+      <input
+        id="harmonyNewPassword"
+        class="harmonyFamilyInput"
+        type="password"
+        autocomplete="new-password"
+        placeholder="새 비밀번호">
+
+      <input
+        id="harmonyNewPassword2"
+        class="harmonyFamilyInput"
+        type="password"
+        autocomplete="new-password"
+        placeholder="새 비밀번호 다시 입력">
+
+      <div
+        id="harmonyRecoveryUpdateError"
+        class="harmonyFamilyError">
+      </div>
+
+      <button
+        class="harmonyFamilyPrimary"
+        type="button"
+        onclick="harmonyUpdatePassword()">
+        ✅ 비밀번호 변경
+      </button>
+
+    </div>
+
+  </div>
 </div>
 <div class="app">
 
@@ -3806,6 +3906,262 @@ background:linear-gradient(135deg,#fff7fb,#eef7ff);">
 
     };
 
+
+})();
+</script>
+<script id="HARMONY_PASSWORD_RECOVERY_V1">
+(function(){
+
+  function recoveryBox(){
+    return document.getElementById("harmonyPasswordRecovery");
+  }
+
+  function showRecoveryRequest(){
+
+    const box = recoveryBox();
+    if(!box) return;
+
+    box.style.display = "flex";
+
+    const request =
+      document.getElementById("harmonyRecoveryRequest");
+
+    const update =
+      document.getElementById("harmonyRecoveryUpdate");
+
+    if(request) request.style.display = "block";
+    if(update) update.style.display = "none";
+  }
+
+  function showRecoveryUpdate(){
+
+    const box = recoveryBox();
+    if(!box) return;
+
+    box.style.display = "flex";
+
+    const request =
+      document.getElementById("harmonyRecoveryRequest");
+
+    const update =
+      document.getElementById("harmonyRecoveryUpdate");
+
+    if(request) request.style.display = "none";
+    if(update) update.style.display = "block";
+  }
+
+  window.harmonyShowPasswordRecovery =
+    function(){
+
+      showRecoveryRequest();
+
+      const email =
+        document.getElementById("harmonyRecoveryEmail");
+
+      if(email){
+        setTimeout(function(){
+          email.focus();
+        },100);
+      }
+    };
+
+  window.harmonyClosePasswordRecovery =
+    function(){
+
+      const box = recoveryBox();
+
+      if(box){
+        box.style.display = "none";
+      }
+
+      const error =
+        document.getElementById(
+          "harmonyRecoveryRequestError"
+        );
+
+      if(error){
+        error.textContent = "";
+      }
+
+    };
+
+  window.harmonySendPasswordReset =
+    async function(){
+
+      const email =
+        document
+          .getElementById("harmonyRecoveryEmail")
+          .value
+          .trim();
+
+      const error =
+        document.getElementById(
+          "harmonyRecoveryRequestError"
+        );
+
+      error.textContent = "";
+
+      if(!email){
+
+        error.textContent =
+          "관리자 이메일을 입력해주세요.";
+
+        return;
+      }
+
+      const redirectTo =
+        window.location.origin +
+        window.location.pathname;
+
+      const result =
+        await supabaseClient.auth.resetPasswordForEmail(
+          email,
+          {
+            redirectTo: redirectTo
+          }
+        );
+
+      if(result.error){
+
+        console.error(result.error);
+
+        error.textContent =
+          "재설정 이메일을 보내지 못했습니다.";
+
+        return;
+      }
+
+      error.textContent =
+        "재설정 이메일을 보냈습니다. 이메일의 링크를 눌러주세요.";
+
+    };
+
+  window.harmonyUpdatePassword =
+    async function(){
+
+      const password =
+        document
+          .getElementById("harmonyNewPassword")
+          .value;
+
+      const password2 =
+        document
+          .getElementById("harmonyNewPassword2")
+          .value;
+
+      const error =
+        document.getElementById(
+          "harmonyRecoveryUpdateError"
+        );
+
+      error.textContent = "";
+
+      if(!password || !password2){
+
+        error.textContent =
+          "새 비밀번호를 두 번 입력해주세요.";
+
+        return;
+      }
+
+      if(password.length < 8){
+
+        error.textContent =
+          "비밀번호는 8자 이상으로 설정해주세요.";
+
+        return;
+      }
+
+      if(password !== password2){
+
+        error.textContent =
+          "두 비밀번호가 일치하지 않습니다.";
+
+        return;
+      }
+
+      const result =
+        await supabaseClient.auth.updateUser({
+          password: password
+        });
+
+      if(result.error){
+
+        console.error(result.error);
+
+        error.textContent =
+          "비밀번호 변경에 실패했습니다.";
+
+        return;
+      }
+
+      error.textContent = "";
+
+      alert(
+        "✅ 비밀번호가 변경되었습니다."
+      );
+
+      const box = recoveryBox();
+
+      if(box){
+        box.style.display = "none";
+      }
+
+      document.getElementById(
+        "harmonyLoginPassword"
+      ).value = "";
+
+    };
+
+  function startRecoveryListener(){
+
+    supabaseClient.auth.onAuthStateChange(
+      function(event,session){
+
+        if(event === "PASSWORD_RECOVERY" && session){
+
+          showRecoveryUpdate();
+
+        }
+
+      }
+    );
+
+    supabaseClient.auth.getSession()
+      .then(function(result){
+
+        if(
+          result &&
+          result.data &&
+          result.data.session
+        ){
+
+          const hash =
+            window.location.hash || "";
+
+          if(
+            hash.includes("access_token=") ||
+            hash.includes("type=recovery")
+          ){
+
+            showRecoveryUpdate();
+
+          }
+
+        }
+
+      });
+
+  }
+
+  document.addEventListener(
+    "DOMContentLoaded",
+    function(){
+
+      startRecoveryListener();
+
+    }
+  );
 
 })();
 </script>
